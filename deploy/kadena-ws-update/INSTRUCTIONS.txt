@@ -1,0 +1,33 @@
+Kadena Nexus – kadena.ws homepage update (8 Oct 2026)
+
+WHAT CHANGED
+- Kadena Earn moved to the live projects list
+- New pulsing "Saudi Kadena node" card in the hero, under the Adoption Index
+
+1) HOMEPAGE – file swap only (5 minutes)
+   sudo cp /var/www/kadena.ws/index.html /var/www/kadena.ws/index.html.bak
+   sudo cp index.html /var/www/kadena.ws/index.html
+   No nginx reload needed.
+
+   Check https://kadena.ws in a private window:
+   - Kadena Earn is in the projects list, with earn.kadena.ws
+   - The Saudi node card shows "Online" and pulses
+
+   Rollback: sudo mv /var/www/kadena.ws/index.html.bak /var/www/kadena.ws/index.html
+
+2) SAUDI NODE PUBLIC ENDPOINT – so the card shows live figures
+   a. GoDaddy DNS for kadena.ws: add A record   node -> 193.122.85.1
+   b. On the node (193.122.85.1): install nginx, copy node-kadena.ws.conf to
+      /etc/nginx/sites-available/node.kadena.ws, then
+        sudo ln -s /etc/nginx/sites-available/node.kadena.ws /etc/nginx/sites-enabled/
+        sudo nginx -t && sudo systemctl reload nginx
+        sudo certbot --nginx -d node.kadena.ws
+   c. Oracle Cloud security list + ufw: open 80, 443 and 1789
+      (1789 = Chainweb P2P, so the public crawler can measure uptime)
+
+   Check:
+     curl -s https://node.kadena.ws/info                      -> JSON with "nodePackageVersion"
+     curl -sI https://node.kadena.ws/info | grep -i access    -> access-control-allow-origin
+
+   After that the card switches from "Online" to "In sync" and shows block height,
+   uptime, online since, version and latency. Nothing else on kadena.ws changes.
