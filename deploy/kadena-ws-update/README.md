@@ -59,9 +59,10 @@ before Oracle Ubuntu's host firewall REJECT rule, and persisted.
 The gateway is installed and locally verified. After Naif's Oracle networking
 update, external HTTP returned 200 with the expected Host header. Both GoDaddy
 authoritative nameservers still return NXDOMAIN for `node.kadena.ws`; the DNS
-record must resolve before HTTPS activation. Naif needs to verify that GoDaddy
-DNS contains `node A 193.122.85.1` in the active kadena.ws zone. TCP 1789 already
-works.
+record must resolve before HTTPS activation. The A record currently resolves at
+`node.kadena.ws.kadena.ws`, showing that the full hostname was entered as the
+record name. Change its GoDaddy Name/Host to `node` so the record becomes
+`node.kadena.ws A 193.122.85.1`. TCP 1789 already works.
 
 After those changes, run the staged activation script on the node:
 
