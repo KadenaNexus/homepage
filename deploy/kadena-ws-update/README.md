@@ -29,7 +29,7 @@ ssh -t mustafa@89.167.14.58 'sudo bash /home/mustafa/kadena-ws-update/install.sh
 
 The installer verifies the staged SHA256 manifest and known current homepage /
 dashboard hashes, refuses unexpected concurrent changes, backs up the two HTML
-files and actual enabled nginx configurations, installs the crawler snippet,
+files and actual nginx configuration targets (preserving enabled symlinks), installs the crawler snippet,
 tests nginx before reloading, and preserves file ownership. A failure restores
 the previous files and configuration. It checks the existing data processes and
 never replaces the dashboard data directory. The backup path is printed on
@@ -56,10 +56,12 @@ to `/info`, `/health-check` and `/chainweb/0.0/mainnet01/cut`, with CORS and rat
 limiting; transaction submission is not exposed. HTTP and HTTPS are accepted
 before Oracle Ubuntu's host firewall REJECT rule, and persisted.
 
-The gateway is installed and locally verified. External HTTP is still blocked,
-and `node.kadena.ws` has no A record as of the recorded verification. Naif needs
-to add GoDaddy DNS `node A 193.122.85.1` and allow inbound TCP 80 and 443 from
-`0.0.0.0/0` in the instance's Oracle security list / NSG. TCP 1789 already works.
+The gateway is installed and locally verified. After Naif's Oracle networking
+update, external HTTP returned 200 with the expected Host header. Both GoDaddy
+authoritative nameservers still return NXDOMAIN for `node.kadena.ws`; the DNS
+record must resolve before HTTPS activation. Naif needs to verify that GoDaddy
+DNS contains `node A 193.122.85.1` in the active kadena.ws zone. TCP 1789 already
+works.
 
 After those changes, run the staged activation script on the node:
 

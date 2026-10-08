@@ -6,8 +6,10 @@ umask 077
 source_dir=$(dirname -- "$(readlink -f -- "$0")")
 homepage=/var/www/kadena.ws/index.html
 dashboard=/home/zero/monitor/dist/index.html
-homepage_conf=/etc/nginx/sites-enabled/kadena.ws
-dashboard_conf=/etc/nginx/sites-enabled/nodes.kadena.ws
+homepage_enabled=/etc/nginx/sites-enabled/kadena.ws
+dashboard_enabled=/etc/nginx/sites-enabled/nodes.kadena.ws
+homepage_conf=$homepage_enabled
+dashboard_conf=$dashboard_enabled
 snippet=/etc/nginx/snippets/kadena-crawler-proxy.conf
 old_homepage_hash=f32ff13ed1cf29f2bb1ec1c19c795d270d8b523e669cb76f04c3bcac81d18014
 old_dashboard_hash=af82a5d1a86bd785452f42e1fd42047c5bf606c40b22f404312fa612d964b8d0
@@ -19,6 +21,28 @@ temporary_files=()
 
 die() { printf '%s\n' "$*" >&2; return 1; }
 hash() { sha256sum -- "$1" | awk '{print $1}'; }
+
+# Edit the canonical configuration target, leaving nginx's enabled symlink intact.
+resolve_nginx_conf() {
+    local enabled=$1 domain=$2 resolved
+    if [[ ! -f "$enabled" ]]; then
+        die "Expected an existing nginx configuration: $enabled"
+        return 1
+    fi
+    if ! resolved=$(readlink -e -- "$enabled"); then
+        die "Cannot resolve nginx configuration: $enabled"
+        return 1
+    fi
+    case "$resolved" in
+        "/etc/nginx/sites-enabled/$domain"|"/etc/nginx/sites-available/$domain") ;;
+        *) die "Unexpected nginx configuration target: $resolved"; return 1 ;;
+    esac
+    if [[ ! -f "$resolved" || -L "$resolved" ]]; then
+        die "Expected a regular nginx configuration target: $resolved"
+        return 1
+    fi
+    printf '%s\n' "$resolved"
+}
 
 assert_data_jobs() {
     [[ -d /home/zero/monitor/dist/data ]] || die 'Dashboard data directory is missing.'
@@ -77,15 +101,17 @@ trap 'on_failure 143 "$LINENO"' TERM
 trap cleanup EXIT
 
 [[ $EUID -eq 0 ]] || die 'Run this installer with sudo.'
-for command in python3 nginx systemctl sha256sum flock stat install pgrep; do
+for command in python3 nginx systemctl sha256sum flock stat install pgrep readlink; do
     command -v "$command" >/dev/null || die "Required command is missing: $command"
 done
 exec 9>/run/lock/kadena-ws-update.lock
 flock -n 9 || die 'Another Kadena website update is running.'
 
-for path in "$homepage" "$dashboard" "$homepage_conf" "$dashboard_conf"; do
+for path in "$homepage" "$dashboard"; do
     [[ -f "$path" && ! -L "$path" ]] || die "Expected an existing regular file: $path"
 done
+homepage_conf=$(resolve_nginx_conf "$homepage_enabled" kadena.ws)
+dashboard_conf=$(resolve_nginx_conf "$dashboard_enabled" nodes.kadena.ws)
 [[ ! -e "$snippet" || ( -f "$snippet" && ! -L "$snippet" ) ]] || die 'The crawler snippet is not a regular file.'
 [[ -s /etc/ssl/certs/ca-certificates.crt ]] || die 'System certificate trust store is missing.'
 assert_data_jobs
@@ -211,6 +237,7 @@ fi
 cp -a -- "$source_dir/SHA256SUMS" "$backup_dir/SHA256SUMS"
 
 # Recheck before the first mutation to avoid overwriting concurrent changes.
+[[ "$(resolve_nginx_conf "$homepage_enabled" kadena.ws)" == "$homepage_conf" && "$(resolve_nginx_conf "$dashboard_enabled" nodes.kadena.ws)" == "$dashboard_conf" ]] || die 'An enabled nginx configuration changed targets during preparation.'
 [[ "$(hash "$homepage")" == "$current_homepage_hash" && "$(hash "$dashboard")" == "$current_dashboard_hash" ]] || die 'Website files changed during preparation; no files were installed.'
 [[ "$(hash "$homepage_conf")" == "$current_homepage_conf_hash" && "$(hash "$backup_dir$homepage_conf")" == "$current_homepage_conf_hash" ]] || die 'Homepage nginx configuration changed during preparation.'
 [[ "$(hash "$dashboard_conf")" == "$current_dashboard_conf_hash" && "$(hash "$backup_dir$dashboard_conf")" == "$current_dashboard_conf_hash" ]] || die 'Dashboard nginx configuration changed during preparation.'
