@@ -1,0 +1,26 @@
+name: Uptime check
+
+# Checks every Kadena Nexus site every 15 minutes. On a failure it opens (or updates)
+# an issue labelled "uptime"; when the site is back it closes the issue.
+# GitHub pauses scheduled workflows in public repos after 60 days without commits;
+# any push to this repo re-enables it.
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const run = require('./.github/scripts/uptime.js');
+            await run({ github, context, core });

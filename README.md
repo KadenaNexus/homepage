@@ -9,6 +9,7 @@ Source of https://kadena.ws, part of [Kadena Nexus](https://kadena.ws).
 | `site/nginx-kadena.ws.conf` | nginx server block for kadena.ws. |
 | `deploy/kadena-ws-update/` | Mustafa's installer and node-gateway setup for the Oct 2026 update (homepage node card, nodes page, node.kadena.ws gateway, crawler proxy). |
 | `DEPLOY.md` | How to put a new version live (file swap on Hetzner). |
+| `.github/workflows/uptime.yml` | Every 15 minutes checks all seven live sites and opens an issue labelled `uptime` when one is down (closes it when it recovers). Watch this repo to get the alerts by email. |
 
 Built Oct 2026 to replace the GoDaddy site builder page. Design and HTML by Saudi.KDA with Claude; deployment by Mustafa Zahid.
 
