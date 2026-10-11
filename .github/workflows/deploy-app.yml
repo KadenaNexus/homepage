@@ -1,0 +1,64 @@
+# Shared deploy for Kadena Nexus apps (build and restart on the server).
+# The server holds one root-owned script per app (e.g. /usr/local/bin/deploy-earn) that
+# pulls main, builds, restarts pm2 and tags the release. The deploy user may run only
+# that script via sudo. This workflow just triggers it and checks the site afterwards.
+# Runs for main only. Callers must make this job depend on their test job.
+name: deploy-app
+
+on:
+  workflow_call:
+    inputs:
+      url:
+        description: "Live URL, checked after the deploy"
+        type: string
+        required: true
+    secrets:
+      DEPLOY_HOST: { required: false }
+      DEPLOY_USER: { required: false }
+      DEPLOY_KEY: { required: false }
+      DEPLOY_SCRIPT: { required: false }
+      DEPLOY_KNOWN_HOSTS: { required: false }
+
+jobs:
+  deploy:
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-${{ github.repository }}
+      cancel-in-progress: false
+    env:
+      HOST: ${{ secrets.DEPLOY_HOST }}
+      USER_: ${{ secrets.DEPLOY_USER }}
+      KEY: ${{ secrets.DEPLOY_KEY }}
+      SCRIPT: ${{ secrets.DEPLOY_SCRIPT }}
+      KNOWN: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+    steps:
+      - name: Check deploy is configured
+        id: cfg
+        run: |
+          if [ -z "$HOST" ] || [ -z "$USER_" ] || [ -z "$KEY" ] || [ -z "$SCRIPT" ]; then
+            echo "::notice::Deploy secrets are not set in this repo yet; skipping deploy."
+            echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          case "$SCRIPT" in deploy-*) ;; *) echo "::error::DEPLOY_SCRIPT must be a deploy-<app> script name"; exit 1;; esac
+
+      - name: Set up SSH
+        if: steps.cfg.outputs.skip != 'true'
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
+          if [ -n "$KNOWN" ]; then printf '%s\n' "$KNOWN" > ~/.ssh/known_hosts; else ssh-keyscan -T 15 "$HOST" > ~/.ssh/known_hosts 2>/dev/null; fi
+
+      - name: Run the server deploy script
+        if: steps.cfg.outputs.skip != 'true'
+        run: ssh -i ~/.ssh/deploy -o IdentitiesOnly=yes "$USER_@$HOST" "sudo -n /usr/local/bin/$SCRIPT"
+
+      - name: Check the live site answers
+        if: steps.cfg.outputs.skip != 'true'
+        run: |
+          for i in 1 2 3 4 5 6; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -H 'Cache-Control: no-cache' "${{ inputs.url }}")
+            [ "$code" = "200" ] && { echo "Live: ${{ inputs.url }} (HTTP 200)"; exit 0; }
+            sleep 10
+          done
+          echo "::error::${{ inputs.url }} answered HTTP $code after deploy; roll back on the server"; exit 1

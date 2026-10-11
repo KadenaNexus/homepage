@@ -1,0 +1,104 @@
+# Shared deploy for Kadena Nexus static sites (HTML files copied to the server).
+# Called from each site repo; see docs/DEPLOY-STANDARD.md.
+#
+#   main branch   -> live web root   (secret DEPLOY_PATH)
+#   other branches -> preview.kadena.ws/<repo>/<branch>/  (secret PREVIEW_PATH)
+#
+# Nothing is ever deleted on the server (no rsync --delete), so folders the server
+# owns, like nodes.kadena.ws/data, are never touched.
+name: deploy-static
+
+on:
+  workflow_call:
+    inputs:
+      source:
+        description: "Folder in the repo to publish, e.g. site or static-site"
+        type: string
+        required: true
+      files:
+        description: "Optional space-separated list of files inside source to publish (default: everything except config/docs)"
+        type: string
+        default: ""
+      url:
+        description: "Live URL, checked after a main deploy"
+        type: string
+        required: true
+    secrets:
+      DEPLOY_HOST: { required: false }
+      DEPLOY_USER: { required: false }
+      DEPLOY_KEY: { required: false }
+      DEPLOY_PATH: { required: false }
+      PREVIEW_PATH: { required: false }
+      DEPLOY_KNOWN_HOSTS: { required: false }
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-${{ github.repository }}-${{ github.ref_name }}
+      cancel-in-progress: false
+    env:
+      HOST: ${{ secrets.DEPLOY_HOST }}
+      USER_: ${{ secrets.DEPLOY_USER }}
+      KEY: ${{ secrets.DEPLOY_KEY }}
+      LIVE: ${{ secrets.DEPLOY_PATH }}
+      PREVIEW: ${{ secrets.PREVIEW_PATH }}
+      KNOWN: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+    steps:
+      - name: Check deploy is configured
+        id: cfg
+        run: |
+          if [ -z "$HOST" ] || [ -z "$USER_" ] || [ -z "$KEY" ]; then
+            echo "::notice::Deploy secrets are not set in this repo yet; skipping deploy."
+            echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            [ -n "$LIVE" ] || { echo "::error::DEPLOY_PATH secret is missing"; exit 1; }
+            echo "target=$LIVE" >> "$GITHUB_OUTPUT"; echo "live=true" >> "$GITHUB_OUTPUT"
+          else
+            if [ -z "$PREVIEW" ]; then echo "::notice::No PREVIEW_PATH secret; branch not deployed."; echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+            slug=$(echo "${GITHUB_REF_NAME}" | tr '/ ' '--' | tr -cd 'A-Za-z0-9._-')
+            echo "target=$PREVIEW/${GITHUB_REPOSITORY#*/}/$slug" >> "$GITHUB_OUTPUT"
+            echo "preview_url=https://preview.kadena.ws/${GITHUB_REPOSITORY#*/}/$slug/" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.cfg.outputs.skip != 'true'
+
+      - name: Set up SSH
+        if: steps.cfg.outputs.skip != 'true'
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
+          if [ -n "$KNOWN" ]; then printf '%s\n' "$KNOWN" > ~/.ssh/known_hosts; else ssh-keyscan -T 15 "$HOST" > ~/.ssh/known_hosts 2>/dev/null; fi
+
+      - name: Copy files
+        if: steps.cfg.outputs.skip != 'true'
+        env:
+          TARGET: ${{ steps.cfg.outputs.target }}
+          SRC: ${{ inputs.source }}
+          FILES: ${{ inputs.files }}
+        run: |
+          SSH="ssh -i ~/.ssh/deploy -o IdentitiesOnly=yes"
+          $SSH "$USER_@$HOST" "mkdir -p '$TARGET'"
+          if [ -n "$FILES" ]; then
+            (cd "$SRC" && rsync -av --chmod=F644 -e "$SSH" $FILES "$USER_@$HOST:$TARGET/")
+          else
+            rsync -av --chmod=D755,F644 -e "$SSH" \
+              --exclude '*.conf' --exclude '*.md' --exclude '*.txt' --exclude '.*' \
+              "$SRC/" "$USER_@$HOST:$TARGET/"
+          fi
+
+      - name: Check the live site answers
+        if: steps.cfg.outputs.live == 'true'
+        run: |
+          for i in 1 2 3; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -H 'Cache-Control: no-cache' "${{ inputs.url }}")
+            [ "$code" = "200" ] && { echo "Live: ${{ inputs.url }} (HTTP 200)"; exit 0; }
+            sleep 10
+          done
+          echo "::error::${{ inputs.url }} answered HTTP $code after deploy"; exit 1
+
+      - name: Preview link
+        if: steps.cfg.outputs.preview_url != ''
+        run: echo "::notice::Preview at ${{ steps.cfg.outputs.preview_url }}"

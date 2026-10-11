@@ -16,7 +16,7 @@ Reference implementations: [nodes.kadena.ws](https://github.com/KadenaNexus/netw
 8. **Favicon:** the Kadena Nexus mark (`nexus-mark.png` in this folder), unless the product has an approved mark of its own.
 9. **Colors:** use the shared tokens (teal `#1C637B`, orange `#E2710A`, ink/sand/mist/line); dark mode follows `prefers-color-scheme` plus a toggle.
 
-A new product is not ready to launch until it meets rules 1, 6 and 7.
+A new product is not ready to launch until it meets rules 1, 6 and 7. It must also deploy automatically from GitHub; see [DEPLOY-STANDARD.md](../DEPLOY-STANDARD.md).
 
 ## Drop-in HTML and CSS
 
