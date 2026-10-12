@@ -24,6 +24,7 @@ Reference implementations: [nodes.kadena.ws](https://github.com/KadenaNexus/netw
     2. a shorter wallet address (`k:abcd…wxyz`);
     3. shorter nav labels (keep a `data-short` label on each nav item, for example "Leaderboard" becomes "Leaders");
     4. let the nav scroll sideways inside its own box (`overflow-x:auto`), never the whole page.
+
     Never hide the wallet or the sign-in button to make room; the user must always see that they are connected. The product name may shorten with an ellipsis but the mark and "Kadena Nexus" link stay (the link hides only under rule 5). A script that measures and steps through these levels on resize is fine (Earn's `fitHeader()` in `public/app.js` is the reference); guard it so it also runs in tests without a browser (`window.addEventListener?.(...)`).
 
 A new product is not ready to launch until it meets rules 1, 6, 7, 8 and 10. It must also deploy automatically from GitHub; see [DEPLOY-STANDARD.md](../DEPLOY-STANDARD.md).
