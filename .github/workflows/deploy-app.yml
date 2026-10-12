@@ -1,64 +1,110 @@
-# Shared deploy for Kadena Nexus apps (build and restart on the server).
-# The server holds one root-owned script per app (e.g. /usr/local/bin/deploy-earn) that
-# pulls main, builds, restarts pm2 and tags the release. The deploy user may run only
-# that script via sudo. This workflow just triggers it and checks the site afterwards.
-# Runs for main only. Callers must make this job depend on their test job.
 name: deploy-app
-
 on:
   workflow_call:
     inputs:
-      url:
-        description: "Live URL, checked after the deploy"
-        type: string
-        required: true
+      url: { type: string, required: true }
     secrets:
       DEPLOY_HOST: { required: false }
       DEPLOY_USER: { required: false }
       DEPLOY_KEY: { required: false }
       DEPLOY_SCRIPT: { required: false }
-      DEPLOY_KNOWN_HOSTS: { required: false }
-
+permissions:
+  contents: read
 jobs:
   deploy:
-    if: github.ref_name == 'main'
+    name: deploy
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     concurrency:
       group: deploy-${{ github.repository }}
       cancel-in-progress: false
+    permissions:
+      contents: write
     env:
-      HOST: ${{ secrets.DEPLOY_HOST }}
-      USER_: ${{ secrets.DEPLOY_USER }}
-      KEY: ${{ secrets.DEPLOY_KEY }}
-      SCRIPT: ${{ secrets.DEPLOY_SCRIPT }}
-      KNOWN: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+      DEPLOY_SCRIPT: ${{ secrets.DEPLOY_SCRIPT }}
     steps:
-      - name: Check deploy is configured
-        id: cfg
+      - name: Check out source for deployment tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Validate deployment settings
+        id: app
         run: |
-          if [ -z "$HOST" ] || [ -z "$USER_" ] || [ -z "$KEY" ] || [ -z "$SCRIPT" ]; then
-            echo "::notice::Deploy secrets are not set in this repo yet; skipping deploy."
-            echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
+          set -euo pipefail
+          case "$GITHUB_REPOSITORY" in
+            KadenaNexus/marketplace) app=marketplace; label=Marketplace ;;
+            KadenaNexus/earn) app=earn; label=Earn ;;
+            KadenaNexus/adoption-index) app=adoption; label=Adoption ;;
+            *) echo "::error::This shared workflow is not authorized for this repository."; exit 1 ;;
+          esac
+          expected="deploy-$app"
+          test "$DEPLOY_HOST" = "89.167.14.58"
+          test "$DEPLOY_USER" = "deployer"
+          test -n "$DEPLOY_KEY"
+          test "$DEPLOY_SCRIPT" = "$expected" || test "$DEPLOY_SCRIPT" = "/usr/local/bin/$expected" || {
+            echo "::error::DEPLOY_SCRIPT is missing or does not match this repository."
+            exit 1
+          }
+          echo "app=$app" >> "$GITHUB_OUTPUT"
+          echo "label=$label" >> "$GITHUB_OUTPUT"
+          echo "script=/usr/local/bin/$expected" >> "$GITHUB_OUTPUT"
+      - name: Prepare pinned SSH connection
+        run: |
+          set -euo pipefail
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/id_ed25519"
+          chmod 600 "$HOME/.ssh/id_ed25519"
+          cat > "$HOME/.ssh/known_hosts" <<'EOF'
+          89.167.14.58 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEmNdcA2rlIHynqX/PNVjT+fDPFVwmhc1WDE6QN0kLel
+          EOF
+          chmod 600 "$HOME/.ssh/known_hosts"
+      - name: Run the fixed server deploy script
+        id: remote_deploy
+        env:
+          SCRIPT: ${{ steps.app.outputs.script }}
+          LABEL: ${{ steps.app.outputs.label }}
+        run: |
+          set -euo pipefail
+          if ! output=$(ssh -i "$HOME/.ssh/id_ed25519" \
+            -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$HOME/.ssh/known_hosts" -o ConnectTimeout=15 \
+            "$DEPLOY_USER@$DEPLOY_HOST" "sudo -n $SCRIPT" 2>&1); then
+            printf '%s\n' "$output"
+            exit 1
           fi
-          case "$SCRIPT" in deploy-*) ;; *) echo "::error::DEPLOY_SCRIPT must be a deploy-<app> script name"; exit 1;; esac
-
-      - name: Set up SSH
-        if: steps.cfg.outputs.skip != 'true'
+          printf '%s\n' "$output"
+          deployed_short_sha=$(printf '%s\n' "$output" | sed -nE \
+            "s/^$LABEL deployment succeeded at ([0-9a-f]{7,40})\\..*/\\1/p; s/^$LABEL is already at origin\\/main \\(([0-9a-f]{7,40})\\)\\.?/\\1/p" | tail -n 1)
+          [[ "$deployed_short_sha" =~ ^[0-9a-f]{7,40}$ ]] || {
+            echo "::error::Could not identify the deployed commit."
+            exit 1
+          }
+          echo "deployed_short_sha=$deployed_short_sha" >> "$GITHUB_OUTPUT"
+      - name: Check public site health
+        env:
+          URL: ${{ inputs.url }}
         run: |
-          install -m 700 -d ~/.ssh
-          printf '%s\n' "$KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
-          if [ -n "$KNOWN" ]; then printf '%s\n' "$KNOWN" > ~/.ssh/known_hosts; else ssh-keyscan -T 15 "$HOST" > ~/.ssh/known_hosts 2>/dev/null; fi
-
-      - name: Run the server deploy script
-        if: steps.cfg.outputs.skip != 'true'
-        run: ssh -i ~/.ssh/deploy -o IdentitiesOnly=yes "$USER_@$HOST" "sudo -n /usr/local/bin/$SCRIPT"
-
-      - name: Check the live site answers
-        if: steps.cfg.outputs.skip != 'true'
-        run: |
-          for i in 1 2 3 4 5 6; do
-            code=$(curl -s -o /dev/null -w '%{http_code}' -H 'Cache-Control: no-cache' "${{ inputs.url }}")
-            [ "$code" = "200" ] && { echo "Live: ${{ inputs.url }} (HTTP 200)"; exit 0; }
+          set -euo pipefail
+          for attempt in 1 2 3 4 5 6; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' -H 'Cache-Control: no-cache' "$URL" || true)
+            [ "$code" = "200" ] && exit 0
             sleep 10
           done
-          echo "::error::${{ inputs.url }} answered HTTP $code after deploy; roll back on the server"; exit 1
+          echo "::error::Live site returned HTTP $code after deployment" >&2
+          exit 1
+      - name: Tag deployed commit
+        env:
+          APP: ${{ steps.app.outputs.app }}
+          DEPLOYED_SHORT_SHA: ${{ steps.remote_deploy.outputs.deployed_short_sha }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          deployed_sha=$(git rev-parse --verify "${DEPLOYED_SHORT_SHA}^{commit}")
+          tag="deploy-${APP}-$(date -u +%F-%H%M)-${DEPLOYED_SHORT_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "$tag" "$deployed_sha"
+          git push origin "refs/tags/$tag"

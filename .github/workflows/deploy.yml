@@ -1,13 +1,15 @@
-# kadena.ws: main goes live, other branches go to preview.kadena.ws/homepage/<branch>/
 name: deploy
 on:
+  pull_request:
+    branches: [main]
   push:
-    paths: ["site/**", ".github/workflows/deploy*.yml"]
   workflow_dispatch:
 jobs:
   site:
     uses: ./.github/workflows/deploy-static.yml
     with:
       source: site
+      files: "index.html logo-kadena-nexus.png privacy-policy.html"
+      target: /var/www/kadena.ws
       url: https://kadena.ws/
     secrets: inherit

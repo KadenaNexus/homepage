@@ -1,91 +1,40 @@
 # Kadena Nexus deploy standard
 
-Every Kadena Nexus site deploys from GitHub. Merging to `main` is the deployment; nobody copies files to the server by hand. This applies to every current domain and to every new one.
+A successful pull request to main is the production release. Each site repository runs a check on pull requests and deploys only after a successful push to main.
 
-A new domain is not ready to launch until (1) it follows the [header standard](brand/HEADER-STANDARD.md) and (2) it deploys automatically as described here.
+## Current sites
 
-## Two kinds of site, two shared workflows
-
-Both live in this repo and are called from each site's repo with a few lines.
-
-| Kind | Sites | Workflow | What happens |
-|---|---|---|---|
-| Static | kadena.ws, kadenadevs.kadena.ws, nodes.kadena.ws, quantum.kadena.ws | [`deploy-static.yml`](../.github/workflows/deploy-static.yml) | `main`: files copied into the live web root. Other branches: copied to `preview.kadena.ws/<repo>/<branch>/` for review. Nothing on the server is ever deleted. |
-| App | marketplace.kadena.ws, earn.kadena.ws, adoption.kadena.ws, mine.kadena.ws (Garden) | [`deploy-app.yml`](../.github/workflows/deploy-app.yml) | `main` only, after tests pass: runs the app's own deploy script on the server (pull, build, restart, tag). |
-
-Both check the live URL afterwards and fail loudly if it doesn't answer.
-
-## Calling the workflow from a site repo
-
-Static site, in `.github/workflows/deploy.yml`:
-
-```yaml
-name: deploy
-on:
-  push:
-  workflow_dispatch:
-jobs:
-  site:
-    uses: KadenaNexus/homepage/.github/workflows/deploy-static.yml@main
-    with:
-      source: static-site            # folder to publish
-      # files: "index.html og.png"   # optional: only these files
-      url: https://kadenadevs.kadena.ws/
-    secrets: inherit
-```
-
-App, after its test job:
-
-```yaml
-name: deploy
-on:
-  push:
-    branches: [main]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 22 }
-      - run: npm ci && npm test
-  deploy:
-    needs: test
-    uses: KadenaNexus/homepage/.github/workflows/deploy-app.yml@main
-    with:
-      url: https://earn.kadena.ws/
-    secrets: inherit
-```
-
-## Server side (once per site)
-
-- One deploy user, `deployer`, with an SSH key used only by GitHub. No password login, no general sudo.
-- **Static site:** `deployer` may write into that site's web root only (for nodes.kadena.ws: `index.html` and `og.png`, never `dist/data`).
-- **App:** a root-owned script `/usr/local/bin/deploy-<app>` that pulls `main`, runs `npm ci` and the build, restarts its pm2 processes, keeps the previous build for rollback, tags the release, and exits non-zero on any failure. It never touches `.env`, databases or keys. `/etc/sudoers.d/deployer` allows `deployer` to run exactly these scripts and nothing else.
-
-## Repository secrets (Settings, Secrets and variables, Actions)
-
-| Secret | Static | App |
+| Type | Site | Deployment |
 |---|---|---|
-| `DEPLOY_HOST` | server address | server address |
-| `DEPLOY_USER` | `deployer` | `deployer` |
-| `DEPLOY_KEY` | private key | private key |
-| `DEPLOY_PATH` | live web root | |
-| `PREVIEW_PATH` | `/var/www/preview.kadena.ws` | |
-| `DEPLOY_SCRIPT` | | `deploy-<app>` |
-| `DEPLOY_KNOWN_HOSTS` | output of `ssh-keyscan <host>` (recommended) | same |
+| Static | kadena.ws | Copy site/index.html, site/logo-kadena-nexus.png, and site/privacy-policy.html to /var/www/kadena.ws |
+| Static | kadenadevs.kadena.ws | Copy static-site/index.html and static-site/og.png to /var/www/kadenadevs.kadena.ws |
+| Static | nodes.kadena.ws | Replace only /home/zero/monitor/dist/index.html. Never write dist/data. |
+| Static | quantum.kadena.ws | Copy index.html and nexus-mark.png. Preserve assessment.json and status.json. |
+| App | marketplace.kadena.ws | Run the fixed deploy-marketplace server script after checks. This deploys the frontend; the API process remains separate. |
+| App | earn.kadena.ws | Run the fixed deploy-earn server script after backend and Pact tests. |
+| App | adoption.kadena.ws | Run the fixed deploy-adoption server script after backend and site tests/build. |
 
-Until the secrets exist, the workflows skip quietly, so adding them to a repo early is safe.
+Mine/Garden is a later addition and is not configured yet.
 
-## Adding a new domain (checklist)
+Static workflows call deploy-static.yml. App workflows call deploy-app.yml after their own test job. The shared app workflow only permits the marketplace, earn, and adoption-index repositories and maps each repository to one fixed server script. Main-branch deployments fail if required secrets are missing or mismatched; they do not silently skip.
 
-1. Repo in KadenaNexus, header standard applied.
-2. DNS record at GoDaddy, nginx block and certificate on the server.
-3. Web root writable by `deployer` (static) or `deploy-<app>` script plus sudoers line (app).
-4. Secrets added to the repo.
-5. `deploy.yml` added (copy from above), first deploy watched in the Actions tab.
-6. URL added to the uptime check in `homepage/.github/scripts/uptime.js`.
+The shared workflows pin the server SSH host key. They do not need a DEPLOY_KNOWN_HOSTS secret. Static copies do not delete existing server files. The network monitor workflow writes to its existing index.html file and leaves its data directory alone.
 
-## What stays manual
+App server scripts check out origin/main, install/build, restart only the intended PM2 processes, verify local health, and restore the prior checkout/build on failure. They do not run database migrations or contract/key commands. After the server succeeds and the public URL returns HTTP 200, GitHub Actions creates and pushes a deploy tag with the deployed commit. The GitHub Actions token needs contents: write for that deploy job.
 
-Contract deployments and upgrades, private keys and payouts, `.env` files, nginx, firewall and databases. Those are changed by hand on the server by the technical lead.
+## Repository Actions secrets
+
+| Secret | Value or use |
+|---|---|
+| DEPLOY_HOST | 89.167.14.58. The organization-level secret can be inherited; a repository secret may override it. |
+| DEPLOY_USER | deployer |
+| DEPLOY_KEY | Private half of the deployer SSH key |
+| DEPLOY_PATH | Exact web root for a static site. For nodes.kadena.ws, use /home/zero/monitor/dist/index.html. |
+| DEPLOY_SCRIPT | App script name, such as deploy-marketplace, deploy-earn, or deploy-adoption. The shared workflow also accepts the full /usr/local/bin path. |
+| PREVIEW_PATH | Optional static branch preview root, /var/www/preview.kadena.ws |
+
+A pull request never receives a production deploy. Other branch pushes can be copied beneath PREVIEW_PATH when it is configured. DNS, HTTPS, and the noindex header for preview.kadena.ws still need the server administrator's manual setup before preview links are usable.
+
+## What remains manual
+
+DNS, nginx, certificates, firewall changes, production database migrations, contract deployments, contract keys, payouts, and .env files remain manual responsibilities of the technical lead. Add new domains only after the server root or app script, secrets, workflow, and HTTPS configuration have been reviewed.
