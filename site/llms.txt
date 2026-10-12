@@ -1,6 +1,6 @@
 # Kadena Nexus
 
-> Kadena Nexus is an independent, community-run project that builds tools for Kadena Community Edition (KCE), the Kadena proof-of-work blockchain as it runs today. It is based in Saudi Arabia, has been building since January 2026, and is not affiliated with Kadena LLC and is not an official kda-community project, though some products are built with individual community developers. Each product runs on its own kadena.ws subdomain and reads directly from Chainweb. Nothing on these sites is financial advice.
+> Kadena Nexus is an independent, community-run project that builds tools for Kadena Community Edition (KCE), the Kadena proof-of-work blockchain as it runs today. It is based in Saudi Arabia, has been building since January 2026, and is not affiliated with Kadena LLC. It works alongside the kda-community developers and the community DAO, building tools that support Kadena Community Edition and collaborating with them on new projects. Each product runs on its own kadena.ws subdomain and reads directly from Chainweb. Nothing on these sites is financial advice.
 
 Kadena Community Edition is the same Kadena chain and the same KDA coin, continued by former Kadena engineers and community developers after Kadena LLC announced on October 21, 2025 that it was ceasing operations. The community release (chainweb-node 3.0) took over at block 6,335,858 on November 8, 2025. Balances, accounts and Pact contracts carried over unchanged. Since release 3.1, network upgrades are activated by miner vote.
 
