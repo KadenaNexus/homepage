@@ -185,6 +185,11 @@ section{padding-block:clamp(4rem,9vw,7rem)}
 .about h2{font-size:clamp(1.9rem,3.4vw,2.8rem);line-height:1.08}
 .about .body p+p{margin-top:1rem}
 .about .body p{max-width:60ch}
+.glance{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:.55rem 1.4rem;margin:1.6rem 0 0;padding-top:1.4rem;border-top:1px solid var(--line);font-size:.98rem}
+.glance dt{color:var(--sand);font-weight:600}
+.glance dd{margin:0}
+.glance a{color:var(--teal)}
+@media (max-width:560px){.glance{grid-template-columns:1fr;gap:.15rem}.glance dd{margin-bottom:.6rem}}
 .cta{margin-top:4.5rem;padding:clamp(2rem,5vw,3.2rem);border-radius:20px;border:1px solid var(--line);background:var(--panel);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1.5rem}
 .cta h3{font-size:clamp(1.5rem,2.6vw,2rem);max-width:22ch}
 .cta p{margin-top:.5rem}
@@ -380,8 +385,15 @@ footer a:hover{color:var(--sand)}
       <div class="grid">
         <h2 id="about-title">Built by the community, from Saudi Arabia</h2>
         <div class="body">
-          <p>Kadena Nexus is an independent project run by Kadena holders and developers. When Kadena LLC wound down in late 2025, the chain kept running as Kadena Community Edition. We build what we wanted to have: honest data about how the network is doing, and practical ways to use it.</p>
+          <p>Kadena Nexus is an independent project run by Kadena holders and developers. When Kadena LLC wound down in late 2025, the chain kept running as <a href="/community-edition/" style="color:var(--teal)">Kadena Community Edition</a>. We build what we wanted to have: honest data about how the network is doing, and practical ways to use it.</p>
           <p>Everything here is funded by us and by the people who use it. We are not affiliated with Kadena LLC, and nothing on this site is financial advice.</p>
+        <dl class="glance" aria-label="Kadena Nexus at a glance">
+          <dt>Building since</dt><dd>January 2026</dd>
+          <dt>Based in</dt><dd>Saudi Arabia, with a Kadena mainnet node in Jeddah</dd>
+          <dt>Live</dt><dd>Network Monitor, Adoption Index, P2P Marketplace, Kadena Earn, Quantum-Safe Kadena, Kadena Devs</dd>
+          <dt>Code</dt><dd><a href="https://github.com/KadenaNexus">github.com/KadenaNexus</a>, MIT licensed</dd>
+          <dt>Talk to us</dt><dd><a href="https://t.me/KadenaNexus">Telegram</a> · <a href="https://x.com/KadenaNexus">X</a> · <a href="mailto:Saudi.KDA@kadena.ws">Saudi.KDA@kadena.ws</a></dd>
+        </dl>
         </div>
       </div>
       <div class="cta">
@@ -409,6 +421,7 @@ footer a:hover{color:var(--sand)}
       <a href="https://earn.kadena.ws/">Earn</a>
       <a href="https://quantum.kadena.ws/">Quantum</a>
       <a href="https://github.com/KadenaNexus">GitHub</a>
+      <a href="/community-edition/">Kadena Community Edition</a>
       <a href="/privacy-policy">Privacy policy</a>
     </nav>
   </div>
