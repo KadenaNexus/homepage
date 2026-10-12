@@ -23,7 +23,8 @@
 <link rel="icon" type="image/png" href="/nexus-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap"></noscript>
 <style>
 :root{
   --ink:#FFFFFF;        /* page */
@@ -593,10 +594,27 @@ footer a:hover{color:var(--sand)}
         ctx.fillRect(x - s/2, y - s/2, s, s);
       }
     }
-    if (!still) requestAnimationFrame(draw);
+    if (!still && visible) requestAnimationFrame(loop);
   }
-  size(); addEventListener('resize', () => { size(); if (still) draw(0); });
-  requestAnimationFrame(draw);
+  // Performance: draw at most 30 frames a second (the weave moves slowly, so it looks the same),
+  // pause while the hero is off screen, and start only after the page has loaded.
+  let visible = true, last = 0;
+  function loop(now){
+    if (!visible) return;
+    if (now - last < 33) { requestAnimationFrame(loop); return; }
+    last = now; draw(now);
+  }
+  const start = () => {
+    size();
+    addEventListener('resize', () => { size(); if (still) draw(0); });
+    if (still) { draw(0); return; }
+    new IntersectionObserver(([e]) => {
+      const was = visible; visible = e.isIntersecting;
+      if (visible && !was) requestAnimationFrame(loop);
+    }).observe(cv);
+    requestAnimationFrame(loop);
+  };
+  if (document.readyState === 'complete') start(); else addEventListener('load', start, { once: true });
 })();
 </script>
 </body>
