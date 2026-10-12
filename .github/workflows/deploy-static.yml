@@ -31,7 +31,7 @@ jobs:
           for file in $FILES; do test -s "$SOURCE/$file"; done
   deploy:
     name: deploy
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
     needs: checks
     runs-on: ubuntu-latest
     concurrency:
