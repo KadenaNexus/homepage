@@ -1,0 +1,35 @@
+# Kadena Nexus
+
+> Kadena Nexus is an independent, community-run project that builds tools for Kadena Community Edition (KCE), the Kadena proof-of-work blockchain as it runs today. It is based in Saudi Arabia, has been building since January 2026, and is not affiliated with Kadena LLC or the kda-community node maintainers. Each product runs on its own kadena.ws subdomain and reads directly from Chainweb. Nothing on these sites is financial advice.
+
+Kadena Community Edition is the same Kadena chain and the same KDA coin, continued by former Kadena engineers and community developers after Kadena LLC ceased operations on October 21, 2025. The community release (chainweb-node 3.0) took over at block 6,335,858 on November 8, 2025. Balances, accounts and Pact contracts carried over unchanged. Since release 3.1, network upgrades are activated by miner vote.
+
+Kadena Nexus also runs a Kadena mainnet node in Jeddah, Saudi Arabia (public API at node.kadena.ws).
+
+## Explainers
+
+- [What is Kadena Community Edition?](https://kadena.ws/community-edition/): what happened in 2025, what changed and what did not, and what it means for KDA holders
+- [Quantum-Safe Kadena](https://quantum.kadena.ws/): how Kadena's post-quantum accounts (SLH-DSA / SPHINCS+ q: accounts) will work, with a progress bar toward production that updates itself from the core developers' public work
+
+## Live products
+
+- [Kadena Network Monitor](https://nodes.kadena.ws/): live view of Kadena mainnet, with every block on all 20 chains, throughput, confirmation times and a map of public nodes. Free.
+- [Kadena Community Edition Adoption Index](https://adoption.kadena.ws/): one number, updated daily at 00:00 UTC, measuring whether KCE is used more or less than its summer 2026 baseline of 50. Built from active addresses, new contracts, TVL, hashrate and GitHub commits. Methodology: https://adoption.kadena.ws/methodology
+- [Kadena P2P Marketplace](https://marketplace.kadena.ws/): buy and sell KDA person to person. The seller's KDA is held in the Pact escrow contract free.p2p-escrow-v10 on Chain 1 until the seller confirms payment; disputes go to an arbiter. No sign-up and no platform fee, only network gas.
+- [Kadena Earn](https://earn.kadena.ws/): get paid in KDA for useful work for Kadena, such as testing apps, reporting bugs and explaining what is new. Every task is funded in escrow before it goes live, and every payout links to its transaction on Chainweb.
+- [Kadena Devs](https://kadenadevs.kadena.ws/): the projects built by the Kadena Nexus dev team, what is live and what is in development, and how developers can join.
+
+## In development
+
+- Kadena Garden (mine.kadena.ws): open-source solo mining through shared nodes, with Direct, Sweep or Convert payouts. A collaboration with Pascal (@CryptoPascal31).
+- ChainProof (chainproof.kadena.ws): QR-based proof of authenticity for physical goods, recorded on Kadena.
+- Kadena AgentPay AI (agentpay.kadena.ws): lets AI agents trigger payments through Pact contracts, with owner-set limits and approvals.
+- KadenaTrace (trace.kadena.ws): traces scam and fraud transactions, with findings attested on-chain.
+- Kadena Privacy (privacy.kadena.ws): zero-knowledge privacy tools in Pact, starting with Prove (show you hold at least a given amount of KDA without revealing your wallet).
+
+## Contact and code
+
+- Email: Saudi.KDA@kadena.ws
+- X: https://x.com/KadenaNexus
+- Telegram: https://t.me/KadenaNexus
+- Code: https://github.com/KadenaNexus (public repositories are MIT licensed)
