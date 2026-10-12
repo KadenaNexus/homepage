@@ -16,7 +16,7 @@ A successful pull request to main is the production release. Each site repositor
 
 Mine/Garden is a later addition and is not configured yet.
 
-Static workflows call deploy-static.yml. App workflows call deploy-app.yml after their own test job. The shared app workflow only permits the marketplace, earn, and adoption-index repositories and maps each repository to one fixed server script. Main-branch deployments fail if required secrets are missing or mismatched; they do not silently skip.
+Static workflows call deploy-static.yml. Its checks job also runs SEO checks before any deploy: every HTML page needs a title, meta description and canonical link; every index.html also needs an og:image, a twitter:card, valid JSON-LD and exactly one H1; a deployed robots.txt must point to a sitemap and must not block the whole site; a deployed sitemap.xml must be valid XML with at least one URL. A failure blocks the merge-to-deploy, with the reason in the job log. App workflows call deploy-app.yml after their own test job. The shared app workflow only permits the marketplace, earn, and adoption-index repositories and maps each repository to one fixed server script. Main-branch deployments fail if required secrets are missing or mismatched; they do not silently skip.
 
 The shared workflows pin the server SSH host key. They do not need a DEPLOY_KNOWN_HOSTS secret. Static copies do not delete existing server files. The network monitor workflow writes to its existing index.html file and leaves its data directory alone.
 
