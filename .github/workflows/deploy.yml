@@ -9,7 +9,7 @@ jobs:
     uses: ./.github/workflows/deploy-static.yml
     with:
       source: site
-      files: "index.html logo-kadena-nexus.png privacy-policy.html"
+      files: "index.html logo-kadena-nexus.png privacy-policy.html favicon.ico apple-touch-icon.png nexus-mark.png"
       target: /var/www/kadena.ws
       url: https://kadena.ws/
     secrets: inherit
