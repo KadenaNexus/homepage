@@ -29,6 +29,98 @@ jobs:
           set -euo pipefail
           test -d "$SOURCE"
           for file in $FILES; do test -s "$SOURCE/$file"; done
+      - name: SEO checks
+        env:
+          SOURCE: ${{ inputs.source }}
+          FILES: ${{ inputs.files }}
+        run: |
+          python3 - "$SOURCE" "$FILES" <<'PY'
+          """SEO checks for a static Kadena Nexus site before it deploys.
+
+          Usage: python3 seo_check.py <source dir> <space-separated deploy file list>
+
+          Every HTML page must have a title, a meta description and a canonical link.
+          Index pages (index.html, including folders like community-edition/index.html)
+          must also have an og:image, a twitter:card, valid JSON-LD and exactly one H1.
+          If robots.txt or sitemap.xml are deployed, they must be valid.
+          """
+          import json
+          import os
+          import re
+          import sys
+          import xml.dom.minidom
+
+          source, files = sys.argv[1], sys.argv[2].split()
+          errors = []
+
+
+          def html_files():
+              for f in files:
+                  path = os.path.join(source, f)
+                  if os.path.isdir(path):
+                      for root, _, names in os.walk(path):
+                          for n in names:
+                              if n.endswith(".html"):
+                                  yield os.path.join(root, n)
+                  elif f.endswith(".html"):
+                      yield path
+
+
+          def meta(t, attr, name):
+              m = re.search(r'<meta[^>]+%s="%s"[^>]*content="([^"]*)"' % (attr, re.escape(name)), t, re.I)
+              return m.group(1).strip() if m else ""
+
+
+          for path in html_files():
+              t = open(path, encoding="utf-8").read()
+              rel = os.path.relpath(path, source)
+              title = re.search(r"<title[^>]*>(.*?)</title>", t, re.I | re.S)
+              if not title or not title.group(1).strip():
+                  errors.append(f"{rel}: missing <title>")
+              if not meta(t, "name", "description"):
+                  errors.append(f"{rel}: missing meta description")
+              if not re.search(r'<link[^>]+rel="canonical"[^>]+href="https://', t, re.I):
+                  errors.append(f"{rel}: missing canonical link")
+              if os.path.basename(path) != "index.html":
+                  continue
+              if not meta(t, "property", "og:image"):
+                  errors.append(f"{rel}: missing og:image (link preview)")
+              if not meta(t, "name", "twitter:card"):
+                  errors.append(f"{rel}: missing twitter:card")
+              blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', t, re.S)
+              if not blocks:
+                  errors.append(f"{rel}: missing JSON-LD structured data")
+              for b in blocks:
+                  try:
+                      json.loads(b)
+                  except ValueError as e:
+                      errors.append(f"{rel}: JSON-LD is not valid JSON ({e})")
+              body = re.sub(r"<script.*?</script>", "", t, flags=re.S | re.I)
+              h1 = len(re.findall(r"<h1[\s>]", body, re.I))
+              if h1 != 1:
+                  errors.append(f"{rel}: has {h1} <h1> elements, expected 1")
+
+          if "robots.txt" in files:
+              r = open(os.path.join(source, "robots.txt"), encoding="utf-8").read()
+              if not re.search(r"^Sitemap:\s*https://", r, re.M | re.I):
+                  errors.append("robots.txt: missing 'Sitemap: https://...' line")
+              if re.search(r"^Disallow:\s*/\s*$", r, re.M | re.I):
+                  errors.append("robots.txt: blocks the whole site (Disallow: /)")
+
+          if "sitemap.xml" in files:
+              try:
+                  d = xml.dom.minidom.parse(os.path.join(source, "sitemap.xml"))
+                  if not d.getElementsByTagName("loc"):
+                      errors.append("sitemap.xml: lists no URLs")
+              except Exception as e:  # noqa: BLE001
+                  errors.append(f"sitemap.xml: not valid XML ({e})")
+
+          if errors:
+              for e in errors:
+                  print(f"::error::SEO check: {e}")
+              sys.exit(1)
+          print("SEO checks passed")
+          PY
   deploy:
     name: deploy
     if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
