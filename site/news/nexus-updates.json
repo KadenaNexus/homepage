@@ -1,0 +1,27 @@
+[
+  {
+    "date": "2026-10-13",
+    "text": "New guides: How to buy KDA in 2026 and the Kadena FAQ",
+    "links": {"How to buy KDA in 2026": "/buy-kda/", "Kadena FAQ": "/faq/"}
+  },
+  {
+    "date": "2026-10-12",
+    "text": "Published the explainer What is Kadena Community Edition?",
+    "links": {"What is Kadena Community Edition?": "/community-edition/"}
+  },
+  {
+    "date": "2026-10-09",
+    "text": "Launched the Quantum-Safe Kadena explainer at quantum.kadena.ws",
+    "links": {"quantum.kadena.ws": "https://quantum.kadena.ws/"}
+  },
+  {
+    "date": "2026-10-08",
+    "text": "Saudi Arabia's first Kadena mainnet node went live in Jeddah"
+  },
+  {
+    "date": "2026-10-01",
+    "display_date": "October 2026",
+    "text": "Launched the Kadena Community Edition Adoption Index at adoption.kadena.ws",
+    "links": {"adoption.kadena.ws": "https://adoption.kadena.ws/"}
+  }
+]
