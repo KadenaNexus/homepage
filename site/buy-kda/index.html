@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How to buy KDA (Kadena) in 2026 | Kadena Nexus</title>
+<meta name="description" content="Where to buy KDA now that Binance, OKX and Bybit have delisted it: exchanges that still list KDA, the USDC bridge route to Kadena, Kadena DEXs, and person-to-person trades in escrow.">
+<link rel="canonical" href="https://kadena.ws/buy-kda/">
+<meta property="og:title" content="How to buy KDA in 2026">
+<meta property="og:description" content="Exchanges that still list KDA, the USDC bridge route, Kadena DEXs and person-to-person trades in escrow.">
+<meta property="og:url" content="https://kadena.ws/buy-kda/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://kadena.ws/og/og-home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kadena.ws/og/og-home.jpg">
+<meta name="twitter:site" content="@KadenaNexus">
+<meta name="theme-color" content="#1C637B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap"></noscript>
+<style>
+:root{
+  --ink:#FFFFFF;        /* page */
+  --panel:#F2F6F7;      /* raised surfaces */
+  --line:#D6E0E4;       /* rules and outlines */
+  --sand:#123A48;       /* headline text, from the wordmark */
+  --mist:#4F6B76;       /* body text */
+  --teal:#1C637B;       /* brand teal, from the logo */
+  --pink:#E2710A;       /* brand orange, from the logo, used sparingly */
+  --live:#1C637B;       /* live status */
+  --deep:#123A48;       /* dark band */
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body:"Instrument Sans", "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+  --wrap:min(1180px, 100% - 2.5rem);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(4.5rem + env(safe-area-inset-top,0px))}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media (min-width:1500px){:root{--wrap:min(1400px, 100% - 5rem)}}
+body{margin:0;background:var(--ink);color:var(--mist);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img,svg,canvas{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--pink);outline-offset:3px;border-radius:4px}
+.wrap{width:var(--wrap);margin-inline:auto}
+h1,h2,h3{font-family:var(--display);color:var(--sand);font-weight:600;margin:0;letter-spacing:-.015em}
+p{margin:0}
+.skip{position:absolute;left:-999px;top:0}
+.skip:focus{left:1rem;top:1rem;background:var(--teal);color:#fff;padding:.5rem .8rem;z-index:10}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .2s}
+.top.scrolled{border-bottom-color:var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:4.25rem;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;font:700 1.15rem/1 var(--display);color:var(--sand)}
+.brand img{width:34px;height:auto}
+.nav{display:flex;gap:1.6rem;align-items:center}
+.nav a{text-decoration:none;font-size:.95rem;color:var(--mist)}
+.nav a:hover{color:var(--sand)}
+.nav .contact{color:var(--sand);border:1px solid var(--line);padding:.45rem .9rem;border-radius:999px}
+.nav .contact:hover{border-color:var(--pink)}
+.menu{display:none;background:none;border:1px solid var(--line);color:var(--sand);border-radius:8px;padding:.45rem .7rem;font:500 .9rem var(--body)}
+@media (max-width:760px){
+  .menu{display:block}
+  .nav{display:none;position:absolute;top:4.25rem;left:0;right:0;flex-direction:column;align-items:flex-start;gap:0;background:var(--ink);border-bottom:1px solid var(--line);padding:.5rem 1.25rem 1rem}
+  .nav.open{display:flex}
+  .nav a{padding:.7rem 0;width:100%}
+  .nav .contact{border:0;padding:.7rem 0}
+}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem;min-height:min(78vh,720px);align-items:center;padding-block:4rem}
+.hero h1{font-size:clamp(2.5rem,5.4vw,5.2rem);line-height:1.02;font-weight:700;max-width:12ch}
+.hero .lede{margin-top:1.4rem;font-size:1.2rem;max-width:34ch;color:var(--mist)}
+.actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:2.9rem;padding:0 1.3rem;border-radius:999px;font:600 1rem var(--body);text-decoration:none;border:1px solid var(--line);color:var(--sand);transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--sand)}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.primary:hover{background:#154f63;border-color:#154f63}
+.btn:not(.primary):hover{border-color:var(--teal)}
+#braid{position:absolute;inset:0;width:100%;height:100%}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.92) 30%,rgba(255,255,255,.6) 50%,rgba(255,255,255,0) 68%);pointer-events:none}
+@media (max-width:860px){
+  .hero .wrap{grid-template-columns:1fr;min-height:auto;padding-block:3.5rem 4rem}
+  #braid{inset:0;width:100%;opacity:.35}
+  .hero::after{background:linear-gradient(180deg,rgba(255,255,255,.2),var(--ink) 92%)}
+}
+
+/* live reading */
+.reading{margin-top:2.6rem;display:inline-grid;grid-template-columns:auto 1fr;gap:.2rem 1rem;align-items:baseline;padding:1rem 1.2rem;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.85);text-decoration:none;max-width:100%}
+.reading:hover{border-color:var(--teal)}
+.reading .num{grid-row:span 2;font:700 2.6rem/1 var(--display);color:var(--sand);font-variant-numeric:tabular-nums}
+.reading .what{color:var(--sand);font-weight:600}
+.reading .when{font-size:.9rem}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--live);margin-right:.45rem;vertical-align:middle;box-shadow:0 0 0 3px rgba(28,99,123,.18)}
+
+/* sections */
+section{padding-block:clamp(4rem,9vw,7rem)}
+.intro{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:2rem 4rem;align-items:end;margin-bottom:3rem}
+.intro h2{font-size:clamp(1.9rem,3.4vw,2.8rem);line-height:1.08}
+.intro p{max-width:56ch}
+@media (max-width:860px){.intro{grid-template-columns:1fr}}
+
+/* tools: a ledger of rows, not a card grid */
+.tools{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.tool{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,5fr) minmax(0,3fr);gap:1.2rem 2.5rem;padding:2rem 0;border-bottom:1px solid var(--line);align-items:start}
+.tool h3{font-size:1.55rem;line-height:1.15}
+.tool .host{display:block;margin-top:.35rem;font-size:.9rem;color:var(--mist)}
+.tool p{max-width:48ch}
+.tool dl{margin:0;display:grid;gap:.5rem}
+.tool dt{font-size:.82rem;color:var(--mist)}
+.tool dd{margin:0 0 .4rem;color:var(--sand);font-weight:500}
+.tool .go{margin-top:1.1rem}
+.pipeline{margin-top:3.5rem;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:1.5rem 2.5rem;align-items:start}
+.pipeline h3{font-size:1.55rem;line-height:1.15}
+.pipeline>div p{margin-top:.6rem;max-width:34ch}
+.pipeline ol{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel)}
+.pipeline li{display:grid;grid-template-columns:minmax(0,11rem) minmax(0,1fr) auto;gap:.4rem 1.5rem;align-items:baseline;padding:1.1rem 1.4rem;border-top:1px solid var(--line)}
+.pipeline li:first-child{border-top:0}
+.pipeline .name{font:600 1.05rem/1.3 var(--display);color:var(--sand)}
+.pipeline .desc{font-size:.95rem;max-width:52ch}
+.pipeline .stage{font-size:.85rem;color:var(--mist);white-space:nowrap}
+.pipeline .stage.now{color:var(--pink);font-weight:600}
+@media (max-width:900px){.pipeline{grid-template-columns:1fr}.pipeline li{grid-template-columns:1fr auto}.pipeline .desc{grid-column:1 / -1}.pipeline .stage{grid-column:2;grid-row:1}}
+.tag{display:inline-block;margin-left:.5rem;font:500 .78rem/1 var(--body);color:#fff;background:var(--pink);padding:.3rem .55rem;border-radius:6px;vertical-align:middle;letter-spacing:0}
+@media (max-width:900px){.tool{grid-template-columns:1fr}}
+
+/* security */
+.security{background:var(--deep);color:#B9CDD5;border-block:1px solid var(--deep)}
+.security h2,.security .facts code{color:#fff}
+.security .facts,.security .facts div{border-color:rgba(255,255,255,.18)}
+.security .grid{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:3rem;align-items:center}
+.security h2{font-size:clamp(1.9rem,3.4vw,2.8rem);line-height:1.08;max-width:16ch}
+.security p{margin-top:1.2rem;max-width:52ch}
+.facts{display:grid;gap:0;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.facts div{padding:1.25rem 1.4rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:1rem;align-items:baseline}
+.facts div:first-child{border-top:0}
+.facts b{font:700 1.5rem/1.1 var(--display);color:var(--pink);font-variant-numeric:tabular-nums;text-align:right}
+.facts code{font:500 .95rem/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--sand)}
+@media (max-width:860px){.security .grid{grid-template-columns:1fr}}
+
+/* about + contact */
+.about .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:2rem 4rem}
+.about h2{font-size:clamp(1.9rem,3.4vw,2.8rem);line-height:1.08}
+.about .body p+p{margin-top:1rem}
+.about .body p{max-width:60ch}
+.cta{margin-top:4.5rem;padding:clamp(2rem,5vw,3.2rem);border-radius:20px;border:1px solid var(--line);background:var(--panel);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1.5rem}
+.cta h3{font-size:clamp(1.5rem,2.6vw,2rem);max-width:22ch}
+.cta p{margin-top:.5rem}
+@media (max-width:860px){.about .grid{grid-template-columns:1fr}}
+
+footer{border-top:1px solid var(--line);padding-block:2rem 2.5rem;font-size:.9rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:1rem 2rem;justify-content:space-between}
+footer nav{display:flex;flex-wrap:wrap;gap:1.4rem}
+footer a{text-decoration:none}
+footer a:hover{color:var(--sand)}
+</style>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Organization",
+   "@id": "https://kadena.ws/#org",
+   "name": "Kadena Nexus",
+   "url": "https://kadena.ws/",
+   "logo": "https://kadena.ws/logo-kadena-nexus.png",
+   "sameAs": [
+    "https://x.com/KadenaNexus",
+    "https://t.me/KadenaNexus",
+    "https://github.com/KadenaNexus"
+   ]
+  },
+  {
+   "@type": "Article",
+   "headline": "How to buy KDA in 2026",
+   "description": "Where to buy KDA now that Binance, OKX and Bybit have delisted it: exchanges that still list KDA, the USDC bridge route to Kadena, Kadena DEXs, and person-to-person trades in escrow.",
+   "url": "https://kadena.ws/buy-kda/",
+   "inLanguage": "en",
+   "datePublished": "2026-10-13",
+   "dateModified": "2026-10-13",
+   "author": {
+    "@id": "https://kadena.ws/#org"
+   },
+   "publisher": {
+    "@id": "https://kadena.ws/#org"
+   },
+   "image": "https://kadena.ws/og/og-home.jpg",
+   "about": [
+    "Kadena",
+    "KDA",
+    "Buying KDA"
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Kadena Nexus",
+     "item": "https://kadena.ws/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "How to buy KDA",
+     "item": "https://kadena.ws/buy-kda/"
+    }
+   ]
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "Can I still buy KDA on Binance or Coinbase?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Binance moved KDA to withdrawal-only in late 2025 and its withdrawal window closed on January 12, 2026. Coinbase never listed KDA, and OKX and Bybit delisted it in 2025."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Which exchanges list KDA in 2026?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "MEXC and Gate.io list KDA for spot trading as of October 2026. Availability depends on your country and on identity checks, so confirm before you deposit."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "What is the cheapest way to buy KDA?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "For larger amounts, the USDC route is usually cheapest: send USDC to MetaMask, bridge it to kb-USDC on Kadena with the Kinesis bridge, then swap it for KDA on a Kadena DEX. You pay Ethereum gas once for the bridge, then very small Kadena fees."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Is it safe to buy KDA person to person?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "On the Kadena P2P Marketplace the seller's KDA is locked in a Pact escrow contract on chain 1 until the seller confirms your payment, so neither side holds the other's money. Start with a very small practice trade, for example between two of your own wallets."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Which Kadena chain should my KDA be on?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "KDA lives on 20 chains with the same account name on each. Wallets show a balance per chain and can move KDA between chains. Check which chain an exchange or app uses before sending: the P2P Marketplace, for example, works on chain 1."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
+<style>
+.policy{padding-block:3.5rem 5rem}
+.policy .wrap{max-width:720px}
+.policy h1{font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.05}
+.policy .eff{margin:.6rem 0 2.2rem;font-size:.95rem}
+.policy h2{font-size:1.35rem;margin:2.2rem 0 .7rem}
+.policy p{margin:0 0 .9rem}
+.policy ul{margin:0 0 1rem;padding-left:1.3rem}
+.policy li{margin-bottom:.3rem}
+.policy a{color:var(--teal)}
+.policy .lede{font-size:1.2rem;margin:1rem 0 2rem;color:var(--mist)}
+.policy h3{font-size:1.08rem;margin:1.4rem 0 .4rem}
+.kv{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:0 0 1rem}
+.kv dt,.kv dd{margin:0;padding:.8rem 1rem;border-top:1px solid var(--line)}
+.kv dt{color:var(--sand);font-weight:600;background:var(--panel)}
+.kv dt:first-of-type,.kv dt:first-of-type+dd{border-top:0}
+.timeline{list-style:none;padding:0;margin:0 0 1rem;border-left:2px solid var(--line)}
+.timeline li{position:relative;padding:0 0 1rem 1.2rem;margin:0}
+.timeline li::before{content:"";position:absolute;left:-7px;top:.45rem;width:12px;height:12px;border-radius:50%;background:var(--teal)}
+.timeline b{color:var(--sand)}
+.sources{font-size:.92rem}
+.updated{font-size:.9rem;margin-top:2.5rem}
+@media (max-width:560px){.kv{grid-template-columns:1fr}.kv dd{border-top:0;padding-top:0}}
+</style>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/nexus-mark.png">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Kadena Nexus home">
+      <img src="data:image/png;base64,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" alt="" width="34" height="30">
+      Kadena Nexus
+    </a>
+    <button class="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="/#projects">Projects</a>
+      <a href="/#security">Security</a>
+      <a href="/#about">About</a>
+      <a href="https://kadenadevs.kadena.ws/">Build</a>
+      <a class="contact" href="mailto:Saudi.KDA@kadena.ws">Contact us</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <article class="policy" aria-labelledby="buy-title">
+    <div class="wrap">
+      <h1 id="buy-title">How to buy KDA in 2026</h1>
+      <p class="lede">Since Kadena LLC wound down in late 2025, the biggest exchanges dropped KDA. You can still buy it in four ways: on a smaller exchange, by bridging USDC to Kadena, on a Kadena DEX, or person to person in escrow. This guide covers each one.</p>
+
+      <h2>Before you start: a Kadena wallet</h2>
+      <p>Keep KDA in a wallet where you control the keys. The <a href="https://kda-chain.org/wallets.html">Kadena Community Edition site</a> lists self-custody wallets:</p>
+      <ul>
+        <li><strong>eckoWALLET</strong>: browser extension and phone app.</li>
+        <li><strong>Linx Wallet</strong>: phone app aimed at new users.</li>
+        <li><strong>Zelcore</strong>: multi-chain wallet for desktop, phone and browser.</li>
+        <li><strong>Chainweaver</strong>: desktop wallet for developers.</li>
+      </ul>
+      <p>Your Kadena account name starts with <code>k:</code> followed by your public key. KDA can sit on any of Kadena's 20 chains under that same name, and wallets show a balance per chain.</p>
+
+      <h2>At a glance</h2>
+      <dl class="kv">
+        <dt>Exchange (fastest)</dt><dd>MEXC or Gate.io, then withdraw to your wallet</dd>
+        <dt>USDC bridge (low fees)</dt><dd>USDC on Ethereum → Kinesis bridge → kb-USDC → swap for KDA</dd>
+        <dt>Kadena DEX</dt><dd>Swap Kadena tokens for KDA on Mercatus, eckoDEX or KDSwap</dd>
+        <dt>Person to person</dt><dd>Kadena P2P Marketplace, seller's KDA held in escrow</dd>
+        <dt>Earn it</dt><dd>Paid community tasks on Kadena Earn</dd>
+      </dl>
+
+      <h2>1. Buy on an exchange that still lists KDA</h2>
+      <p>As of October 2026, <strong>MEXC</strong> and <strong>Gate.io</strong> list KDA for spot trading. Deposit USDT or another coin they support, buy KDA, then withdraw it to your own <code>k:</code> account. Check which Kadena chain the exchange withdraws to, and send a small test amount first.</p>
+      <p>Exchanges that no longer list KDA: Binance (withdrawals closed January 12, 2026), OKX and Bybit (delisted in 2025). Coinbase never listed it. Exchange availability depends on where you live and on identity checks, and listings can change, so confirm on the exchange before you deposit.</p>
+
+      <h2>2. Bridge USDC to Kadena</h2>
+      <p>This is the route the Kadena Community Edition site describes, and the one the Kadena Nexus team uses. It suits larger amounts because you pay Ethereum gas once.</p>
+      <ol>
+        <li><strong>Get USDC on Ethereum into MetaMask.</strong> Withdraw USDC from Robinhood or any exchange to your MetaMask address, and keep a little ETH there for gas.</li>
+        <li><strong>Bridge it to Kadena.</strong> Open the <a href="https://kinesis.kda-chain.org/bridge">Kinesis bridge</a>, connect MetaMask and eckoWALLET, and bridge your USDC. It arrives 1:1 as kb-USDC in eckoWALLET after a few minutes.</li>
+        <li><strong>Swap kb-USDC for KDA.</strong> Use a Kadena DEX such as <a href="https://mercatus.works/">Mercatus</a>. To spread purchases over time, a community dollar-cost-averaging tool runs on Mercatus; it is third-party, so try it with a separate wallet and a small amount first.</li>
+      </ol>
+      <p>To sell, run the same steps in reverse: swap KDA for kb-USDC, then bridge back to USDC on Ethereum.</p>
+
+      <h2>3. Swap on a Kadena DEX</h2>
+      <p>If you already hold tokens on Kadena, swap them for KDA on <a href="https://mercatus.works/">Mercatus</a>, eckoDEX or KDSwap. These run on Kadena itself, with no account or identity check, and you pay only small Kadena gas fees in KDA.</p>
+
+      <h2>4. Buy person to person, in escrow</h2>
+      <p>On the <a href="https://marketplace.kadena.ws/">Kadena P2P Marketplace</a>, a seller lists KDA at a price and accepts a payment method such as a bank transfer. The seller's KDA is locked in a Pact escrow contract on chain 1. You pay the seller directly, the seller confirms, and the contract releases the KDA to you. If something goes wrong, the trade can go to a dispute.</p>
+      <p>New to it? Make a first practice trade with a very small amount, for example between two of your own wallets, to see each step before you trade with someone else.</p>
+
+      <h2>5. Earn KDA instead</h2>
+      <p><a href="https://earn.kadena.ws/">Kadena Earn</a> pays KDA for useful community work: testing new apps, reporting bugs, writing guides and similar tasks. It is a good way to get your first KDA without buying any.</p>
+
+      <h2>Stay safe</h2>
+      <ul>
+        <li>Never share your seed phrase or private key. No real admin or support person will message you first.</li>
+        <li>Send a small test amount before any large transfer.</li>
+        <li>Double-check the chain number and the full <code>k:</code> account before you send.</li>
+        <li>Use a separate wallet for third-party tools until you trust them.</li>
+      </ul>
+
+      <h2>Questions people ask</h2>
+      <h3>Can I still buy KDA on Binance or Coinbase?</h3>
+      <p>No. Binance moved KDA to withdrawal-only in late 2025 and its withdrawal window closed on January 12, 2026. Coinbase never listed KDA, and OKX and Bybit delisted it in 2025.</p>
+      <h3>Which exchanges list KDA in 2026?</h3>
+      <p>MEXC and Gate.io list KDA for spot trading as of October 2026. Availability depends on your country and on identity checks, so confirm before you deposit.</p>
+      <h3>What is the cheapest way to buy KDA?</h3>
+      <p>For larger amounts, the USDC route is usually cheapest: send USDC to MetaMask, bridge it to kb-USDC on Kadena with the Kinesis bridge, then swap it for KDA on a Kadena DEX. You pay Ethereum gas once for the bridge, then very small Kadena fees.</p>
+      <h3>Is it safe to buy KDA person to person?</h3>
+      <p>On the <a href="https://marketplace.kadena.ws/">Kadena P2P Marketplace</a> the seller's KDA is locked in a Pact escrow contract on chain 1 until the seller confirms your payment, so neither side holds the other's money. Start with a very small practice trade, for example between two of your own wallets.</p>
+      <h3>Which Kadena chain should my KDA be on?</h3>
+      <p>KDA lives on 20 chains with the same account name on each. Wallets show a balance per chain and can move KDA between chains. Check which chain an exchange or app uses before sending: the P2P Marketplace, for example, works on chain 1.</p>
+
+      <h2>Sources</h2>
+      <ul class="sources">
+        <li><a href="https://kda-chain.org/how-to-buy.html">How to buy KDA</a> and <a href="https://kda-chain.org/wallets.html">Wallets</a>, Kadena Community Edition site</li>
+        <li><a href="https://kadenawallet.io/exchanges">Kadena (KDA) exchanges in 2026: active list and delistings</a>, kadenawallet.io</li>
+        <li><a href="https://www.mexc.com/how-to-buy/KDA">How to buy Kadena (KDA)</a>, MEXC</li>
+        <li><a href="/community-edition/">What is Kadena Community Edition?</a>, Kadena Nexus</li>
+      </ul>
+      <p class="updated">Written by Kadena Nexus, an independent community project. Not financial advice. Last updated October 13, 2026.</p>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; <span id="yr">2026</span> Kadena Nexus. Community-run, not financial advice.</span>
+    <nav aria-label="Footer">
+      <a href="https://nodes.kadena.ws/">Monitor</a>
+      <a href="https://adoption.kadena.ws/">Adoption Index</a>
+      <a href="https://marketplace.kadena.ws/">Marketplace</a>
+      <a href="https://kadenadevs.kadena.ws/">Devs</a>
+      <a href="https://earn.kadena.ws/">Earn</a>
+      <a href="https://quantum.kadena.ws/">Quantum</a>
+      <a href="https://github.com/KadenaNexus">GitHub</a>
+      <a href="/community-edition/">Kadena Community Edition</a>
+      <a href="/buy-kda/">How to buy KDA</a>
+      <a href="/faq/">Kadena FAQ</a>
+      <a href="/privacy-policy">Privacy policy</a>
+    </nav>
+  </div>
+</footer>
+<script>
+(() => {
+  const top = document.getElementById('top');
+  const onScroll = () => top.classList.toggle('scrolled', scrollY > 8);
+  addEventListener('scroll', onScroll, {passive:true}); onScroll();
+  const btn = document.querySelector('.menu'), nav = document.getElementById('nav');
+  btn.addEventListener('click', () => { const open = nav.classList.toggle('open'); btn.setAttribute('aria-expanded', open); btn.textContent = open ? 'Close' : 'Menu'; });
+  document.getElementById('yr').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
