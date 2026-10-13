@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kadena Nexus | Community projects on Kadena</title>
-<meta name="description" content="Community-built projects for Kadena Community Edition: a live network monitor, a daily adoption index, a non-custodial P2P escrow marketplace, paid community tasks and a quantum-safe accounts explainer.">
+<title>Kadena (KDA): live network, guides and community tools | Kadena Nexus</title>
+<meta name="description" content="Kadena (KDA) in 2026: watch the Kadena network live, learn what Kadena Community Edition is, buy KDA, trade person to person in escrow and earn KDA. Community tools by Kadena Nexus.">
 <link rel="canonical" href="https://kadena.ws/">
-<meta property="og:title" content="Kadena Nexus">
+<meta property="og:title" content="Kadena Nexus: community tools for Kadena (KDA)">
 <meta property="og:description" content="Live network data, a daily adoption index, P2P escrow, paid tasks and quantum-safe accounts for Kadena Community Edition.">
 <meta property="og:url" content="https://kadena.ws/">
 <meta property="og:type" content="website">
@@ -202,6 +202,16 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:1rem 2rem;justify-content:space-bet
 footer nav{display:flex;flex-wrap:wrap;gap:1.4rem}
 footer a{text-decoration:none}
 footer a:hover{color:var(--sand)}
+/* new to Kadena */
+.start{padding-block:clamp(2.5rem,6vw,4rem);border-bottom:1px solid var(--line);background:var(--panel)}
+.start h2{font-size:clamp(1.6rem,3vw,2.2rem);line-height:1.1}
+.start p{margin-top:.8rem;max-width:68ch}
+.start-links{list-style:none;margin:1.6rem 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.start-links a{display:block;height:100%;padding:1.1rem 1.2rem;border:1px solid var(--line);border-radius:14px;background:var(--ink);text-decoration:none}
+.start-links a:hover{border-color:var(--teal)}
+.start-links b{display:block;font:600 1.08rem/1.3 var(--display);color:var(--sand)}
+.start-links span{display:block;margin-top:.35rem;font-size:.95rem}
+@media (max-width:860px){.start-links{grid-template-columns:1fr}}
 </style>
 <script type="application/ld+json">
 {
@@ -217,7 +227,21 @@ footer a:hover{color:var(--sand)}
     "https://x.com/KadenaNexus",
     "https://t.me/KadenaNexus",
     "https://github.com/KadenaNexus"
-   ]
+   ],
+   "alternateName": [
+    "KadenaNexus",
+    "Kadena Nexus community"
+   ],
+   "description": "Independent community project building tools for Kadena (KDA) and Kadena Community Edition: a live network monitor, a daily adoption index, a P2P escrow marketplace, paid community tasks and guides.",
+   "foundingDate": "2026-01",
+   "knowsAbout": [
+    "Kadena",
+    "KDA",
+    "Kadena Community Edition",
+    "Chainweb",
+    "Pact"
+   ],
+   "email": "Saudi.KDA@kadena.ws"
   },
   {
    "@type": "WebSite",
@@ -260,7 +284,7 @@ footer a:hover{color:var(--sand)}
     <div class="wrap">
       <div>
         <h1 id="hero-title">Everything happening on Kadena, in one place</h1>
-        <p class="lede">Community-built projects for Kadena Community Edition: watch the network live, measure adoption daily, trade peer to peer, and get paid to build and contribute.</p>
+        <p class="lede">Community-built tools for Kadena (KDA) and Kadena Community Edition: watch the network live, measure adoption daily, trade peer to peer, and get paid to build and contribute.</p>
         <div class="actions">
           <a class="btn primary" href="https://nodes.kadena.ws/">Open the network monitor</a>
           <a class="btn" href="#projects">See all projects</a>
@@ -289,6 +313,18 @@ footer a:hover{color:var(--sand)}
         </a>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="start" aria-labelledby="start-title">
+    <div class="wrap">
+      <h2 id="start-title">New to Kadena?</h2>
+      <p>Kadena is a proof-of-work blockchain with 20 parallel chains and the Pact smart contract language. Since November 2025 the community has run it as Kadena Community Edition, with the same KDA and accounts. Start here:</p>
+      <ul class="start-links">
+        <li><a href="/community-edition/"><b>What is Kadena Community Edition?</b><span>What changed after Kadena LLC wound down, and what did not</span></a></li>
+        <li><a href="/buy-kda/"><b>How to buy KDA in 2026</b><span>Exchanges, the USDC bridge route, DEXs and person-to-person trades</span></a></li>
+        <li><a href="/faq/"><b>Kadena FAQ</b><span>Block time, chains, supply, mining and quantum safety</span></a></li>
+      </ul>
     </div>
   </section>
 
