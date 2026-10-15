@@ -189,7 +189,7 @@ footer a:hover{color:var(--sand)}
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="/nexus-mark.png">
-<meta name="generator" content="kadena-nexus-network-report 3">
+<meta name="generator" content="kadena-nexus-network-report 4">
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -286,6 +286,8 @@ footer a:hover{color:var(--sand)}
 }
 </script>
 <style>
+.policy .wrap{max-width:1040px}
+.policy .lede{font-size:1.25rem}
 .policy .crumb{font-size:.9rem;margin-bottom:.8rem}
 .policy .crumb a{color:var(--teal)}
 .policy .meta{font-size:.9rem;margin:-1rem 0 1.5rem}
@@ -377,7 +379,7 @@ footer a:hover{color:var(--sand)}
       <h2>Data and method</h2>
       <ul>
         <li><b>Source:</b> the public Chainweb GraphQL indexer (graphql.chaddex.com), queried block by block in 50-block windows on every chain. Each UTC day starts at the first block created at or after 00:00 UTC. New days are added every week.</li>
-        <li><b>Transactions</b> count non-coinbase transactions in canonical blocks; orphaned blocks are excluded. As a check, the October 14 total (4,716) is within 1% of the Kadena Network Monitor's own rolling 24-hour count (4,704) at the last update.</li>
+        <li><b>Transactions</b> count non-coinbase transactions in canonical blocks; orphaned blocks are excluded. As a check, the October 14 total (4,716) is within 1% of the Kadena Network Monitor's own rolling 24-hour count (4,659) at the last update.</li>
         <li><b>Recorder calls</b> are transactions whose code calls <code>free.block-history.attest</code>, found by reading the code of every transaction in every block. Other transactions are the total minus recorder calls.</li>
         <li><b>Hashrate</b> is the sum of each canonical block's difficulty over the day, divided by 86,400 seconds.</li>
         <li><b>Nodes</b> come from the public node crawler (nodes.denascan.com); <b>Adoption Index</b> from adoption.kadena.ws; <b>supply</b> from the indexer's network summary. These are read when the page is updated.</li>
