@@ -94,6 +94,7 @@ p{margin:0}
 .gcards p{font-size:.97rem}
 .gcards a{color:var(--teal);font-weight:600;font-size:.95rem}
 .gcards p+a{margin-top:auto}
+.gcards p.live{font-size:.9rem;padding:.6rem .75rem;border-radius:10px;background:color-mix(in srgb,var(--teal) 8%,transparent)}
 @media (max-width:1100px){.gcards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:620px){.gcards{grid-template-columns:1fr}}
 .hfaq .qa{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.6rem 3rem}
@@ -340,7 +341,9 @@ footer a:hover{color:var(--sand)}
         <article>
           <h2>Live Kadena network statistics</h2>
           <p>Each of the 20 chains targets a block every 30 seconds, about 40 blocks a minute across the network. The Kadena Network Monitor shows every block as it lands, throughput, confirmation times and where the nodes run. The Adoption Index publishes one daily number for how much Kadena is used.</p>
+          <p class="live"><strong>Today:</strong> <span data-auto="network-today">see the Kadena Network Monitor for live numbers</span>. Latest node release: <span data-auto="node-release">chainweb-node 3.2.1 (August 2026)</span>.</p>
           <a href="https://nodes.kadena.ws/">Open the Kadena Network Monitor</a>
+          <a href="/news/">Kadena news, updated daily</a>
           <a href="https://adoption.kadena.ws/">See today's Adoption Index</a>
         </article>
         <article>
