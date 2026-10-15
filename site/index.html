@@ -4,11 +4,13 @@
 <meta charset="utf-8">
 <script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kadena Nexus | Community projects on Kadena</title>
-<meta name="description" content="Community-built projects for Kadena Community Edition: a live network monitor, a daily adoption index, a non-custodial P2P escrow marketplace, paid community tasks and a quantum-safe accounts explainer.">
+<title>Kadena (KDA) Blockchain | Kadena Nexus Community Hub</title>
+<meta name="description" content="Explore Kadena blockchain and Community Edition: live network statistics, KDA adoption data, wallets, P2P trading, community rewards and developer tools.">
+<meta name="robots" content="index,follow">
 <link rel="canonical" href="https://kadena.ws/">
-<meta property="og:title" content="Kadena Nexus">
-<meta property="og:description" content="Live network data, a daily adoption index, P2P escrow, paid tasks and quantum-safe accounts for Kadena Community Edition.">
+<meta property="og:title" content="Kadena (KDA) Blockchain | Kadena Nexus">
+<meta property="og:site_name" content="Kadena Nexus">
+<meta property="og:description" content="Independent community hub for Kadena: live network statistics, KDA adoption data, P2P trading, community rewards, guides and developer tools.">
 <meta property="og:url" content="https://kadena.ws/">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://kadena.ws/og/og-home.jpg">
@@ -83,7 +85,22 @@ p{margin:0}
 .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
 .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem;min-height:min(78vh,720px);align-items:center;padding-block:4rem}
 .hero h1{font-size:clamp(2.5rem,5.4vw,5.2rem);line-height:1.02;font-weight:700;max-width:12ch}
-.hero .lede{margin-top:1.4rem;font-size:1.2rem;max-width:34ch;color:var(--mist)}
+.hero h1 .kicker{display:block;font:600 .8rem/1.4 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:1rem;max-width:40ch}
+.hero h1 .display{display:block}
+.guide{padding-block:clamp(3rem,6vw,4.5rem);border-bottom:1px solid var(--line)}
+.gcards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.25rem}
+.gcards article{border:1px solid var(--line);border-radius:16px;padding:1.4rem 1.3rem;background:var(--panel);display:flex;flex-direction:column;gap:.7rem}
+.gcards h2{font-size:1.2rem;line-height:1.2}
+.gcards p{font-size:.97rem}
+.gcards a{color:var(--teal);font-weight:600;font-size:.95rem}
+.gcards p+a{margin-top:auto}
+@media (max-width:1100px){.gcards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.gcards{grid-template-columns:1fr}}
+.hfaq .qa{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.6rem 3rem}
+.hfaq h3{font-size:1.1rem;margin-bottom:.4rem}
+.hfaq a,.hfaq .intro a{color:var(--teal)}
+@media (max-width:760px){.hfaq .qa{grid-template-columns:1fr}}
+.hero .lede{margin-top:1.4rem;font-size:1.2rem;max-width:40ch;color:var(--mist)}
 .actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2rem}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:2.9rem;padding:0 1.3rem;border-radius:999px;font:600 1rem var(--body);text-decoration:none;border:1px solid var(--line);color:var(--sand);transition:border-color .15s,background .15s}
 .btn:hover{border-color:var(--sand)}
@@ -217,14 +234,15 @@ footer a:hover{color:var(--sand)}
     "https://x.com/KadenaNexus",
     "https://t.me/KadenaNexus",
     "https://github.com/KadenaNexus"
-   ]
+   ],
+   "description": "Independent community hub and tools for Kadena Community Edition, based in Saudi Arabia."
   },
   {
    "@type": "WebSite",
    "@id": "https://kadena.ws/#website",
    "name": "Kadena Nexus",
    "url": "https://kadena.ws/",
-   "description": "Community-built projects for Kadena Community Edition: a live network monitor, a daily adoption index, a non-custodial P2P escrow marketplace, paid community tasks and a quantum-safe accounts explainer.",
+   "description": "Explore Kadena blockchain and Community Edition: live network statistics, KDA adoption data, wallets, P2P trading, community rewards and developer tools.",
    "inLanguage": "en",
    "publisher": {
     "@id": "https://kadena.ws/#org"
@@ -245,6 +263,7 @@ footer a:hover{color:var(--sand)}
     </a>
     <button class="menu" aria-expanded="false" aria-controls="nav">Menu</button>
     <nav class="nav" id="nav" aria-label="Main">
+      <a href="#kadena">What is Kadena</a>
       <a href="#projects">Projects</a>
       <a href="#security">Security</a>
       <a href="#about">About</a>
@@ -259,8 +278,8 @@ footer a:hover{color:var(--sand)}
     <canvas id="braid" aria-hidden="true"></canvas>
     <div class="wrap">
       <div>
-        <h1 id="hero-title">Everything happening on Kadena, in one place</h1>
-        <p class="lede">Community-built projects for Kadena Community Edition: watch the network live, measure adoption daily, trade peer to peer, and get paid to build and contribute.</p>
+        <h1 id="hero-title"><span class="kicker">Kadena blockchain – community hub, tools &amp; live network data</span><span class="display">Everything happening on Kadena, in one place</span></h1>
+        <p class="lede">Kadena is a proof-of-work blockchain powered by Chainweb and Pact smart contracts. Kadena Nexus is an independent community hub for it: live network monitoring, KDA adoption data, peer-to-peer trading, community rewards and guides.</p>
         <div class="actions">
           <a class="btn primary" href="https://nodes.kadena.ws/">Open the network monitor</a>
           <a class="btn" href="#projects">See all projects</a>
@@ -292,10 +311,38 @@ footer a:hover{color:var(--sand)}
     </div>
   </section>
 
+  <section class="guide" id="kadena" aria-label="Kadena guide">
+    <div class="wrap">
+      <div class="gcards">
+        <article>
+          <h2>What is Kadena (KDA)?</h2>
+          <p>Kadena is a proof-of-work blockchain that runs 20 chains in parallel, a design called Chainweb, so it can handle more transactions while keeping mining security. Smart contracts are written in Pact, a readable language built for safe on-chain code. KDA is the coin used for fees and paid to miners.</p>
+          <a href="/faq/">Kadena FAQ</a>
+        </article>
+        <article>
+          <h2>Kadena Community Edition today</h2>
+          <p>Kadena LLC wound down in October 2025. Since November 8, 2025 the chain has run as Kadena Community Edition: the same chain, KDA and accounts, with node software published by former Kadena engineers and community developers. Network upgrades are switched on by miner vote.</p>
+          <a href="/community-edition/">What is Kadena Community Edition?</a>
+        </article>
+        <article>
+          <h2>Live Kadena network statistics</h2>
+          <p>Each of the 20 chains targets a block every 30 seconds, about 40 blocks a minute across the network. The Kadena Network Monitor shows every block as it lands, throughput, confirmation times and where the nodes run. The Adoption Index publishes one daily number for how much Kadena is used.</p>
+          <a href="https://nodes.kadena.ws/">Open the Kadena Network Monitor</a>
+          <a href="https://adoption.kadena.ws/">See today's Adoption Index</a>
+        </article>
+        <article>
+          <h2>How to buy, store and use KDA</h2>
+          <p>Keep KDA in a wallet where you hold the keys, such as eckoWALLET or Linx. You can buy it on an exchange that still lists it, bridge USDC to Kadena and swap on a Kadena DEX, trade person to person in escrow, or earn it through community tasks. Crypto prices move a lot, so start small.</p>
+          <a href="/buy-kda/">How to buy KDA in 2026</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <section id="projects" aria-labelledby="projects-title">
     <div class="wrap">
       <div class="intro">
-        <h2 id="projects-title">Our projects on Kadena</h2>
+        <h2 id="projects-title">Kadena tools and projects</h2>
         <p>Each project runs on its own subdomain and reads directly from Chainweb. No accounts are needed to look around; you only connect a wallet when you trade or submit work.</p>
       </div>
 
@@ -378,6 +425,21 @@ footer a:hover{color:var(--sand)}
         <div><span>Funds taken</span><b>0</b></div>
         <div><span>Audit score</span><b>9.5 / 10</b></div>
         <div><span>Contract</span><code>free.p2p-escrow-v10</code></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hfaq" id="faq" aria-labelledby="hfaq-title">
+    <div class="wrap">
+      <div class="intro">
+        <h2 id="hfaq-title">Kadena FAQ and current development</h2>
+        <p>Short answers to what people ask most. More in the <a href="/faq/">Kadena FAQ</a>.</p>
+      </div>
+      <div class="qa">
+          <div><h3>Is Kadena still running?</h3><p>Yes. After Kadena LLC wound down, the community release of the node software took over on November 8, 2025. Miners kept mining, and the chain, KDA and accounts carried on unchanged as Kadena Community Edition.</p></div>
+          <div><h3>Is Kadena quantum safe?</h3><p>Not yet on mainnet. Community developers are adding q: accounts signed with SLH-DSA (SPHINCS+), a hash-based signature built to resist quantum computers. <a href="https://quantum.kadena.ws/">Quantum-Safe Kadena</a> explains it and tracks progress.</p></div>
+          <div><h3>Who develops Kadena now?</h3><p>Former Kadena engineers and community developers publish the node software under the kda-community organization on GitHub, together with the new community DAO. Kadena Nexus works alongside them, building tools that support Kadena Community Edition.</p></div>
+          <div><h3>Is Kadena Nexus the official Kadena team?</h3><p>No. Kadena Nexus is an independent community project and is not affiliated with Kadena LLC. Nothing on this site is financial advice.</p></div>
       </div>
     </div>
   </section>
