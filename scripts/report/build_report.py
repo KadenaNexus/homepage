@@ -227,6 +227,33 @@ def snapshot():
     return s
 
 
+
+# ---------------------------------------------------------------- update badge
+def next_update(last):
+    """The morning the weekly job will add new days: 8 days after the newest day,
+    or the day after the month ends if that comes first."""
+    month_end = dt.date(last.year, last.month, calendar.monthrange(last.year, last.month)[1])
+    nxt = last + dt.timedelta(days=8)
+    if last < month_end:
+        nxt = min(nxt, month_end + dt.timedelta(days=1))
+    return nxt
+
+
+def badge(updated, last):
+    """Top-right note: last update and when the next one is due. The day count is
+    worked out in the reader's browser, so it stays right between weekly rebuilds."""
+    nxt = next_update(last)
+    return (f'<p class="upd" data-next="{nxt.isoformat()}"><span class="dot" aria-hidden="true"></span>'
+            f'<span>Updated {updated:%b} {updated.day}, {updated.year} · '
+            f'<span class="nx">Next update around {nxt:%b} {nxt.day}</span></span></p>')
+
+
+BADGE_JS = """<script>
+(function(){var p=document.querySelector('.upd[data-next]');if(!p)return;
+var n=new Date(p.getAttribute('data-next')+'T03:30:00Z'),d=Math.ceil((n-new Date())/864e5),s=p.querySelector('.nx');
+if(!s)return;s.textContent=d>1?'Next update in '+d+' days':d===1?'Next update tomorrow':'Next update due today';})();
+</script>"""
+
 # ---------------------------------------------------------------- page shell
 def shell(site, page_title, desc, url, ld, extra_css, body):
     tpl = open(os.path.join(site, "community-edition", "index.html"), encoding="utf-8").read()
@@ -261,12 +288,20 @@ def shell(site, page_title, desc, url, ld, extra_css, body):
 .tw th:first-child,.tw td:first-child{{text-align:left}}
 .policy .dl{{display:inline-block;font-weight:600;margin-right:1.2rem}}
 .policy code{{font-size:.9em;background:var(--panel);padding:.05em .3em;border-radius:4px}}
+.policy .topbar{{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;margin-bottom:.8rem}}
+.policy .topbar .crumb{{margin:0}}
+.policy .upd{{margin:0 0 0 auto;font-size:.82rem;line-height:1.3;color:var(--sand);font-weight:500;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.35rem .8rem;display:inline-flex;align-items:center;gap:.45rem}}
+.policy .upd .nx{{white-space:nowrap}}
+.policy .upd .dot{{width:.5rem;height:.5rem;border-radius:50%;background:var(--teal);flex:none}}
+@media (max-width:620px){{.policy .upd{{margin-left:0}}}}
 {extra_css}</style>
 '''
     rest = tpl[head_end:]
     pre_main = rest[:rest.index('<main id="main">')]
     post_main = rest[rest.index("</main>") + len("</main>"):]
     page = head + pre_main + body + post_main
+    if 'class="upd"' in body:
+        page = page.replace("</body>", BADGE_JS + "\n</body>", 1)
     assert "—" not in page, "em-dash in report page"
     return page
 
@@ -437,7 +472,7 @@ def build_month(all_days, year, month, site, snap, published=None):
     body = f'''<main id="main">
   <article class="policy" aria-labelledby="r-title">
     <div class="wrap">
-      <p class="crumb"><a href="/">Kadena Nexus</a> / <a href="/reports/">Reports</a></p>
+      <div class="topbar"><p class="crumb"><a href="/">Kadena Nexus</a> / <a href="/reports/">Reports</a></p>{badge(pub, cur[-1]["dt"]) if not full else ""}</div>
       <h1 id="r-title">{ttl}</h1>
       <p class="lede">What happened on Kadena mainnet in {mname} {year}: transactions, blocks and mining hashrate across all 20 chains, measured by Kadena Nexus from public chain data{f", compared with {prev_lbl}" if prv else ""}.</p>
       <p class="meta">Published {fdate(pub0)}, {pub0.year}{updated} · Data through {fdate(last)}, {last.year} (UTC) · {status}</p>
@@ -515,7 +550,7 @@ def build_index(all_days, site, today):
     body = f'''<main id="main">
   <article class="policy" aria-labelledby="r-title">
     <div class="wrap">
-      <p class="crumb"><a href="/">Kadena Nexus</a> / Reports</p>
+      <div class="topbar"><p class="crumb"><a href="/">Kadena Nexus</a> / Reports</p>{badge(today, days[-1]["dt"])}</div>
       <h1 id="r-title">Kadena network reports</h1>
       <p class="lede">One report per month on how Kadena mainnet is used: transactions, blocks and mining hashrate across all 20 chains, measured by Kadena Nexus from public chain data. The current month's report is updated every week.</p>
       <h2>Monthly reports</h2>

@@ -265,6 +265,12 @@ footer a:hover{color:var(--sand)}
 .tw th:first-child,.tw td:first-child{text-align:left}
 .policy .dl{display:inline-block;font-weight:600;margin-right:1.2rem}
 .policy code{font-size:.9em;background:var(--panel);padding:.05em .3em;border-radius:4px}
+.policy .topbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;margin-bottom:.8rem}
+.policy .topbar .crumb{margin:0}
+.policy .upd{margin:0 0 0 auto;font-size:.82rem;line-height:1.3;color:var(--sand);font-weight:500;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.35rem .8rem;display:inline-flex;align-items:center;gap:.45rem}
+.policy .upd .nx{white-space:nowrap}
+.policy .upd .dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--teal);flex:none}
+@media (max-width:620px){.policy .upd{margin-left:0}}
 </style>
 </head>
 <body>
@@ -289,7 +295,7 @@ footer a:hover{color:var(--sand)}
 <main id="main">
   <article class="policy" aria-labelledby="r-title">
     <div class="wrap">
-      <p class="crumb"><a href="/">Kadena Nexus</a> / Reports</p>
+      <div class="topbar"><p class="crumb"><a href="/">Kadena Nexus</a> / Reports</p><p class="upd" data-next="2026-10-22"><span class="dot" aria-hidden="true"></span><span>Updated Oct 15, 2026 · <span class="nx">Next update around Oct 22</span></span></p></div>
       <h1 id="r-title">Kadena network reports</h1>
       <p class="lede">One report per month on how Kadena mainnet is used: transactions, blocks and mining hashrate across all 20 chains, measured by Kadena Nexus from public chain data. The current month's report is updated every week.</p>
       <h2>Monthly reports</h2>
@@ -332,6 +338,11 @@ footer a:hover{color:var(--sand)}
   btn.addEventListener('click', () => { const open = nav.classList.toggle('open'); btn.setAttribute('aria-expanded', open); btn.textContent = open ? 'Close' : 'Menu'; });
   document.getElementById('yr').textContent = new Date().getFullYear();
 })();
+</script>
+<script>
+(function(){var p=document.querySelector('.upd[data-next]');if(!p)return;
+var n=new Date(p.getAttribute('data-next')+'T03:30:00Z'),d=Math.ceil((n-new Date())/864e5),s=p.querySelector('.nx');
+if(!s)return;s.textContent=d>1?'Next update in '+d+' days':d===1?'Next update tomorrow':'Next update due today';})();
 </script>
 </body>
 </html>
