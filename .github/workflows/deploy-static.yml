@@ -7,6 +7,9 @@ on:
       target: { type: string, required: true }
       file_target: { type: boolean, default: false, required: false }
       url: { type: string, required: true }
+      # Optional build command run after checkout in both jobs, e.g. a page generator.
+      # Empty by default, so callers that do not pass it are unchanged.
+      build: { type: string, default: "", required: false }
     secrets:
       DEPLOY_HOST: { required: false }
       DEPLOY_USER: { required: false }
@@ -21,6 +24,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build generated files
+        if: inputs.build != ''
+        env:
+          BUILD: ${{ inputs.build }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash -euo pipefail -c "$BUILD"
       - name: Verify deployable files
         env:
           SOURCE: ${{ inputs.source }}
@@ -123,7 +132,7 @@ jobs:
           PY
   deploy:
     name: deploy
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
+    if: github.event_name == 'push' || ((github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && github.ref == 'refs/heads/main')
     needs: checks
     runs-on: ubuntu-latest
     concurrency:
@@ -172,6 +181,13 @@ jobs:
       - name: Check out caller repository
         if: steps.destination.outputs.skip != 'true'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build generated files
+        if: steps.destination.outputs.skip != 'true' && inputs.build != ''
+        env:
+          BUILD: ${{ inputs.build }}
+          GITHUB_TOKEN: ${{ github.token }}
+          DEPLOY_KEY: "" # the build command never sees the SSH key
+        run: bash -euo pipefail -c "$BUILD"
       - name: Prepare pinned SSH connection
         if: steps.destination.outputs.skip != 'true'
         run: |
