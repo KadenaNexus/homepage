@@ -189,7 +189,7 @@ footer a:hover{color:var(--sand)}
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="/nexus-mark.png">
-<meta name="generator" content="kadena-nexus-network-report 2">
+<meta name="generator" content="kadena-nexus-network-report 3">
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -377,7 +377,7 @@ footer a:hover{color:var(--sand)}
       <h2>Data and method</h2>
       <ul>
         <li><b>Source:</b> the public Chainweb GraphQL indexer (graphql.chaddex.com), queried block by block in 50-block windows on every chain. Each UTC day starts at the first block created at or after 00:00 UTC. New days are added every week.</li>
-        <li><b>Transactions</b> count non-coinbase transactions in canonical blocks; orphaned blocks are excluded. As a check, the October 14 total (4,716) is within 1% of the Kadena Network Monitor's own rolling 24-hour count (4,652) at the last update.</li>
+        <li><b>Transactions</b> count non-coinbase transactions in canonical blocks; orphaned blocks are excluded. As a check, the October 14 total (4,716) is within 1% of the Kadena Network Monitor's own rolling 24-hour count (4,704) at the last update.</li>
         <li><b>Recorder calls</b> are transactions whose code calls <code>free.block-history.attest</code>, found by reading the code of every transaction in every block. Other transactions are the total minus recorder calls.</li>
         <li><b>Hashrate</b> is the sum of each canonical block's difficulty over the day, divided by 86,400 seconds.</li>
         <li><b>Nodes</b> come from the public node crawler (nodes.denascan.com); <b>Adoption Index</b> from adoption.kadena.ws; <b>supply</b> from the indexer's network summary. These are read when the page is updated.</li>
@@ -388,7 +388,7 @@ footer a:hover{color:var(--sand)}
       <details><summary>Transactions by chain</summary><div class="tw"><table><thead><tr><th>Chain</th><th>Other transactions, Oct 1–14</th><th>Share</th></tr></thead><tbody><tr><td>0</td><td>12,266</td><td>20.6%</td></tr><tr><td>1</td><td>17,875</td><td>30.0%</td></tr><tr><td>2</td><td>22,019</td><td>36.9%</td></tr><tr><td>3</td><td>415</td><td>0.7%</td></tr><tr><td>4</td><td>416</td><td>0.7%</td></tr><tr><td>5</td><td>487</td><td>0.8%</td></tr><tr><td>6</td><td>418</td><td>0.7%</td></tr><tr><td>7</td><td>543</td><td>0.9%</td></tr><tr><td>8</td><td>428</td><td>0.7%</td></tr><tr><td>9</td><td>416</td><td>0.7%</td></tr><tr><td>10</td><td>417</td><td>0.7%</td></tr><tr><td>11</td><td>418</td><td>0.7%</td></tr><tr><td>12</td><td>415</td><td>0.7%</td></tr><tr><td>13</td><td>416</td><td>0.7%</td></tr><tr><td>14</td><td>417</td><td>0.7%</td></tr><tr><td>15</td><td>414</td><td>0.7%</td></tr><tr><td>16</td><td>417</td><td>0.7%</td></tr><tr><td>17</td><td>413</td><td>0.7%</td></tr><tr><td>18</td><td>418</td><td>0.7%</td></tr><tr><td>19</td><td>621</td><td>1.0%</td></tr></tbody></table></div></details>
 
       <h2>Follow the network live</h2>
-      <p>The <a href="https://nodes.kadena.ws/">Kadena Network Monitor</a> shows every block as it lands, throughput and confirmation times. The <a href="https://adoption.kadena.ws/">Adoption Index</a> updates daily. Other months: <a href="/reports/">all Kadena network reports</a>. New to Kadena? Start with <a href="/community-edition/">What is Kadena Community Edition?</a></p>
+      <p>The <a href="https://nodes.kadena.ws/">Kadena Network Monitor</a> shows every block as it lands, throughput and confirmation times. The <a href="https://adoption.kadena.ws/">Adoption Index</a> updates daily. Other months: <a href="/reports/">all Kadena network reports</a>. Supply and the frozen platform share: <a href="/tokenomics/">KDA tokenomics</a>. New to Kadena? Start with <a href="/community-edition/">What is Kadena Community Edition?</a></p>
       <p class="updated">Kadena Nexus is an independent community project and is not affiliated with Kadena LLC. Nothing here is financial advice.</p>
     </div>
   </article>
@@ -410,6 +410,7 @@ footer a:hover{color:var(--sand)}
       <a href="/faq/">Kadena FAQ</a>
       <a href="/news/">Kadena news</a>
       <a href="/reports/">Kadena network reports</a>
+      <a href="/tokenomics/">KDA tokenomics</a>
       <a href="/privacy-policy">Privacy policy</a>
     </nav>
   </div>
