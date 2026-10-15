@@ -93,6 +93,8 @@ p{margin:0}
 .gcards h2{font-size:1.2rem;line-height:1.2}
 .gcards p{font-size:.97rem}
 .gcards a{color:var(--teal);font-weight:600;font-size:.95rem}
+.gcards a.ico{display:inline-flex;align-items:flex-start;gap:.45rem}
+.gcards a.ico svg{flex:none;margin-top:.2em}
 .gcards p+a{margin-top:auto}
 .gcards p.live{font-size:.9rem;padding:.6rem .75rem;border-radius:10px;background:color-mix(in srgb,var(--teal) 8%,transparent)}
 @media (max-width:1100px){.gcards{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -343,10 +345,9 @@ footer a:hover{color:var(--sand)}
           <h2>Live Kadena network statistics</h2>
           <p>Each of the 20 chains targets a block every 30 seconds, about 40 blocks a minute across the network. The Kadena Network Monitor shows every block as it lands, throughput, confirmation times and where the nodes run. The Adoption Index publishes one daily number for how much Kadena is used.</p>
           <p class="live"><strong>Today:</strong> <span data-auto="network-today">4,704 transactions in the last 24 hours · Adoption Index 54 (baseline 50)</span>. Latest node release: <span data-auto="node-release">chainweb-node 3.2.1 (August 2026)</span>.</p>
-          <a href="https://nodes.kadena.ws/">Open the Kadena Network Monitor</a>
+          <a href="/tokenomics/" class="ico"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 8V1.5A6.5 6.5 0 0 1 14.5 8Z" fill="#eb6834"/></svg>KDA tokenomics, updated daily</a>
           <a href="/news/">Kadena news, updated daily</a>
           <a href="/reports/">Monthly network reports, updated weekly</a>
-          <a href="https://adoption.kadena.ws/">See today's Adoption Index</a>
         </article>
         <article>
           <h2>How to buy, store and use KDA</h2>
