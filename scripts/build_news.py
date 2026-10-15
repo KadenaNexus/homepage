@@ -264,7 +264,7 @@ def build_main(stats, stat_sources, releases, dev, updates):
         for label, value, note in stats:
             a(f'        <div><b>{esc(value)}</b><span class="lbl">{esc(label)}</span><span class="note">{esc(note)}</span></div>')
         a("      </div>")
-        a(f'      <p class="asof">As of {long_date(TODAY)} (UTC). Live numbers: <a href="https://nodes.kadena.ws/">Kadena Network Monitor</a> and <a href="https://adoption.kadena.ws/">Adoption Index</a>.</p>')
+        a(f'      <p class="asof">As of {long_date(TODAY)} (UTC). Live numbers: <a href="https://nodes.kadena.ws/">Kadena Network Monitor</a> and <a href="https://adoption.kadena.ws/">Adoption Index</a>. A month of daily data: <a href="/reports/kadena-network-october-2026/">Kadena network report, October 2026</a>.</p>')
     if releases or dev:
         a("")
         a("      <h2>Node releases and core development</h2>")
