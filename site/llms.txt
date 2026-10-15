@@ -10,8 +10,8 @@ Kadena Nexus also runs a Kadena mainnet node in Jeddah, Saudi Arabia (public API
 
 - [What is Kadena Community Edition?](https://kadena.ws/community-edition/): what happened in 2025, what changed and what did not, and what it means for KDA holders
 - [How to buy KDA in 2026](https://kadena.ws/buy-kda/): exchanges that still list KDA (Gate.io, AnonKyc, per kda-chain.org), the USDC bridge route via Kinesis to kb-USDC, the Mercatus DEX, person-to-person escrow and earning KDA
-- [Kadena FAQ](https://kadena.ws/faq/): block time (30 seconds per chain), 20 chains, 1 billion max supply, mining, quantum safety, wallets
-- [Kadena news](https://kadena.ws/news/): weekly Kadena Community Edition news, with node releases, core development from kda-community on GitHub, network numbers (24h transactions, block time, active chains, Adoption Index score) and new Kadena Nexus tools. Rebuilt every Monday
+- [Kadena FAQ](https://kadena.ws/faq/): block time (30 seconds per chain), 20 chains, 1 billion max supply, mining, quantum safety, wallets; current exchanges, wallets, node release and network numbers refreshed daily
+- [Kadena news](https://kadena.ws/news/): weekly Kadena Community Edition news, with node releases, core development from kda-community on GitHub, network numbers (24h transactions, block time, active chains, Adoption Index score) and new Kadena Nexus tools. Rebuilt every day
 - [Quantum-Safe Kadena](https://quantum.kadena.ws/): how Kadena's post-quantum accounts (SLH-DSA / SPHINCS+ q: accounts) will work, with a progress bar toward production that updates itself from the core developers' public work
 
 ## Live products

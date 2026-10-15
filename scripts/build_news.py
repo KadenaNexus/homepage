@@ -256,10 +256,10 @@ def build_main(stats, stat_sources, releases, dev, updates):
     a('  <article class="policy" aria-labelledby="news-title">')
     a('    <div class="wrap">')
     a('      <h1 id="news-title">Kadena news</h1>')
-    a('      <p class="lede">What changed on Kadena this week: node releases, core development, network numbers and new community tools. Updated every week by Kadena Nexus.</p>')
+    a('      <p class="lede">What is new on Kadena: node releases, core development, network numbers and new community tools. Updated every day by Kadena Nexus.</p>')
     if stats:
         a("")
-        a("      <h2>This week in numbers</h2>")
+        a("      <h2>The network today</h2>")
         a('      <div class="stats">')
         for label, value, note in stats:
             a(f'        <div><b>{esc(value)}</b><span class="lbl">{esc(label)}</span><span class="note">{esc(note)}</span></div>')
@@ -296,7 +296,7 @@ def build_main(stats, stat_sources, releases, dev, updates):
         a('        <li><a href="https://adoption.kadena.ws/methodology">Adoption Index methodology</a>, Kadena Nexus</li>')
     a('        <li><a href="https://kda-chain.org/">kda-chain.org</a>, the Kadena Community Edition site</li>')
     a("      </ul>")
-    a(f'      <p class="updated">Updated {long_date(TODAY)}. Built automatically every Monday from the public sources above by Kadena Nexus, an independent community project not affiliated with Kadena LLC. Not financial advice.</p>')
+    a(f'      <p class="updated">Updated {long_date(TODAY)}. Built automatically every day from the public sources above by Kadena Nexus, an independent community project not affiliated with Kadena LLC. Not financial advice.</p>')
     a("    </div>")
     a("  </article>")
     a("</main>")
@@ -319,7 +319,7 @@ def json_ld(description):
                 "@type": "CollectionPage",
                 "@id": PAGE_URL + "#page",
                 "name": "Kadena news",
-                "headline": f"Kadena news: weekly updates for {TODAY:%B} {TODAY.year}",
+                "headline": f"Kadena news: daily updates for {TODAY:%B} {TODAY.year}",
                 "description": description,
                 "url": PAGE_URL,
                 "inLanguage": "en",
@@ -351,10 +351,10 @@ def render(main_html):
     with open(TEMPLATE, encoding="utf-8") as f:
         t = f.read()
     month = f"{TODAY:%B} {TODAY.year}"
-    title = f"Kadena news: weekly updates for {month} | Kadena Nexus"
+    title = f"Kadena news: daily updates for {month} | Kadena Nexus"
     desc = (f"Kadena news for {month}: Kadena Community Edition node releases, core development, "
-            "network stats and new community tools, updated every week by Kadena Nexus.")
-    og_desc = "Node releases, core development, network numbers and new community tools for Kadena, every week."
+            "network stats and new community tools, updated every day by Kadena Nexus.")
+    og_desc = "Node releases, core development, network numbers and new community tools for Kadena, every day."
     t = sub_once(r"<title>.*?</title>", f"<title>{esc(title)}</title>", t, "title")
     t = sub_once(r'<meta name="description" content="[^"]*">', f'<meta name="description" content="{esc(desc)}">', t, "meta description")
     t = sub_once(r'<link rel="canonical" href="[^"]*">', f'<link rel="canonical" href="{PAGE_URL}">', t, "canonical")
