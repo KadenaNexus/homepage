@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh the changing facts on the Kadena FAQ and How to buy KDA pages.
+"""Refresh the changing facts on the Kadena Nexus homepage, FAQ and How to buy KDA pages.
 
 Run from anywhere: python3 scripts/update_facts.py   (runs daily before deploy)
 
@@ -31,7 +31,7 @@ import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = os.path.join(ROOT, "site")
-PAGES = {"faq/index.html": "https://kadena.ws/faq/", "buy-kda/index.html": "https://kadena.ws/buy-kda/"}
+PAGES = {"index.html": "https://kadena.ws/", "faq/index.html": "https://kadena.ws/faq/", "buy-kda/index.html": "https://kadena.ws/buy-kda/"}
 UA = "KadenaNexus-facts-updater (+https://kadena.ws/faq/)"
 TIMEOUT = 25
 OFFLINE = os.environ.get("FACTS_OFFLINE") == "1"
