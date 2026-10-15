@@ -197,9 +197,90 @@ def supply_bar(n):
     return "".join(parts) + f'<ul class="legend">{legend}</ul>'
 
 
-def year_bars(n):
-    rows = [{"label": y, "tick": y, "v": v} for y, v in PS_CLAIMED_BY_YEAR]
-    return br.bars(rows, "v", "KDA of platform share claimed", lambda v: f"{v / 1e6:g}M" if v else "0", "t-claims", h=260)
+# Platform share moved out of the PS allocation accounts, by quarter (claims are
+# released into those accounts and moved on the same day or soon after).
+PS_CLAIMED_BY_QUARTER = {
+    "2021-Q2": 1_200_000, "2021-Q3": 1_200_000, "2022-Q1": 3_200_000, "2022-Q3": 1_316_788, "2022-Q4": 3_883_211,
+    "2023-Q1": 7_784_000, "2023-Q2": 9_200_000, "2023-Q3": 4_000_000, "2023-Q4": 12_000_000, "2024-Q1": 10_000_000,
+    "2024-Q3": 8_400_000, "2024-Q4": 20_000_000, "2025-Q1": 10_000_000, "2025-Q3": 15_904_000, "2025-Q4": 1_968_000,
+}
+FIRST_CLAIM = dt.date(2021, 6, 30)
+SHUTDOWN = dt.date(2025, 10, 21)
+TEAL, ORANGE, INK, MUTED, GRID = "#1C637B", "#eb6834", "#123A48", "#4F6B76", "#D6E0E4"
+
+
+def timeline_chart(n):
+    """Quarterly bars from 2021 to today, with the last claim, the shutdown and the
+    fork marked, and the post-fork stretch shaded with what has been released since."""
+    quarters = [(y, q) for y in range(2021, TODAY.year + 1) for q in range(1, 5)
+                if (y, q) <= (TODAY.year, (TODAY.month - 1) // 3 + 1)]
+    w, h, pl, pr, pt, pb = 960, 360, 58, 14, 64, 44
+    iw, ih = w - pl - pr, h - pt - pb
+    bw = iw / len(quarters)
+    top = 25_000_000
+    def y(v):
+        return pt + ih - v / top * ih
+    def xd(d):      # x position of a date inside its quarter
+        qi = quarters.index((d.year, (d.month - 1) // 3 + 1))
+        q0 = dt.date(d.year, 3 * ((d.month - 1) // 3) + 1, 1)
+        return pl + (qi + (d - q0).days / 91.3) * bw
+    s = [f'<svg viewBox="0 0 {w} {h}" role="img" aria-labelledby="t-claims" class="chart tline">']
+    fx = xd(FORK_DATE)
+    moved = n["moved_since_fork"]
+    s.append(f'<rect x="{fx:.1f}" y="{pt - 6}" width="{w - pr - fx:.1f}" height="{ih + 6}" fill="{ORANGE}" fill-opacity=".08"/>')
+    for v in range(0, top + 1, 5_000_000):
+        s.append(f'<line x1="{pl}" x2="{w - pr}" y1="{y(v):.1f}" y2="{y(v):.1f}" stroke="{GRID}"/>'
+                 f'<text x="{pl - 8}" y="{y(v) + 4:.1f}" text-anchor="end" class="tk">{v // 1_000_000}M</text>')
+    for i, (yy, q) in enumerate(quarters):
+        key = f"{yy}-Q{q}"
+        v = PS_CLAIMED_BY_QUARTER.get(key, 0)
+        x0 = pl + i * bw + 2
+        post = (yy, q) > (2025, 4)
+        if v:
+            bh = v / top * ih
+            s.append(f'<g class="m"><rect x="{pl + i * bw:.1f}" y="{pt}" width="{bw:.1f}" height="{ih}" fill="transparent"/>'
+                     f'<path d="M{x0:.1f},{pt + ih} V{y(v) + 4:.1f} Q{x0:.1f},{y(v):.1f} {x0 + 4:.1f},{y(v):.1f} H{x0 + bw - 8:.1f} '
+                     f'Q{x0 + bw - 4:.1f},{y(v):.1f} {x0 + bw - 4:.1f},{y(v) + 4:.1f} V{pt + ih} Z" fill="{TEAL}"/>'
+                     f'<title>Q{q} {yy}: {v:,.0f} KDA claimed</title></g>')
+        elif post:
+            s.append(f'<g class="m"><rect x="{pl + i * bw:.1f}" y="{pt}" width="{bw:.1f}" height="{ih}" fill="transparent"/>'
+                     f'<rect x="{x0:.1f}" y="{pt + ih - 2}" width="{bw - 4:.1f}" height="2" fill="{ORANGE}"/>'
+                     f'<text x="{x0 + (bw - 4) / 2:.1f}" y="{pt + ih - 8}" text-anchor="middle" class="tk zero">0</text>'
+                     f'<title>Q{q} {yy}: nothing released (frozen)</title></g>')
+    for yy in range(2021, TODAY.year + 1):
+        idx = [i for i, (a, _) in enumerate(quarters) if a == yy]
+        cx = pl + (idx[0] + len(idx) / 2) * bw
+        s.append(f'<text x="{cx:.1f}" y="{h - 14}" text-anchor="middle" class="tk yr">{yy}</text>')
+        if yy > 2021:
+            xb = pl + idx[0] * bw
+            s.append(f'<line x1="{xb:.1f}" x2="{xb:.1f}" y1="{pt + ih}" y2="{pt + ih + 8}" stroke="{MUTED}"/>')
+    s.append(f'<line x1="{pl}" x2="{w - pr}" y1="{pt + ih}" y2="{pt + ih}" stroke="{MUTED}"/>')
+    # markers: last claim, shutdown, fork
+    lx, sx = xd(LAST_CLAIM), xd(SHUTDOWN)
+    s.append(f'<line x1="{lx:.1f}" x2="{lx:.1f}" y1="{pt - 22}" y2="{pt + ih}" stroke="{INK}" stroke-width="1.5"/>'
+             f'<circle cx="{lx:.1f}" cy="{pt - 22}" r="4" fill="{INK}"/>'
+             f'<text x="{lx - 8:.1f}" y="{pt - 40}" text-anchor="end" class="an"><tspan font-weight="700">Last claim</tspan> · Oct 9, 2025</text>'
+             f'<text x="{lx - 8:.1f}" y="{pt - 24}" text-anchor="end" class="an sub">Kadena LLC shutdown announced Oct 21</text>')
+    s.append(f'<line x1="{fx:.1f}" x2="{fx:.1f}" y1="{pt - 6}" y2="{pt + ih}" stroke="{ORANGE}" stroke-width="2" stroke-dasharray="5 4"/>'
+             f'<text x="{fx + 8:.1f}" y="{pt - 40}" class="an"><tspan font-weight="700" fill="{ORANGE}">Fork</tspan> · Nov 6, 2025</text>'
+             f'<text x="{fx + 8:.1f}" y="{pt - 24}" class="an sub">Platform share frozen</text>')
+    big = "0 KDA" if moved < 1 else f"{moved / 1e6:,.1f}M KDA"
+    cx = (fx + w - pr) / 2 + 3
+    s.append(f'<text x="{cx:.1f}" y="{pt + ih / 2 - 14:.1f}" text-anchor="middle" class="big">{big}</text>'
+             f'<text x="{cx:.1f}" y="{pt + ih / 2 + 10:.1f}" text-anchor="middle" class="an">released since</text>'
+             f'<text x="{cx:.1f}" y="{pt + ih / 2 + 28:.1f}" text-anchor="middle" class="an">the fork</text>'
+             f'<text x="{cx:.1f}" y="{pt + ih / 2 + 48:.1f}" text-anchor="middle" class="an sub">as of {TODAY:%b} {TODAY.day}, {TODAY.year}</text>')
+    s.append("</svg>")
+    return "".join(s)
+
+
+def year_table(n):
+    rows = [[y, f"{v:,.0f}", "Kadena LLC" + (" (last claim Oct 9)" if y == "2025" else "")] for y, v in PS_CLAIMED_BY_YEAR]
+    moved = n["moved_since_fork"]
+    for yy in range(2026, TODAY.year + 1):
+        rows.append([str(yy), f"{0 if moved < 1 else moved:,.0f}", "Frozen: nothing released" if moved < 1 else "Released by the community multisig"])
+    rows.append(["<b>Total</b>", f"<b>{110_056_000 + max(moved, 0):,.0f}</b>", f"<b>{n['frozen']:,.0f} still frozen</b>"])
+    return br.table(["Year", "Platform share claimed (KDA)", "By"], rows)
 
 
 def build(n):
@@ -276,8 +357,10 @@ def build(n):
       <details open><summary>Genesis allocations by label</summary>{br.table(["Genesis label", "Allocated", "Claimed", "Never claimed"], grp_rows)}</details>
       <p class="note">Labels are the keyset names in the genesis files. Only the platform share (PS) and the CoinList sale are named outright there.</p>
       <p>The <b>platform share</b> was the largest allocation: 197,400,000 KDA, released monthly from January 2021 to December 2024 and controlled by Kadena LLC's keysets PS_C0 to PS_C9. Kadena LLC claimed 110,056,000 of it, the last on {br.fdate(LAST_CLAIM)}, {LAST_CLAIM.year}, and left {FROZEN_AT_FORK:,.0f} unclaimed.</p>
-      <h3 id="t-claims">Platform share claimed by Kadena LLC, by year</h3>
-      {year_bars(n)}
+      <h3 id="t-claims">Platform share claimed, quarter by quarter: 2021 to today</h3>
+      <p>Each bar is platform share released and moved out of the PS accounts in that quarter. The first claim was on {br.fdate(FIRST_CLAIM)}, {FIRST_CLAIM.year}; the last on <b>October 9, 2025</b>, 12 days before Kadena LLC announced it was ceasing operations. The shaded stretch is everything since the fork. Hover a bar for the exact amount.</p>
+      {timeline_chart(n)}
+      <details open><summary>Platform share claimed by year</summary>{year_table(n)}</details>
       <p>Most of what was claimed went to two accounts. They are ordinary accounts under their own keys, so the fork did not change them.</p>
       {br.table(["Account", "Received from the platform share", "When", "Balance now"], rec_rows)}
 
@@ -322,6 +405,11 @@ def build(n):
 .legend b{{font-weight:600;color:var(--sand)}}
 .legend .pc{{color:var(--mist)}}
 .policy h3{{margin-top:1.4rem}}
+.tline .an{{font:600 14px var(--body);fill:{INK}}}
+.tline .an.sub{{font-weight:400;font-size:13px;fill:{MUTED}}}
+.tline .big{{font:700 30px var(--display);fill:{ORANGE}}}
+.tline .yr{{font-weight:600;fill:{INK}}}
+.tline .zero{{fill:{ORANGE};font-weight:600}}
 '''
     page = br.shell(SITE, "KDA tokenomics after the fork: supply and the frozen platform share",
                     f"Where the frozen Kadena platform share is ({n['frozen'] / 1e6:,.1f} million KDA), who controls it, and how much KDA has been mined and claimed, before and after the November 2025 fork. Read from mainnet daily.",
