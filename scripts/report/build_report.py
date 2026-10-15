@@ -27,7 +27,7 @@ import statistics as st
 import sys
 import urllib.request
 
-GENERATOR = "kadena-nexus-network-report 3"
+GENERATOR = "kadena-nexus-network-report 4"
 BASE = "https://kadena.ws/reports/"
 TEAL, INK, MUTED, GRID = "#1C637B", "#123A48", "#4F6B76", "#D6E0E4"
 G = "https://graphql.chaddex.com/graphql/v0"
@@ -272,6 +272,8 @@ def shell(site, page_title, desc, url, ld, extra_css, body):
     head += f'<meta name="generator" content="{GENERATOR}">\n'
     head += '<script type="application/ld+json">\n' + json.dumps(ld, indent=1, ensure_ascii=False) + "\n</script>\n"
     head += f'''<style>
+.policy .wrap{{max-width:1040px}}
+.policy .lede{{font-size:1.25rem}}
 .policy .crumb{{font-size:.9rem;margin-bottom:.8rem}}
 .policy .crumb a{{color:var(--teal)}}
 .policy .meta{{font-size:.9rem;margin:-1rem 0 1.5rem}}

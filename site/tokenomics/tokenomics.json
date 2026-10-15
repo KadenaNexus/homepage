@@ -1,11 +1,11 @@
 {
  "date": "2026-10-15",
- "height": 7317279,
+ "height": 7317298,
  "max_supply_nominal": 1000000000,
  "protocol_total": 990000000.4399993,
  "mining_total": 699999999.9999993,
- "mined": 150045461.46438003,
- "mining_left": 549954538.5356193,
+ "mined": 150045805.99556005,
+ "mining_left": 549954194.0044392,
  "reward_per_height": 18.13322,
  "reward_per_block": 0.906661,
  "per_day": 52223.6736,
@@ -76,8 +76,8 @@
   }
  },
  "keysets_unchanged": true,
- "circulating": 349835719.1643801,
- "indexer_circulating": 376269448.3044652,
+ "circulating": 349836063.6955601,
+ "indexer_circulating": 376269785.58235717,
  "remediated": 1567076,
  "not_created": 10000000,
  "receivers": [
