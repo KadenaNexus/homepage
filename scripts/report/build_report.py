@@ -27,7 +27,7 @@ import statistics as st
 import sys
 import urllib.request
 
-GENERATOR = "kadena-nexus-network-report 2"
+GENERATOR = "kadena-nexus-network-report 3"
 BASE = "https://kadena.ws/reports/"
 TEAL, INK, MUTED, GRID = "#1C637B", "#123A48", "#4F6B76", "#D6E0E4"
 G = "https://graphql.chaddex.com/graphql/v0"
@@ -505,7 +505,7 @@ def build_month(all_days, year, month, site, snap, published=None):
       <details><summary>Transactions by chain</summary>{table(["Chain", f"{'Other t' if rec_in_month else 'T'}ransactions, {rng}", "Share"], [[c, fmt(chain_c[c]), f"{chain_c[c]/tot_c*100:.1f}%"] for c in range(20)])}</details>
 
       <h2>Follow the network live</h2>
-      <p>The <a href="https://nodes.kadena.ws/">Kadena Network Monitor</a> shows every block as it lands, throughput and confirmation times. The <a href="https://adoption.kadena.ws/">Adoption Index</a> updates daily. Other months: <a href="/reports/">all Kadena network reports</a>. New to Kadena? Start with <a href="/community-edition/">What is Kadena Community Edition?</a></p>
+      <p>The <a href="https://nodes.kadena.ws/">Kadena Network Monitor</a> shows every block as it lands, throughput and confirmation times. The <a href="https://adoption.kadena.ws/">Adoption Index</a> updates daily. Other months: <a href="/reports/">all Kadena network reports</a>. Supply and the frozen platform share: <a href="/tokenomics/">KDA tokenomics</a>. New to Kadena? Start with <a href="/community-edition/">What is Kadena Community Edition?</a></p>
       <p class="updated">Kadena Nexus is an independent community project and is not affiliated with Kadena LLC. Nothing here is financial advice.</p>
     </div>
   </article>

@@ -1,0 +1,124 @@
+{
+ "date": "2026-10-15",
+ "height": 7317250,
+ "max_supply_nominal": 1000000000,
+ "protocol_total": 990000000.4399993,
+ "mining_total": 699999999.9999993,
+ "mined": 150044935.60100004,
+ "mining_left": 549955064.3989992,
+ "reward_per_height": 18.13322,
+ "reward_per_block": 0.906661,
+ "per_day": 52223.6736,
+ "next_step": [
+  7446000,
+  18.08092
+ ],
+ "mining_ends_year": 2138,
+ "genesis": 290000000.44,
+ "genesis_entries": 1318,
+ "claimed": 201357333.70000002,
+ "frozen": 87344000.0,
+ "frozen_entries": 200,
+ "frozen_by_chain": {
+  "0": 2800000.0,
+  "1": 1200000.0,
+  "2": 1200000.0,
+  "3": 1200000.0,
+  "4": 1200000.0,
+  "5": 16000000.0,
+  "6": 16000000.0,
+  "7": 16000000.0,
+  "8": 16000000.0,
+  "9": 15744000.0
+ },
+ "moved_since_fork": 0.0,
+ "other_unclaimed": 1298666.7400000005,
+ "groups": {
+  "PS": {
+   "total": 197400000.0,
+   "claimed": 110056000.0,
+   "unclaimed": 87344000.0
+  },
+  "SB": {
+   "total": 17165577.440000005,
+   "claimed": 16162510.700000007,
+   "unclaimed": 1003066.7400000005
+  },
+  "SA": {
+   "total": 4500000.0,
+   "claimed": 4204400.0,
+   "unclaimed": 295600.0
+  },
+  "Coinlist": {
+   "total": 20000000.0,
+   "claimed": 20000000.0,
+   "unclaimed": 0.0
+  },
+  "CS": {
+   "total": 20000005.0,
+   "claimed": 20000005.0,
+   "unclaimed": 0.0
+  },
+  "ST": {
+   "total": 23334418.0,
+   "claimed": 23334418.0,
+   "unclaimed": 0.0
+  },
+  "FTS": {
+   "total": 5000000.0,
+   "claimed": 5000000.0,
+   "unclaimed": 0.0
+  },
+  "EB": {
+   "total": 2600000.0,
+   "claimed": 2600000.0,
+   "unclaimed": 0.0
+  }
+ },
+ "keysets_unchanged": true,
+ "circulating": 349835193.30100006,
+ "indexer_circulating": 376268928.78771216,
+ "remediated": 1567076,
+ "not_created": 10000000,
+ "receivers": [
+  {
+   "account": "w:DD-js2J0pYzsFkqpaTckDmHAH3bVLu5JqwyIbx0yJbg:keys-2",
+   "received_platform_share": 78272000,
+   "period": "October 2023 \u2013 October 2025",
+   "balance_now": 2342576.129089
+  },
+  {
+   "account": "w:u-on-LXLTkp7DLszyPLphqfDzS6WTvfTtqNaLvEDrAI:keys-2",
+   "received_platform_share": 24867211,
+   "period": "October 2022 \u2013 August 2023",
+   "balance_now": 3.037571
+  }
+ ],
+ "keyholders": [
+  {
+   "name": "Edmund Noble",
+   "public_key": "4a6a31a21c0561a05b0d608bd27e9042e2d6d66eca855c7b5a20d052398257a9"
+  },
+  {
+   "name": "Jose Cardona",
+   "public_key": "128ad09365148288f27c16ce4ee3aceb524e00717cb253cb9f233bdea59b227e"
+  },
+  {
+   "name": "Louis Page",
+   "public_key": "b21b3614b1e36c9b15d74efb4f3acaa846e2d96e81aa1661ae5686c8cbc36e7c"
+  },
+  {
+   "name": "Pascal Sclafer",
+   "public_key": "be6918da77866bd20fc2f6581dc9cdacd98372b9c427ac6f9e4f731f7861bca8"
+  },
+  {
+   "name": "Tadeas Kmenta",
+   "public_key": "09f3981dc8855bc5eea026d266c9f055eae79dc9bfb8a34a6af50dad062be55a"
+  }
+ ],
+ "fork": {
+  "block": 6332978,
+  "date": "2025-11-06",
+  "frozen_at_fork": 87344000.0
+ }
+}

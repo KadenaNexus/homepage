@@ -9,8 +9,9 @@ explanations around them stay hand-written. Sources:
                                   Community Edition site
   - kda-chain.org/wallets.html    self-custody wallets listed there
   - GitHub kda-community/chainweb-node latest release
-  - Kadena Network Monitor 24h transactions, Adoption Index score, KDA in
-    circulation from the public Chainweb GraphQL indexer
+  - Kadena Network Monitor 24h transactions and Adoption Index score
+  - KDA in circulation and the frozen platform share from site/tokenomics/
+    tokenomics.json (built just before by scripts/tokenomics/build_tokenomics.py)
 
 Safety: every source has a timeout and a sanity check. If a source fails or
 looks wrong, that marker keeps its current text. The FAQPage JSON-LD answers
@@ -128,12 +129,14 @@ def network_today():
     return " · ".join(parts)
 
 
-def supply():
-    q = json.dumps({"query": "{ networkInfo { coinsInCirculation } }"}).encode()
-    v = float(json.loads(fetch("https://graphql.chaddex.com/graphql/v0", q))["data"]["networkInfo"]["coinsInCirculation"])
-    if not 2e8 < v < 1e9:
-        raise ValueError(f"supply {v}")
-    return f"about {v / 1e6:.0f} million KDA"
+def tokenomics():
+    """Circulating supply and frozen platform share, as counted by
+    scripts/tokenomics/build_tokenomics.py earlier in the same build."""
+    t = json.load(open(os.path.join(SITE, "tokenomics", "tokenomics.json")))
+    v, fz = float(t["circulating"]), float(t["frozen"])
+    if not (2e8 < v < 1e9 and 0 <= fz < 2e8):
+        raise ValueError(f"tokenomics {v} {fz}")
+    return v, fz
 
 
 # ---------------------------------------------------------------- facts
@@ -160,7 +163,7 @@ def gather():
     put(wallets, lambda w: {"wallets-and": esc(join(w, "and"))})
     put(node_release, lambda s: {"node-release": esc(s)})
     put(network_today, lambda s: {"network-today": esc(s)})
-    put(supply, lambda s: {"supply": esc(s)})
+    put(tokenomics, lambda s: {"supply": f"about {s[0] / 1e6:.0f} million KDA", "frozen": f"{s[1]:,.0f} KDA"})
     return facts
 
 
