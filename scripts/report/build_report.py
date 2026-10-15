@@ -231,13 +231,19 @@ except OSError:
 
 PERIOD = "in October" if FULL else f"from October 1 to {fdate(last)}"
 rec_story = ""
+# last day with any recorder call (the developer ended the service in October 2026)
+rec_last = max((d["dt"] for d in days if d["recorder_transactions"] > 0), default=None)
+ended = rec_last is not None and rec_last < last
 if rec_sep:
     rec_story = (f"In late September about {rec_share_sep:.0f}% of all Kadena transactions were automated calls to one contract, "
-                 f"<code>free.block-history</code>, which keeps an on-chain record of each block's hash and time: about "
+                 f"<code>free.block-history</code>, a service that recorded each block's hash and time on-chain: about "
                  f"{rec_per_block:.0f} calls per block on every chain, {fmt(rec_sep)} a day.")
-    if rec_drop:
-        rec_story += f" They fell sharply from {fdate(rec_drop)}"
-        rec_story += f" and had stopped by {fdate(rec_stop)}." if rec_stop else "."
+    if ended:
+        rec_story += (f" Its developer then wound the service down: calls dropped from {fdate(rec_drop)} "
+                      f"and the last ones were on {fdate(rec_last)}." if rec_drop else
+                      f" Its developer has since ended the service; the last calls were on {fdate(rec_last)}.")
+    elif rec_drop:
+        rec_story += f" They fell sharply from {fdate(rec_drop)}."
 summary = [
     rec_story + f" That one contract explains the drop in the total, from {fmt(tx_sep)} transactions a day in late September to "
     f"{fmt(days[-1]['transactions'])} on {fdate(last)}." if rec_sep else "",
@@ -284,10 +290,10 @@ body = f'''<main id="main">
       <h2 id="t-all">All transactions per day</h2>
       <p>Non-coinbase transactions included in canonical blocks on all 20 chains, per UTC day. Hover a bar for the exact value.</p>
       {svg_all}
-      <p class="note">{"Most of this total was one automated workload, explained next." if rec_sep else ""}</p>
+      <p class="note">{"Most of this total was one automated service, explained next." if rec_sep else ""}</p>
 
       <h2 id="t-rec">The block-history recorder</h2>
-      <p><code>free.block-history</code> is a Pact contract that stores each block's height, hash and time on its own chain, so other contracts can look them up later. Anyone can call its <code>attest</code> function, which records the previous block. {f"In late September recorder accounts called it about {rec_per_block:.0f} times in every block on every chain, {fmt(rec_sep)} transactions a day, most of Kadena's daily total." if rec_sep else ""} {f"The calls fell sharply from {fdate(rec_drop)}" + (f" and had stopped by {fdate(rec_stop)}" if rec_stop else "") + "." if rec_drop else ""} These are real, fee-paying transactions, but they come from one automated source, so this report shows activity with and without them.</p>
+      <p><code>free.block-history</code> is a Pact contract that stores each block's height, hash and time on its own chain, so other contracts can look them up later. A recorder service called its <code>attest</code> function to record the previous block. {f"In late September the recorder accounts called it about {rec_per_block:.0f} times in every block on every chain, {fmt(rec_sep)} transactions a day, most of Kadena's daily total." if rec_sep else ""} {(f"Its developer then ended the service: calls dropped from {fdate(rec_drop)} and the last ones were on {fdate(rec_last)}. The contract stays on chain with the blocks it recorded, but no new calls are being made." if rec_drop else f"Its developer has since ended the service; the last calls were on {fdate(rec_last)}.") if ended else ""} These were real, fee-paying transactions, but they came from one automated service, so this report shows activity with and without them.</p>
 
       <h2 id="t-tx">Transactions excluding the recorder</h2>
       <p>Everything except calls to <code>free.block-history</code>: transfers, swaps, contract calls and the rest, per UTC day.</p>
