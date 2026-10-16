@@ -148,6 +148,7 @@ p{margin:0}
 .ngrid > span[hidden]{display:none}
 .ngrid small{font-size:.76rem;color:var(--mist)}
 .ngrid b{font:600 1rem/1.25 var(--display);color:var(--sand);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ngrid > #c-api{grid-column:1 / -1}
 .ngrid b em{font:500 .8rem var(--body);font-style:normal;color:var(--mist);margin-left:.25rem}
 .nfoot{font-size:.85rem}
 @media (max-width:520px){.ngrid{grid-template-columns:repeat(2,minmax(0,1fr))}.ncard-head{grid-template-columns:auto 1fr}.nstate{grid-column:1 / -1;justify-self:start}}
@@ -314,10 +315,11 @@ footer a:hover{color:var(--sand)}
           </span>
           <span class="ngrid" id="n-grid" hidden>
             <span id="c-h"><small>Block height</small><b id="n-h">&ndash;</b></span>
-            <span id="c-up" title="Share of independent crawler checks the node answered"><small>Uptime</small><b id="n-up">&ndash;</b></span>
+            <span id="c-up" title="Share of our crawler's checks (every 10 minutes) that the node answered"><small>Uptime</small><b id="n-up">&ndash;</b></span>
             <span id="c-since"><small>Online since</small><b id="n-since">&ndash;</b></span>
             <span id="c-ver"><small>Version</small><b id="n-ver">&ndash;</b></span>
             <span id="c-lat" title="Round trip from your browser to the node"><small>Latency from you</small><b id="n-lat">&ndash;</b></span>
+            <span id="c-peers" title="Other Kadena nodes in this node's peer list, from our crawler" hidden><small>Peers</small><b id="n-peers">&ndash;</b></span>
             <span id="c-api"><small>Public API</small><b>node.kadena.ws</b></span>
           </span>
           <span class="nfoot" id="n-foot">Live on Kadena mainnet, serving the network from Jeddah.</span>
@@ -551,13 +553,16 @@ footer a:hover{color:var(--sand)}
    Two public sources, both read from the visitor's browser (no backend):
    1. the node's own service API at NODE: version, block height, latency
       (needs on the node: add_header Access-Control-Allow-Origin "https://kadena.ws" always;)
-   2. the public Chainweb crawler at CRAWL: uptime and first-seen date, matched by NODE_IP
+   2. the Kadena Nexus node crawler at CRAWL (escrow-admin repo, checks every public node every 10 minutes):
+      uptime and peer count, matched by NODE_IP
    With neither source reachable the card shows "Online" with no figures; it never shows a number it hasn't read. */
 (() => {
   const NODE = 'https://node.kadena.ws';                 // Saudi node public endpoint
   const NODE_IP = '193.122.85.1';                        // how the crawler identifies it
   const TIP = 'https://chainweb.chaddex.com';            // reference node for the network tip
-  const CRAWL = 'https://nodes.denascan.com/api/nodes';  // public node crawler (already used by nodes.kadena.ws)
+  const CRAWL = 'https://fluffy-hummingbird-d7ff3d.netlify.app/api/nodes';  // our node crawler (also feeds nodes.kadena.ws)
+  // First seen by the public denascan crawler; our own crawler only started on Oct 16, so keep the earlier date.
+  const ONLINE_SINCE = Date.parse('2026-10-07T19:14:01Z');
   const card = document.getElementById('sanode'), $ = id => document.getElementById(id);
   const S = {api: null, crawl: null, apiWasOk: false};
   const fmt = n => Number(n).toLocaleString('en-US');
@@ -584,8 +589,10 @@ footer a:hover{color:var(--sand)}
       if (!me) { S.crawl = null; render(); return; }
       const m = me.metadata || {}, live = all.filter(n => n.metadata && n.metadata.status === 'active');
       const tipCut = Math.max(0, ...live.map(n => n.metadata.cut_height || 0));
+      const seen = Date.parse(m.first_seen || '') || 0;
       S.crawl = {alive: m.status === 'active', ok: m.successful_probes || 0, probes: m.total_probes || 0,
-        since: Date.parse(m.first_seen || '') || 0, h: m.max_chain_height || 0,
+        since: seen ? Math.min(seen, ONLINE_SINCE) : ONLINE_SINCE, h: m.max_chain_height || Math.round((m.cut_height || 0) / 20),
+        peers: m.peer_count == null ? null : m.peer_count, peersMore: !!m.peer_count_more,
         lag: m.status === 'active' ? Math.round((tipCut - (m.cut_height || 0)) / 20) : null};
     } catch (_) { /* keep the last crawler reading */ }
     render();
@@ -600,18 +607,20 @@ footer a:hover{color:var(--sand)}
     const show = (id, on) => { $(id).hidden = !on; };
     if (src) $('n-h').textContent = fmt(src.h);
     if (a) { $('n-ver').textContent = 'Chainweb ' + (a.ver || ''); $('n-lat').textContent = a.lat + ' ms'; }
-    if (c) $('n-up').textContent = c.probes >= 50 ? (c.ok / c.probes * 100).toFixed(c.ok === c.probes ? 0 : 1) + '%' : 'Measuring';
+    // our crawler started on Oct 16; uptime needs 6 hours of checks (36) before the share means much
+    if (c) $('n-up').textContent = c.probes >= 36 ? (c.ok / c.probes * 100).toFixed(c.ok === c.probes ? 0 : 1) + '%' : 'Measuring';
+    if (c && c.peers != null) $('n-peers').textContent = fmt(c.peers) + (c.peersMore ? '+' : '');
     if (c && c.since) {
       const days = Math.max(0, Math.floor((Date.now() - c.since) / 864e5));
       $('n-since').innerHTML = new Date(c.since).toLocaleDateString('en-US', {day: 'numeric', month: 'short', timeZone: 'UTC'}) +
         '<em>' + days + (days === 1 ? ' day' : ' days') + '</em>';
     }
     show('c-h', !!src); show('c-up', !!c); show('c-since', !!(c && c.since));
-    show('c-ver', !!a); show('c-lat', !!a); show('c-api', !!a);
+    show('c-ver', !!a); show('c-lat', !!a); show('c-api', !!a); show('c-peers', !!(c && c.peers != null));
     $('n-grid').hidden = !(a || c);
     $('n-foot').textContent = state === 'sync' && src.lag != null ? 'Catching up with the network: ' + fmt(src.lag) + ' blocks behind the tip.'
       : state === 'down' ? 'The node is not answering right now.'
-      : c ? 'Uptime is measured by an independent public crawler, not by us.'
+      : c ? 'Uptime and peers come from our crawler, which checks every public Kadena node every 10 minutes.'
       : 'Live on Kadena mainnet, serving the network from Jeddah.';
   }
   pollNode(); pollCrawler();
