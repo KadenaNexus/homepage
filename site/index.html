@@ -149,6 +149,8 @@ p{margin:0}
 .ngrid small{font-size:.76rem;color:var(--mist)}
 .ngrid b{font:600 1rem/1.25 var(--display);color:var(--sand);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ngrid > #c-api{grid-column:1 / -1}
+.ngrid small .newest{display:inline-block;margin-left:.35rem;padding:0 .4rem;border-radius:999px;background:rgba(28,99,123,.12);color:var(--teal);font-weight:600;font-size:.66rem;line-height:1rem;vertical-align:1px}
+.ngrid small .newest[hidden]{display:none}
 .ngrid b .top{font-size:.95rem;margin-left:.3rem}
 .ngrid b em{font:500 .8rem var(--body);font-style:normal;color:var(--mist);margin-left:.25rem}
 .nfoot{font-size:.85rem}
@@ -318,7 +320,7 @@ footer a:hover{color:var(--sand)}
             <span id="c-h"><small>Block height</small><b id="n-h">&ndash;</b></span>
             <span id="c-up" title="Share of our crawler's checks (every 10 minutes) that the node answered"><small>Uptime</small><b id="n-up">&ndash;</b></span>
             <span id="c-since"><small>Online since</small><b id="n-since">&ndash;</b></span>
-            <span id="c-ver"><small>Version</small><b id="n-ver">&ndash;</b></span>
+            <span id="c-ver"><small>Version<span class="newest" id="n-newest" hidden>Latest</span></small><b id="n-ver">&ndash;</b></span>
             <span id="c-lat" title="Round trip from your browser to the node"><small>Latency from you</small><b id="n-lat">&ndash;</b></span>
             <span id="c-peers" title="Other Kadena nodes in this node's peer list, from our crawler" hidden><small>Peers</small><b id="n-peers">&ndash;</b></span>
             <span id="c-api"><small>Public API</small><b>node.kadena.ws</b></span>
@@ -570,6 +572,9 @@ footer a:hover{color:var(--sand)}
   const j = (u, ms = 8000) => { const c = new AbortController(); const t = setTimeout(() => c.abort(), ms);
     return fetch(u, {signal: c.signal, cache: 'no-store'}).then(r => { clearTimeout(t); if (!r.ok) throw 0; return r.json(); }); };
   const maxH = cut => Math.max(...Object.values(cut.hashes).map(h => h.height));
+  // compare versions like 3.2 and 3.2.1 part by part (3.2 < 3.2.1 < 3.10)
+  const vcmp = (x, y) => { const a = String(x).split('.').map(Number), b = String(y).split('.').map(Number);
+    for (let i = 0; i < Math.max(a.length, b.length); i++) { const d = (a[i] || 0) - (b[i] || 0); if (d) return d; } return 0; };
 
   async function pollNode() {
     try {
@@ -601,6 +606,14 @@ footer a:hover{color:var(--sand)}
           return mine == null || !others.length ? {peersTop: false} :
             {peersTop: others.every(p => p <= mine), peersTied: others.some(p => p === mine), peersOf: others.length + 1};
         })(),
+        // newest Chainweb version on the network: the highest one at least two reachable nodes run,
+        // so a single odd or test build can't set the bar
+        ...(() => {
+          const runs = {};
+          for (const n of live) { const v = n.metadata.package_version; if (v) runs[v] = (runs[v] || 0) + 1; }
+          const top = Object.keys(runs).filter(v => runs[v] >= 2).sort(vcmp).pop();
+          return top ? {newestVer: top, runs, verOf: live.filter(n => n.metadata.package_version).length} : {};
+        })(),
         lag: m.status === 'active' ? Math.round((tipCut - (m.cut_height || 0)) / 20) : null};
     } catch (_) { /* keep the last crawler reading */ }
     render();
@@ -615,6 +628,11 @@ footer a:hover{color:var(--sand)}
     const show = (id, on) => { $(id).hidden = !on; };
     if (src) $('n-h').textContent = fmt(src.h);
     if (a) { $('n-ver').textContent = 'Chainweb ' + (a.ver || ''); $('n-lat').textContent = a.lat + ' ms'; }
+    // "Latest" badge when our node runs the newest version seen on the network
+    const newest = !!(a && a.ver && c && c.newestVer && vcmp(a.ver, c.newestVer) >= 0);
+    $('n-newest').hidden = !newest;
+    if (newest) { const k = c.runs[a.ver] || 1;
+      $('n-newest').title = `Newest Chainweb version on the network: ${k} of ${c.verOf} public nodes run ${a.ver}`; }
     // our crawler started on Oct 16; uptime needs 6 hours of checks (36) before the share means much
     if (c) $('n-up').textContent = c.probes >= 36 ? (c.ok / c.probes * 100).toFixed(c.ok === c.probes ? 0 : 1) + '%' : 'Measuring';
     if (c && c.peers != null) {
