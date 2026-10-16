@@ -149,6 +149,7 @@ p{margin:0}
 .ngrid small{font-size:.76rem;color:var(--mist)}
 .ngrid b{font:600 1rem/1.25 var(--display);color:var(--sand);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ngrid > #c-api{grid-column:1 / -1}
+.ngrid b .top{font-size:.95rem;margin-left:.3rem}
 .ngrid b em{font:500 .8rem var(--body);font-style:normal;color:var(--mist);margin-left:.25rem}
 .nfoot{font-size:.85rem}
 @media (max-width:520px){.ngrid{grid-template-columns:repeat(2,minmax(0,1fr))}.ncard-head{grid-template-columns:auto 1fr}.nstate{grid-column:1 / -1;justify-self:start}}
@@ -593,6 +594,13 @@ footer a:hover{color:var(--sand)}
       S.crawl = {alive: m.status === 'active', ok: m.successful_probes || 0, probes: m.total_probes || 0,
         since: seen ? Math.min(seen, ONLINE_SINCE) : ONLINE_SINCE, h: m.max_chain_height || Math.round((m.cut_height || 0) / 20),
         peers: m.peer_count == null ? null : m.peer_count, peersMore: !!m.peer_count_more,
+        // rank by peer count among the reachable nodes: are we the best connected?
+        ...(() => {
+          const others = live.filter(n => n !== me && n.metadata.peer_count != null).map(n => n.metadata.peer_count);
+          const mine = m.peer_count;
+          return mine == null || !others.length ? {peersTop: false} :
+            {peersTop: others.every(p => p <= mine), peersTied: others.some(p => p === mine), peersOf: others.length + 1};
+        })(),
         lag: m.status === 'active' ? Math.round((tipCut - (m.cut_height || 0)) / 20) : null};
     } catch (_) { /* keep the last crawler reading */ }
     render();
@@ -609,7 +617,12 @@ footer a:hover{color:var(--sand)}
     if (a) { $('n-ver').textContent = 'Chainweb ' + (a.ver || ''); $('n-lat').textContent = a.lat + ' ms'; }
     // our crawler started on Oct 16; uptime needs 6 hours of checks (36) before the share means much
     if (c) $('n-up').textContent = c.probes >= 36 ? (c.ok / c.probes * 100).toFixed(c.ok === c.probes ? 0 : 1) + '%' : 'Measuring';
-    if (c && c.peers != null) $('n-peers').textContent = fmt(c.peers) + (c.peersMore ? '+' : '');
+    if (c && c.peers != null) {
+      // a small flame when no other public node has more peers than ours
+      const why = c.peersTied ? `Tied for the most peers of ${c.peersOf} public Kadena nodes` : `Most peers of ${c.peersOf} public Kadena nodes`;
+      $('n-peers').innerHTML = fmt(c.peers) + (c.peersMore ? '+' : '') +
+        (c.peersTop ? `<span class="top" role="img" aria-label="${why}" title="${why}">🔥</span>` : '');
+    }
     if (c && c.since) {
       const days = Math.max(0, Math.floor((Date.now() - c.since) / 864e5));
       $('n-since').innerHTML = new Date(c.since).toLocaleDateString('en-US', {day: 'numeric', month: 'short', timeZone: 'UTC'}) +
