@@ -8,6 +8,7 @@ const SITES = [
   ['Adoption Index', 'https://adoption.kadena.ws/'],
   ['Quantum-Safe Kadena', 'https://quantum.kadena.ws/'],
   ['Kadena Devs', 'https://kadenadevs.kadena.ws/'],
+  ['Kadena Garden', 'https://mine.kadena.ws/'],
 ];
 const LABEL = 'uptime';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
