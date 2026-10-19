@@ -13,6 +13,7 @@ A successful pull request to main is the production release. Each site repositor
 | App | marketplace.kadena.ws | Run the fixed deploy-marketplace server script after checks. This deploys the frontend; the API process remains separate. |
 | App | earn.kadena.ws | Run the fixed deploy-earn server script after backend and Pact tests. |
 | App | adoption.kadena.ws | Run the fixed deploy-adoption server script after backend and site tests/build. |
+| App | marketplace-advanced.kadena.ws | v11 preview from KadenaNexus/marketplace-advanced. Run the fixed deploy-marketplace-advanced server script after checks. Setup: that repository's deploy/staging/README.md. |
 
 Mine/Garden is a later addition and is not configured yet.
 
@@ -20,7 +21,7 @@ Static workflows call deploy-static.yml. Its checks job also runs SEO checks bef
 
 kadena.ws uses this for the Kadena news page: `python3 scripts/build_news.py` rebuilds site/news/index.html (and the news lastmod in sitemap.xml) from public data, and deploy.yml runs every Monday at 06:17 UTC. The rebuilt page is deployed straight from the workflow and is never committed, so main still changes only through pull requests. Each source has a timeout and is left off the page if it fails; if the page cannot be built, the committed copy is deployed. Edit site/news/nexus-updates.json (newest first) to add Kadena Nexus entries.
 
-App workflows call deploy-app.yml after their own test job. The shared app workflow only permits the marketplace, earn, and adoption-index repositories and maps each repository to one fixed server script. Main-branch deployments fail if required secrets are missing or mismatched; they do not silently skip.
+App workflows call deploy-app.yml after their own test job. The shared app workflow only permits the marketplace, marketplace-advanced, earn, and adoption-index repositories and maps each repository to one fixed server script. Main-branch deployments fail if required secrets are missing or mismatched; they do not silently skip.
 
 The shared workflows pin the server SSH host key. They do not need a DEPLOY_KNOWN_HOSTS secret. Static copies do not delete existing server files. The network monitor workflow writes to its existing index.html file and leaves its data directory alone.
 
@@ -34,7 +35,7 @@ App server scripts check out origin/main, install/build, restart only the intend
 | DEPLOY_USER | deployer |
 | DEPLOY_KEY | Private half of the deployer SSH key |
 | DEPLOY_PATH | Exact web root for a static site. For nodes.kadena.ws, use /home/zero/monitor/dist/index.html. |
-| DEPLOY_SCRIPT | App script name, such as deploy-marketplace, deploy-earn, or deploy-adoption. The shared workflow also accepts the full /usr/local/bin path. |
+| DEPLOY_SCRIPT | App script name, such as deploy-marketplace, deploy-marketplace-advanced, deploy-earn, or deploy-adoption. The shared workflow also accepts the full /usr/local/bin path. |
 | PREVIEW_PATH | Optional static branch preview root, /var/www/preview.kadena.ws |
 
 A pull request never receives a production deploy. Other branch pushes can be copied beneath PREVIEW_PATH when it is configured. DNS, HTTPS, and the noindex header for preview.kadena.ws still need the server administrator's manual setup before preview links are usable.

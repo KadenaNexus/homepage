@@ -38,6 +38,7 @@ jobs:
             KadenaNexus/marketplace) app=marketplace; label=Marketplace ;;
             KadenaNexus/earn) app=earn; label=Earn ;;
             KadenaNexus/adoption-index) app=adoption; label=Adoption ;;
+            KadenaNexus/marketplace-advanced) app=marketplace-advanced; label="Marketplace Advanced" ;;
             *) echo "::error::This shared workflow is not authorized for this repository."; exit 1 ;;
           esac
           expected="deploy-$app"
