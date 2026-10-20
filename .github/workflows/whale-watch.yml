@@ -1,0 +1,25 @@
+name: whale-watch
+on:
+  pull_request:
+    paths: ["services/whale-watch/**", ".github/workflows/whale-watch.yml"]
+  push:
+    branches: [main]
+    paths: ["services/whale-watch/**"]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Unit tests (real mainnet blocks saved as fixtures, no network)
+        run: node --test services/whale-watch/test/*.test.mjs
+      - name: Labels file is valid and every label names its source
+        run: |
+          node -e '
+            const l = JSON.parse(require("fs").readFileSync("services/whale-watch/labels.json","utf8")).accounts;
+            const bad = Object.entries(l).filter(([a, v]) => !v.name || !v.type || !v.source);
+            if (bad.length) { console.error("labels missing name/type/source:", bad.map(b => b[0])); process.exit(1); }
+            console.log(Object.keys(l).length, "labels ok");'
+      - name: Install script syntax
+        run: bash -n services/whale-watch/install.sh

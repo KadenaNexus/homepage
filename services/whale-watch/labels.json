@@ -1,0 +1,220 @@
+{
+ "note": "Only labels backed by a public, checkable source (on-chain contract data or a self-describing account name). Never label a wallet from behavior alone. Each entry names its source.",
+ "accounts": {
+  "coinmetro-multisig-3": {
+   "name": "coinmetro-multisig-3",
+   "type": "exchange",
+   "source": "Account name (self-describing 'coinmetro-multisig-3'); on-chain guard is a 2-of-6 keyset. Not independently confirmed by Coinmetro publicly. Shown under its own account name until Coinmetro confirms it."
+  },
+  "antpoolkda": {
+   "name": "AntPool (mining pool)",
+   "type": "mining",
+   "source": "Account name (self-describing 'antpoolkda'); on-chain it receives block coinbase rewards and pays out many small miner payouts, consistent with the name."
+  },
+  "w:DD-js2J0pYzsFkqpaTckDmHAH3bVLu5JqwyIbx0yJbg:keys-2": {
+   "name": "platform-share recipient wallet",
+   "type": "platform",
+   "source": "On-chain coin.allocation-table redemptions (received redeemed Kadena LLC platform-share allocations) – own research"
+  },
+  "w:u-on-LXLTkp7DLszyPLphqfDzS6WTvfTtqNaLvEDrAI:keys-2": {
+   "name": "platform-share recipient wallet",
+   "type": "platform",
+   "source": "On-chain coin.allocation-table redemptions (received redeemed Kadena LLC platform-share allocations) – own research"
+  },
+  "m:n_48867b242317a0216a67f8c7ca26696b5878e0e3.SPT-launch:SPT-launch-proceeds": {
+   "name": "SPT token sale account",
+   "type": "project",
+   "source": "On-chain: module guard of n_48867b242317a0216a67f8c7ca26696b5878e0e3.SPT-launch (fixed-price SPT token sale; buyers pay KDA here). Account name and guard define it."
+  },
+  "TduYitWpVQgbLcl7CPi9YgqhnQVcSW1iKP5YmZkoDOo": {
+   "name": "Mercatus KDA/AZUKI pool",
+   "type": "dex",
+   "source": "On-chain: (kaddex.exchange.get-pair coin n_518dfea5f0d2abe95cbcd8956eb97f3238e274a9.AZUKI) returns this account on chain 2; guard is kaddex.exchange.enforce-private-reserve"
+  },
+  "4BUspgOmxeQ3rxPTleKt0y8PgdRnNdxYrElqkvSFtQ4": {
+   "name": "sushi-exchange KDA/AZUKI pool",
+   "type": "dex",
+   "source": "On-chain: (n_bd19ba92f0449d4422e620740759c9e94cacdb37.sushi-exchange.get-pair coin n_518dfea5f0d2abe95cbcd8956eb97f3238e274a9.AZUKI) returns this account on chain 2"
+  },
+  "4iBIX0hsSprc7sYvUKLLlMd7_1uVEb6eheF33VBv1p0": {
+   "name": "Mercatus KDA/KDX pool",
+   "type": "dex",
+   "source": "On-chain: (kaddex.exchange.get-pair coin kaddex.kdx) returns this account on chain 2; guard is kaddex.exchange.enforce-private-reserve"
+  },
+  "JAOVE-ox4Kotz9plXXtIVWH_6eL455Yeek0n16eskuI": {
+   "name": "Mercatus KDA/crankk01 pool",
+   "type": "dex",
+   "source": "On-chain: (kaddex.exchange.get-pair coin free.crankk01) returns this account on chain 2; guard is kaddex.exchange.enforce-private-reserve"
+  },
+  "Z4qQZwCnb21a_7zv3AMoRTTXFvWnm_IYljV7O4QXBZo": {
+   "name": "Mercatus KDA/kb-ETH pool",
+   "type": "dex",
+   "source": "On-chain: (kaddex.exchange.get-pair coin n_e595727b657fbbb3b8e362a05a7bb8d12865c1ff.kb-ETH) returns this account on chain 2; guard is kaddex.exchange.enforce-private-reserve"
+  },
+  "xfS-eHFuzE72619KflxCn0FKSa5BhvvhyR9THumhdOE": {
+   "name": "Mercatus KDA/FLUX pool",
+   "type": "dex",
+   "source": "On-chain: (kaddex.exchange.get-pair coin runonflux.flux) returns this account on chain 2; guard is kaddex.exchange.enforce-private-reserve"
+  },
+  "MlhQY79-jTbF1men5ZaESNJ10q4lPseDeJGW_XNJnnc": {
+   "name": "Mercatus KDA/zUSD pool",
+   "type": "dex",
+   "source": "On-chain: (kaddex.exchange.get-pair coin n_b742b4e9c600892af545afb408326e82a6c0c6ed.zUSD) returns this account on chain 2; guard is kaddex.exchange.enforce-private-reserve"
+  },
+  "obtKlgZj3CJcF2IzEkC4NC4qz2JLAZZZmLUb4oFCF5w": {
+   "name": "Mercatus KDA/cyberfly_token pool",
+   "type": "dex",
+   "source": "On-chain: (kaddex.exchange.get-pair coin free.cyberfly_token) returns this account on chain 2; guard is kaddex.exchange.enforce-private-reserve"
+  },
+  "P1J6eqZteaU19umFecSjpEuc7Pea79SdDzz2Vp9LOpc": {
+   "name": "Mercatus KDA/BRO pool",
+   "type": "dex",
+   "source": "On-chain: (kaddex.exchange.get-pair coin n_582fed11af00dc626812cd7890bb88e72067f28c.bro) returns this account on chain 2; guard is kaddex.exchange.enforce-private-reserve"
+  },
+  "PUS35mt6HequLHptLo9cid_X6x1sSPOTUgWLuuQM0hc": {
+   "name": "Mercatus KDA/HERON pool",
+   "type": "dex",
+   "source": "On-chain: (kaddex.exchange.get-pair coin n_e309f0fa7cf3a13f93a8da5325cdad32790d2070.heron) returns this account on chain 2; guard is kaddex.exchange.enforce-private-reserve"
+  },
+  "YrkKiGDhlE102ngYTkAuigSgcAZW-knQM14DJ9VFLus": {
+   "name": "sushi-exchange KDA/HERON pool",
+   "type": "dex",
+   "source": "On-chain: (n_bd19ba92f0449d4422e620740759c9e94cacdb37.sushi-exchange.get-pair coin n_e309f0fa7cf3a13f93a8da5325cdad32790d2070.heron) returns this account on chain 2"
+  },
+  "By3GT_acFHQ37ffWY8tF36M0D7c3_l3ZGCJDvwKipzU": {
+   "name": "Mercatus KDA/ktoshi pool",
+   "type": "dex",
+   "source": "On-chain: (kaddex.exchange.get-pair coin n_625e9938ae84bdb7d190f14fc283c7a6dfc15d58.ktoshi) returns this account on chain 2; guard is kaddex.exchange.enforce-private-reserve"
+  },
+  "eUWz4SjywMCaRsvZKaB0HlYXuhJV_D_H5Loc4M2bQ5Q": {
+   "name": "sushi-exchange KDA/ktoshi pool",
+   "type": "dex",
+   "source": "On-chain: (n_bd19ba92f0449d4422e620740759c9e94cacdb37.sushi-exchange.get-pair coin n_625e9938ae84bdb7d190f14fc283c7a6dfc15d58.ktoshi) returns this account on chain 2"
+  },
+  "Zr-vo5w_gFUHSO1Hbo0TFlQr39pygrghAs_N335uMVA": {
+   "name": "Mercatus KDA/kishu-ken pool",
+   "type": "dex",
+   "source": "On-chain: (kaddex.exchange.get-pair coin free.kishu-ken) returns this account on chain 2; guard is kaddex.exchange.enforce-private-reserve"
+  },
+  "eE2bISo7rVle4Z7-RKNpz3gkZLfjN-OoTyA1sCBLamQ": {
+   "name": "sushi-exchange KDA/kishu-ken pool",
+   "type": "dex",
+   "source": "On-chain: (n_bd19ba92f0449d4422e620740759c9e94cacdb37.sushi-exchange.get-pair coin free.kishu-ken) returns this account on chain 2"
+  },
+  "-qXygkgY9Y_Ld50QdjBng12LIXRqki4EovuF_OJ6DmA": {
+   "name": "Mercatus KDA/kb-USDC pool",
+   "type": "dex",
+   "source": "On-chain: (kaddex.exchange.get-pair coin n_e595727b657fbbb3b8e362a05a7bb8d12865c1ff.kb-USDC) returns this account on chain 2; guard is kaddex.exchange.enforce-private-reserve"
+  },
+  "yJbR_wQ9FQAUKeU9Hq9e7O7xJ-TaLEAlE9n07uZeZWE": {
+   "name": "sushi-exchange KDA/kb-USDC pool",
+   "type": "dex",
+   "source": "On-chain: (n_bd19ba92f0449d4422e620740759c9e94cacdb37.sushi-exchange.get-pair coin n_e595727b657fbbb3b8e362a05a7bb8d12865c1ff.kb-USDC) returns this account on chain 2"
+  },
+  "4dLp53hU4UdrezRAA8yNGr6qgHS8JME2zYEaJUCaFvY": {
+   "name": "Mercatus KDA/prod-hype-coin pool",
+   "type": "dex",
+   "source": "On-chain: (kaddex.exchange.get-pair coin hypercent.prod-hype-coin) returns this account on chain 2; guard is kaddex.exchange.enforce-private-reserve"
+  },
+  "c:uD7TIxTzv4MZsWiKpqcI8WwUyXxD932dNuJX4he-Slk": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:7c0cb92db989f9b64713c949ad2704991f132402d9fe05d0d485b25133f905ce; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:U-UkeZz2W1kyg4CR_4E2ngTzPkWG4WZ31AQ0Mrnv3kA": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:f39d22d498dfbc442335d5c1a9e5bc7f265528d184c5ac5c254bcd198b7f3921; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:2DV-J1-d1V4oM9Zt5zr08-ube1NhIjuWYJg9C_-gfeY": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:0bdfa27ba5bbf924bf73f0cae96716316de138f94e529fd54952c8da93997868; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:-d_mxAt4hE0CNdf5Ya0eFkwjJXpX5KiFw_6Vns2V6U0": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:be698ad1edfd589f1963b2830a5e63c0f22021c1a826e008c22e029b04252c7b; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:c8bHOtMPpHQz6vC6N2fALW8KbqLXC9vvmGoFYAU8ZRQ": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:752232c5656a73c0b361183fb226bb9cbff35b3aec2926583db3cab3f2ee40c7; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:k70oCM6KsSN8-0Rda0Zuu4vNiHD6ZxEUkScntasqTv0": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:04b04a4e1346c44a69dd2bdee28506c83116ccafa60322c7a29185d38bd6ec84; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:rv7eUUflyTIJtsrp4OU5nPlQOYqgTJowLUpwS3KAcwQ": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:007bf8cb956c7072d58be96c31c625aa6b1e5f493247548386efca1326da7aea; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:UdGCQKpg7vkVIf4DEEgbQVsnPaKcqSNhk8H0AT-4s2I": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:43f68829a64cd871b089d74a4b07b84cb02737b182dda12892c1cff8a2e9d993; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:CqFbAUevmf-u6UA9HMj8Z1kU8426DVPtih_nz8dNXnw": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:1a851a6cb77bff93168e3e781203e63de8362865fc2cece387da0876e246b116; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:RsWVIKWm5i2FgNFgMxij2-IhG2bDkYjhtHx0thbDLgM": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:d8521322df73c4a348f3cf765fbe53a6b33b8f058778404ca30b7d3d2e5589a2; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:fPGe7-IzPLUoDBGN6ZGNV-5LXR2SQ4XnEDRmsGee00I": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:c4bdafb00b20ab114903200de9ef2a1fc1c750d8a859d47151b1e49c1c87d583; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:fZgqkEONJx73lhvOsF8lFqeiW-5w6e9XMwp7F7q0N5k": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:a9d1b54528ecc48387de4209ac2c49c04c9bbad4182e28b182567e2f718e4ffe; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:4u-HYAW-vsJfOm_KKP68DjBjbAhWLbhhH2fKxA4vlcI": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:7ad56fa3c606ca63cef152c800946ec50dd4972f0632b5a72239877622af0240; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:57AsKHb5fCMVNySTBsu8lbb-zaoGTwn9ekAh3tVwkME": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:9ec7dc4535bd0a780f61f8b5b49e808aaaf9778fb2f380edaec6051918498fc5; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:qcEnonHf_10OWNDyIHBYl9v8DM4sGpLH-5RTIUH7Hcc": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:bbd96e4b481f663ca9b0f9589492eef7984e25f9806abc92670604e229a065e9; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:eN2XQr_XADN5U385k8tjpPNwVNU0BiGd2yn_qiMA4Qs": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:86935acd4de26307b0ad164542bc746da61646b6e111c03f52ed4cb375f198a2; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:CKabLgh2hJtGCXXC2CfrxECDuLDT_RbItvHkqySyHT8": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:2a55085bdd85b50ed96ca5aa4a8c9544dd3e19b5fad386541239b24573ae8a4f; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:Ia4oLrWg9X8y1L9GgxhPj0NErqsYnMblRajd9H3QUgc": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:5f1dc4d61f3415871ab7edd3f3c6e5a9b80c3c40d3f21d5d8bbc479e77168984; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:jy9mcIurSS98OZx4agen0xElIEE6ZHsPgXKl3-J8cl0": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:da8393ee10e8821f950947ccdbe5df26d794d51a7f667db85c77a6723a87cf80; module is frozen and releases KDA on a linear schedule"
+  },
+  "c:2UZFYp9DIbeRSnJNwpzZztQbS-PqMTra_ZtlGAQxTfI": {
+   "name": "OTC vesting locker",
+   "type": "locker",
+   "source": "On-chain: capability guard n_a93d47fd937a5d0899c9385763d5b1c4056842c5.otc-deal-locker.LOCKED-ACCOUNT-CAP for beneficiary k:f4b51882504bccca924527a20bcbdc27f9367ed2e37ac3b7b5e8a63c7c87df39; module is frozen and releases KDA on a linear schedule"
+  }
+ }
+}
