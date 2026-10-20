@@ -22,13 +22,42 @@ It writes `feed.json`, `stats.json` and `status.json` into `/var/www/kadena.ws/w
 
 Posts contain no links: on X's pay-per-use API a plain post costs about $0.015 and a post with a link about $0.20. Expected volume is 2–3 posts a day, about $1–2 a month.
 
-`POST_MODE=dry` (the default) writes every post to `/var/lib/whale-watch/posts.jsonl` and sends nothing. Switch to `live` only after the bot account and keys are ready.
+Dry mode (the default) writes every post to `posts.jsonl` (on Actions: kadena.ws/whales/data/watcher/posts.jsonl) and sends nothing. Switch to `live` only after the bot account and keys are ready.
 
 ## Labels
 
-`labels.json` names a wallet only when a public, checkable source supports it: on-chain contract data (DEX pool accounts returned by `get-pair`, OTC locker capability guards) or a self-describing account name. Every entry records its source; CI rejects an entry without one. Wallets are never labelled from behaviour alone. The two busiest senders (k:0d584a…2fb0 and k:7cfe37…8e10) look like exchange hot wallets but no public source names them, so they stay "unknown wallet". To add a label: edit `labels.json` with the source, open a PR, then re-run `install.sh` (the watcher reloads labels without a restart).
+`labels.json` names a wallet only when a checkable source supports it, and every entry records its source (CI rejects one without). Each label has a confidence level:
 
-## Install on the kadena.ws server (once, as root)
+- **confirmed**: the exchange itself ties the wallet to it (a deposit address it issued sweeps into the wallet, or a withdrawal it made came from it), or on-chain contract data proves it (DEX pools from `get-pair`, OTC lockers from their capability guard).
+- **likely**: strong circumstantial evidence, such as the wallet pausing and resuming within hours of the exchange's published suspension and resumption times. Always shown as "(likely)" on the page and in posts.
+
+Exchanges so far: Gate (confirmed), CoinEx (likely), OKX (likely). Wallets are never labelled from behaviour alone, and private individuals are never named.
+
+To add a label, edit `labels.json` with its source and open a PR. After the merge, the next Actions run uses it. On the server option, re-run `install.sh`.
+
+## Running it: GitHub Actions (default, no server setup)
+
+`.github/workflows/whale-watch-run.yml` runs `actions-run.sh` every 5 minutes on main:
+
+1. It restores the watcher state from `kadena.ws/whales/data/watcher/` (state.json, feed.json, posts.jsonl).
+   - On the first run ever (HTTP 404), it seeds the last 30 days.
+   - On any other restore problem, it stops, so an outage can never wipe the live feed.
+2. It reads every block since the last run on all 20 chains, using public nodes, and posts.
+3. It copies the page data and state to `/var/www/kadena.ws/whales/data/` with the existing deploy secrets (DEPLOY_HOST, DEPLOY_USER, DEPLOY_KEY, pinned host key).
+
+Before every post, the state is copied to the server first (`CHECKPOINT_CMD`). If that copy fails, nothing is posted, so a failed run can never post twice.
+
+GitHub sometimes delays scheduled runs. The watcher catches up on every missed block, so nothing is skipped, but alerts can arrive 5–20 minutes after the move. Actions runs are free because the repo is public.
+
+**Switches** (repo Settings → Secrets and variables → Actions):
+- Variable `WHALE_POST_MODE` = `live` turns on posting to X. Unset or `dry` writes posts to `kadena.ws/whales/data/watcher/posts.jsonl` only.
+- Secrets `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN` and `X_ACCESS_SECRET` hold the bot account's keys.
+
+To run it once by hand: Actions → whale-watch-run → Run workflow.
+
+## Optional: run it as a service on the kadena.ws server (once, as root)
+
+Running on the server gives near-real-time alerts and reads from the Saudi node. If you switch to it, disable the Actions workflow so only one watcher runs.
 
 ```bash
 cd /path/to/homepage && git pull

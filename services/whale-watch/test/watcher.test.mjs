@@ -181,3 +181,15 @@ test('likely labels say so, exchange-to-exchange moves name both, sweeps inside 
   const stats = JSON.parse(fs.readFileSync(path.join(w.cfg.publicDir, 'stats.json'), 'utf8'));
   assert.ok(stats.labelledExchanges.includes('CoinEx (likely)') && stats.labelledExchanges.includes('Gate'));
 });
+
+test('nothing is posted when the state cannot be stored first (no double posts)', async () => {
+  const { w, posts, dir } = tmpWatcher({ checkpointCmd: 'exit 3' });
+  w.processBlock(fixture('1-7266334'));
+  await assert.rejects(() => w.postFresh());
+  assert.equal(posts.length, 0);
+  const ok = tmpWatcher({ checkpointCmd: `touch ${JSON.stringify(path.join(dir, 'synced'))}` });
+  ok.w.processBlock(fixture('1-7266334'));
+  await ok.w.postFresh();
+  assert.equal(ok.posts.length, 1);
+  assert.ok(fs.existsSync(path.join(dir, 'synced')));
+});

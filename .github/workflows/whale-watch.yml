@@ -22,4 +22,4 @@ jobs:
             if (bad.length) { console.error("labels missing name/type/source:", bad.map(b => b[0])); process.exit(1); }
             console.log(Object.keys(l).length, "labels ok");'
       - name: Install script syntax
-        run: bash -n services/whale-watch/install.sh
+        run: bash -n services/whale-watch/install.sh && bash -n services/whale-watch/actions-run.sh

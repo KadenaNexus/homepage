@@ -10,6 +10,7 @@
 // Configuration comes from the environment; see README.md.
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { Chainweb, num } from './lib/chainweb.mjs';
 import { parseBlock, isPlatformShare } from './lib/parse.mjs';
@@ -38,6 +39,9 @@ export const CONFIG = {
   pollSeconds: Number(env.POLL_SECONDS || 30),
   maxBlocksPerLoop: Number(env.MAX_BLOCKS_PER_LOOP || 300),
   postMode: env.POST_MODE || 'dry',
+  // Optional shell command run after every save that must succeed before anything is posted
+  // (GitHub Actions uses it to copy state to the server first, so a failed run never double-posts).
+  checkpointCmd: env.CHECKPOINT_CMD || '',
   maxAlertsPerDay: Number(env.MAX_ALERTS_PER_DAY || 6),
   freshMinutes: Number(env.FRESH_MINUTES || 180),
   summaryHour: Number(env.SUMMARY_HOUR || 21), // local time (Riyadh)
@@ -244,6 +248,7 @@ export class Watcher {
         : platform ? F.platformPost({ ...item, remaining: this.state.platform.total }, ctx)
           : F.dexPost(item, ctx);
       this.state.posted[item.id] = 'pending';
+      this.checkpoint(); // throws if the state could not be stored: then nothing is posted
       const r = await this.x.post(text, { kind: item.type, item: item.id });
       this.state.posted[item.id] = r.ok ? (r.id || 'dry') : 'failed';
       item.posted = r.ok;
@@ -325,6 +330,7 @@ export class Watcher {
       const text = F.weeklyPost({ ...w, from: this.localDay(this.now() - 6 * 86400e3), to: dayKey, conc: latest ? this.state.conc[latest] : null, prev: weekAgo ? this.state.conc[weekAgo] : null });
       this.state.lastWeekly = dayKey;
       this.state.lastDaily = dayKey; // the weekly digest replaces that day's summary
+      this.checkpoint();
       const r = await this.x.post(text, { kind: 'weekly' });
       if (!r.ok) log('weekly post failed:', r.error);
       return;
@@ -337,6 +343,7 @@ export class Watcher {
       platform: p.total, platformDays: Math.floor((this.now() - Date.parse(p.lastMoveAt)) / 86400e3),
     });
     this.state.lastDaily = dayKey;
+    this.checkpoint();
     const r = await this.x.post(text, { kind: 'daily' });
     if (!r.ok) log('daily post failed:', r.error);
   }
@@ -355,7 +362,21 @@ export class Watcher {
     for (const k of Object.keys(this.state.posted)) if (!keep.has(k)) delete this.state.posted[k];
   }
 
+  // Save, then run the checkpoint command (if any). Throws when the command fails.
+  checkpoint() {
+    this.save();
+    if (this.cfg.checkpointCmd) execFileSync('bash', ['-c', this.cfg.checkpointCmd], { stdio: 'inherit', timeout: 120000 });
+  }
+
+  trimPostLog(maxLines = 1000) {
+    const f = path.join(this.cfg.dataDir, 'posts.jsonl');
+    if (!fs.existsSync(f)) return;
+    const lines = fs.readFileSync(f, 'utf8').split('\n').filter(Boolean);
+    if (lines.length > maxLines) fs.writeFileSync(f, lines.slice(-maxLines).join('\n') + '\n');
+  }
+
   save() {
+    this.trimPostLog();
     this.prune();
     this.state.pools = [...this.pools];
     writeJson(this.stateFile, this.state);
@@ -404,7 +425,7 @@ export class Watcher {
     await this.postFresh();
     await this.snapshotConcentration();
     await this.scheduledPosts();
-    this.save();
+    this.checkpoint();
     return n;
   }
 }
@@ -444,7 +465,10 @@ async function main() {
     try {
       const n = await w.tick();
       if (n) log(`processed ${n} blocks, lag ${w.state.lagBlocks}, feed ${w.feed.length}`);
-    } catch (e) { log('tick failed:', e.message); }
+    } catch (e) {
+      log('tick failed:', e.message);
+      if (argv.includes('--once')) process.exitCode = 1;
+    }
     if (argv.includes('--once')) break;
     const wait = Math.max(1000, cfg.pollSeconds * 1000 - (Date.now() - started));
     for (let t = 0; t < wait && !stop; t += 1000) await new Promise((r) => setTimeout(r, 1000));
