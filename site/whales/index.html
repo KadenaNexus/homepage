@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kadena Whale Watch: large KDA moves live | Kadena Nexus</title>
+<meta name="description" content="Every Kadena (KDA) move of 100,000 KDA or more on all 20 chains, as it happens: wallet moves, big DEX trades, exchange flows, the frozen platform share and whale counts, from public chain data.">
+<link rel="canonical" href="https://kadena.ws/whales/">
+<meta property="og:title" content="Kadena Whale Watch">
+<meta property="og:description" content="Every Kadena (KDA) move of 100,000 KDA or more on all 20 chains, live: wallet moves, big DEX trades, exchange flows and the frozen platform share.">
+<meta property="og:url" content="https://kadena.ws/whales/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://kadena.ws/og/og-nodes.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kadena.ws/og/og-nodes.jpg">
+<meta name="twitter:site" content="@KadenaNexus">
+<meta name="theme-color" content="#1C637B">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/nexus-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Organization",
+   "@id": "https://kadena.ws/#org",
+   "name": "Kadena Nexus",
+   "url": "https://kadena.ws/",
+   "logo": "https://kadena.ws/logo-kadena-nexus.png",
+   "sameAs": ["https://x.com/KadenaNexus", "https://t.me/KadenaNexus", "https://github.com/KadenaNexus"]
+  },
+  {
+   "@type": "WebPage",
+   "name": "Kadena Whale Watch",
+   "url": "https://kadena.ws/whales/",
+   "description": "Every Kadena (KDA) move of 100,000 KDA or more on all 20 chains, as it happens, from public chain data.",
+   "inLanguage": "en",
+   "publisher": {"@id": "https://kadena.ws/#org"}
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Kadena Nexus", "item": "https://kadena.ws/"},
+    {"@type": "ListItem", "position": 2, "name": "Kadena Whale Watch", "item": "https://kadena.ws/whales/"}
+   ]
+  }
+ ]
+}
+</script>
+<style>
+:root{
+  --ink:#FFFFFF; --panel:#F2F6F7; --line:#D6E0E4; --sand:#123A48; --mist:#4F6B76;
+  --teal:#1C637B; --pink:#E2710A; --deep:#123A48;
+  --in:#00789E; --out:#E2710A; /* chart pair, validated for colorblind separation on white */
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Instrument Sans","Helvetica Neue","Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+  --wrap:min(1180px, 100% - 2.5rem);
+  box-sizing:border-box; color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:5rem}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ink);color:var(--mist);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--pink);outline-offset:3px;border-radius:4px}
+.wrap{width:var(--wrap);margin-inline:auto}
+h1,h2,h3{font-family:var(--display);color:var(--sand);font-weight:600;margin:0;letter-spacing:-.015em}
+p{margin:0}
+.skip{position:absolute;left:-999px;top:0}
+.skip:focus{left:1rem;top:1rem;background:var(--teal);color:#fff;padding:.5rem .8rem;z-index:10}
+.top{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:4.25rem;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;font:700 1.15rem/1 var(--display);color:var(--sand);min-width:0}
+.brand-link{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:inherit}
+.brand img{width:32px;height:auto;flex:none}
+.brand small{font:500 .85rem var(--body);color:var(--mist);white-space:nowrap}
+.brand small a{color:var(--teal)}
+.nav{display:flex;gap:1.4rem;align-items:center}
+.nav a{text-decoration:none;font-size:.95rem}
+.nav a:hover{color:var(--sand)}
+@media (max-width:760px){.nav{display:none}.brand small{display:none}}
+
+.hero{padding-block:3rem 2rem}
+.crumb{font-size:.9rem;margin-bottom:.8rem}
+.crumb a{color:var(--teal)}
+.hero h1{font-size:clamp(2.3rem,5vw,4rem);line-height:1.02;font-weight:700}
+.hero .lede{margin-top:1rem;font-size:1.15rem;max-width:62ch}
+.live{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.2rem;font-size:.88rem;color:var(--sand);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.35rem .85rem}
+.live .dot{width:.55rem;height:.55rem;border-radius:50%;background:#2E8B57;flex:none}
+.live.stale .dot{background:var(--pink)}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin-top:2rem}
+.tile{border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;background:#fff}
+.tile b{display:block;font:700 clamp(1.5rem,3vw,2.1rem)/1.1 var(--display);color:var(--sand);font-variant-numeric:tabular-nums}
+.tile span{display:block;font-size:.88rem;margin-top:.35rem}
+@media (max-width:860px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+section{padding-block:2.5rem}
+section+section{border-top:1px solid var(--line)}
+.head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:.8rem 2rem;margin-bottom:1.2rem}
+.head h2{font-size:clamp(1.6rem,3vw,2.2rem);line-height:1.1}
+.head p{max-width:60ch;margin-top:.4rem}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.chips button{font:500 .9rem var(--body);color:var(--sand);background:#fff;border:1px solid var(--line);border-radius:999px;padding:.4rem .85rem;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+
+.feed{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.feed li{display:grid;grid-template-columns:7.5rem minmax(0,15rem) minmax(0,1fr) auto;gap:.3rem 1.2rem;align-items:baseline;padding:.95rem 0;border-bottom:1px solid var(--line)}
+.feed .when{font-size:.85rem;white-space:nowrap}
+.feed .amt{font:700 1.15rem/1.2 var(--display);color:var(--sand);font-variant-numeric:tabular-nums}
+.feed .amt small{display:block;font:400 .82rem var(--body);color:var(--mist)}
+.feed .what{min-width:0;overflow-wrap:anywhere}
+.feed .what a{color:var(--sand);text-decoration-color:var(--line)}
+.feed .what a:hover{text-decoration-color:var(--teal)}
+.feed .sub{display:block;font-size:.85rem;margin-top:.15rem}
+.feed .tx{font-size:.85rem;white-space:nowrap}
+.feed .tx a{color:var(--teal)}
+.tag{display:inline-block;font:600 .72rem/1 var(--body);letter-spacing:.02em;text-transform:uppercase;padding:.3rem .45rem;border-radius:6px;margin-right:.4rem;vertical-align:.1em;background:var(--panel);color:var(--sand);border:1px solid var(--line)}
+.tag.hot{background:#FDF0E4;border-color:#F3C9A0;color:#8A4300}
+.tag.x{background:#E5F2F6;border-color:#B5D8E4;color:#0B5670}
+@media (max-width:760px){.feed li{grid-template-columns:minmax(0,1fr) auto}.feed .what{grid-column:1 / -1}.feed .when{grid-column:1}.feed .amt{grid-column:1}.feed .tx{grid-column:2;grid-row:1}}
+.more{margin-top:1rem;font:500 .95rem var(--body);color:var(--sand);background:#fff;border:1px solid var(--line);border-radius:999px;padding:.5rem 1.1rem;cursor:pointer}
+.empty{padding:1.5rem;border:1px dashed var(--line);border-radius:14px;background:var(--panel)}
+
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:16px;padding:1.3rem 1.4rem;background:#fff}
+.card h3{font-size:1.25rem}
+.card .note{font-size:.88rem;margin-top:.8rem}
+.big{font:700 clamp(2rem,4.5vw,3rem)/1 var(--display);color:var(--sand);font-variant-numeric:tabular-nums;margin-top:.6rem}
+.legend{display:flex;flex-wrap:wrap;gap:1rem;font-size:.85rem;margin:.6rem 0}
+.legend i{display:inline-block;width:.8rem;height:.8rem;border-radius:3px;margin-right:.35rem;vertical-align:-.1em}
+.bars{display:grid;gap:.9rem;margin-top:.8rem}
+.bar .lbl{display:flex;justify-content:space-between;gap:1rem;font-size:.9rem;color:var(--sand)}
+.bar .lbl span{color:var(--mist);font-variant-numeric:tabular-nums}
+.bar .track{display:grid;gap:2px;margin-top:.3rem}
+.bar .seg{height:10px;border-radius:0 4px 4px 0;min-width:2px}
+.chains{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.5rem;margin-top:1rem}
+.chains div{background:var(--panel);border-radius:10px;padding:.5rem .6rem;font-size:.82rem}
+.chains b{display:block;color:var(--sand);font:600 1rem/1.2 var(--display);font-variant-numeric:tabular-nums}
+@media (max-width:560px){.chains{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.chart{width:100%;height:auto;margin-top:.6rem;overflow:visible}
+.chart .ax{font:12px var(--body);fill:#4F6B76}
+.chart .grid{stroke:#E6EDF0;stroke-width:1}
+.chart .hit{fill:transparent;cursor:crosshair}
+.tip{position:fixed;z-index:20;pointer-events:none;background:var(--deep);color:#fff;font-size:.82rem;line-height:1.35;padding:.45rem .6rem;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.15);display:none;max-width:16rem}
+details{margin-top:.8rem}
+summary{cursor:pointer;color:var(--sand);font-weight:600;font-size:.92rem}
+.tw{overflow-x:auto;margin-top:.5rem}
+.tw table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+.tw th,.tw td{text-align:right;padding:.3rem .5rem;border-top:1px solid var(--line)}
+.tw th:first-child,.tw td:first-child{text-align:left}
+
+.about{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:1.5rem 4rem}
+.about .body p+p{margin-top:.9rem}
+.about .body p{max-width:62ch}
+.about ul{margin:.6rem 0 0;padding-left:1.2rem}
+.about li{margin-bottom:.35rem}
+.about a{color:var(--teal)}
+@media (max-width:860px){.about{grid-template-columns:1fr}}
+footer{border-top:1px solid var(--line);padding-block:2rem 2.5rem;font-size:.9rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:1rem 2rem;justify-content:space-between}
+footer nav{display:flex;flex-wrap:wrap;gap:1.2rem}
+footer a{text-decoration:none}
+footer a:hover{color:var(--sand)}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a href="/whales/" class="brand-link"><img src="/nexus-mark.png" alt="" width="32" height="28"><span>Kadena Whale Watch</span></a>
+      <small>Part of <a href="https://kadena.ws/">Kadena Nexus</a></small>
+    </div>
+    <nav class="nav" aria-label="Page">
+      <a href="#feed">Live feed</a>
+      <a href="#flows">Exchanges</a>
+      <a href="#platform">Platform share</a>
+      <a href="#holders">Holders</a>
+      <a href="#about">How it works</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<div class="hero">
+  <div class="wrap">
+    <p class="crumb"><a href="/">Kadena Nexus</a> / Whale Watch</p>
+    <h1>Kadena whale watch</h1>
+    <p class="lede">Every move of 100,000 KDA or more on all 20 Kadena chains, as it happens. Wallet moves, big DEX trades, exchange flows and the frozen platform share, read straight from the chain. Alerts post to X with a daily summary.</p>
+    <p class="live" id="live"><span class="dot"></span><span id="liveText">Loading live data…</span></p>
+    <div class="tiles" aria-live="polite">
+      <div class="tile"><b id="t24">–</b><span>moves of 100K+ KDA in the last 24 hours</span></div>
+      <div class="tile"><b id="t7">–</b><span id="t7l">largest move in the last 7 days</span></div>
+      <div class="tile"><b id="t1m">–</b><span>wallets holding 1M+ KDA</span></div>
+      <div class="tile"><b id="tps">–</b><span id="tpsl">KDA platform share, frozen</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="feed">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <h2>Live feed</h2>
+        <p>Newest first, last 90 days. Amounts in USD use the Mercatus KDA/USDC pool price at the time of the move.</p>
+      </div>
+      <div class="chips" role="group" aria-label="Filter the feed">
+        <button type="button" data-f="all" aria-pressed="true">All</button>
+        <button type="button" data-f="move" aria-pressed="false">Wallet moves</button>
+        <button type="button" data-f="dex" aria-pressed="false">DEX trades and pools</button>
+        <button type="button" data-f="exchange" aria-pressed="false">Exchanges</button>
+        <button type="button" data-f="platform" aria-pressed="false">Platform share</button>
+      </div>
+    </div>
+    <ul class="feed" id="list"></ul>
+    <button class="more" id="more" type="button" hidden>Show more</button>
+  </div>
+</section>
+
+<section id="activity">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <h2>Moves per day</h2>
+        <p>Wallet moves of 100K+ KDA per day (Riyadh time). Hover a bar for the day.</p>
+      </div>
+    </div>
+    <div class="card"><div id="daily"></div></div>
+  </div>
+</section>
+
+<section id="flows">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <h2>Exchange flows</h2>
+        <p>KDA sent to and from exchange wallets over the last 30 days, all amounts. Moves between two wallets of the same exchange are left out. More KDA going in than out often comes before selling, but not always.</p>
+      </div>
+    </div>
+    <div class="card" id="flowCard"></div>
+  </div>
+</section>
+
+<section id="platform">
+  <div class="wrap">
+    <div class="grid2">
+      <div>
+        <h2>Frozen platform share</h2>
+        <p style="margin-top:.8rem">The Kadena platform share is KDA set aside at genesis for the company behind Kadena. When Kadena LLC stopped operating, the community fork moved control of the unredeemed allocations to five community keyholders on November 6, 2025. Any 3 of the 5 must sign to move them.</p>
+        <p style="margin-top:.8rem">This page reads the allocations from the chain every hour. Any release or transfer posts an alert immediately.</p>
+      </div>
+      <div class="card">
+        <h3>Still frozen</h3>
+        <div class="big" id="psTotal">–</div>
+        <p class="note" id="psNote">KDA in platform-share allocations on chains 0–9.</p>
+        <div class="chains" id="psChains"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="holders">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <h2>How many whales</h2>
+        <p>Wallets by total balance across all 20 chains, counted once a day. These counts include exchange wallets and DEX pools. For today's list of the largest accounts, see the <a href="https://denascan.com/richlist" style="color:var(--teal)">DenaScan rich list</a>.</p>
+      </div>
+    </div>
+    <div class="tiles" style="margin-top:0">
+      <div class="tile"><b id="c100k">–</b><span>wallets with 100K+ KDA</span></div>
+      <div class="tile"><b id="c1m">–</b><span>wallets with 1M+ KDA</span></div>
+      <div class="tile"><b id="c10m">–</b><span>wallets with 10M+ KDA</span></div>
+      <div class="tile"><b id="ctop">–</b><span>KDA held by the 10 largest wallets</span></div>
+    </div>
+    <div class="grid2" style="margin-top:1.5rem">
+      <div class="card"><h3>Wallets with 1M+ KDA</h3><div id="trend1m"></div></div>
+      <div class="card"><h3>Wallets with 100K+ KDA</h3><div id="trend100k"></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about">
+    <h2>How it works</h2>
+    <div class="body">
+      <p>A watcher on the Kadena Nexus server reads every block on all 20 chains from the Kadena Nexus node in Saudi Arabia, six blocks behind the tip so short forks never show up. It records each KDA transfer of 100,000 or more.</p>
+      <ul>
+        <li><b>Cross-chain moves</b> count once, on the chain they leave from. A wallet moving its own KDA between chains is not a whale move and is left out.</li>
+        <li><b>DEX trades</b> show the net KDA bought or sold in one transaction, so a round trip through two pools is not counted twice. Liquidity added to or taken out of a pool is shown separately.</li>
+        <li><b>Relay hops</b>: when a wallet passes the same amount straight on, the second hop is shown under the first and not posted again.</li>
+        <li><b>Dormant wallets</b>: a sender idle for a year or more is flagged.</li>
+        <li><b>New whales</b>: a receiver that crosses 1M KDA with the move is flagged.</li>
+      </ul>
+      <p><b>Wallet names.</b> A name is <b>confirmed</b> when the exchange itself ties the wallet to it, for example a deposit address the exchange issued sweeping into that wallet, or when contract data on the chain proves it (DEX pools, vesting lockers). A name marked <b>(likely)</b> rests on strong circumstantial evidence: the wallet paused and resumed within hours of the exchange's published suspension and resumption times around the November 2025 fork, or stopped paying out on the day the exchange closed KDA withdrawals. Everything else shows as an unknown wallet with its address. Private individuals are never named. Spotted a wrong or missing label? Tell us on <a href="https://t.me/KadenaNexus">Telegram</a>.</p>
+      <p><b>Inside one exchange.</b> When an exchange sweeps a customer deposit address into its own hot wallet, the move appears in the feed marked "internal" and is not posted or counted.</p>
+      <p><b>On X.</b> Each move of 100K+ KDA posts as it happens, up to six a day. A summary posts every evening at 21:00 Riyadh time, and a weekly digest on Fridays. Platform-share alerts are never capped.</p>
+      <p>Account and transaction links open on <a href="https://denascan.com/">DenaScan</a>. This page reports what happened on chain. It is not financial advice, and an exchange deposit is not proof that anyone is selling.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Kadena Nexus. Community-run, not financial advice.</span>
+    <nav aria-label="Footer">
+      <a href="https://kadena.ws/">Part of Kadena Nexus</a>
+      <a href="https://nodes.kadena.ws/">Monitor</a>
+      <a href="https://adoption.kadena.ws/">Adoption Index</a>
+      <a href="https://marketplace.kadena.ws/">Marketplace</a>
+      <a href="https://earn.kadena.ws/">Earn</a>
+      <a href="/reports/">Kadena network reports</a>
+      <a href="/tokenomics/">KDA tokenomics</a>
+      <a href="https://github.com/KadenaNexus">GitHub</a>
+      <a href="/privacy-policy">Privacy policy</a>
+    </nav>
+  </div>
+</footer>
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script>
+(() => {
+  const DATA = 'data/';
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fmt = (n) => Math.round(n).toLocaleString('en-US');
+  const compact = (n) => { const a = Math.abs(n); if (a >= 1e6) return (n / 1e6).toFixed(a >= 1e7 ? 1 : 2).replace(/\.?0+$/, '') + 'M'; if (a >= 1e3) return Math.round(n / 1e3) + 'K'; return String(Math.round(n)); };
+  const short = (a) => !a ? '?' : /^k:[0-9a-f]{64}$/.test(a) ? `k:${a.slice(2, 6)}…${a.slice(-4)}` : a.length > 16 ? `${a.slice(0, 10)}…${a.slice(-4)}` : a;
+  const acct = (a, label) => `<a href="https://denascan.com/account/${encodeURIComponent(a)}" title="${esc(a)}">${esc(label || 'unknown wallet ' + short(a))}</a>`;
+  const sym = (t) => { if (!t) return '?'; const l = t.split('.').pop(); return l === 'coin' ? 'KDA' : /^[a-z]+$/.test(l) ? l.toUpperCase() : l; };
+  const tok = (n) => n >= 100 ? fmt(n) : n >= 1 ? n.toFixed(2) : Number(n).toPrecision(3);
+  const ago = (ms) => { const s = (Date.now() - ms) / 1000; if (s < 90) return 'just now'; if (s < 3600) return Math.round(s / 60) + ' min ago'; if (s < 86400) return Math.round(s / 3600) + ' h ago'; return new Date(ms).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); };
+  const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dayLbl = (d) => `${MON[+d.slice(5, 7) - 1]} ${+d.slice(8, 10)}`;
+  const tip = $('tip');
+  const showTip = (e, html) => { tip.innerHTML = html; tip.style.display = 'block'; const x = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8); tip.style.left = x + 'px'; tip.style.top = (e.clientY + 14) + 'px'; };
+  const hideTip = () => { tip.style.display = 'none'; };
+
+  let feed = [], stats = null, filter = 'all', shown = 40;
+  const isExchange = (i, s) => {
+    const ex = new Set((s && s.labelledExchanges) || []);
+    return ex.has(i.fromLabel) || ex.has(i.toLabel);
+  };
+
+  function row(i) {
+    const usd = i.usd ? `<small>~$${fmt(i.usd)}</small>` : '';
+    const chain = i.toChain != null && i.toChain !== i.chain ? `chain ${i.chain} → ${i.toChain}` : `chain ${i.chain}`;
+    const tx = i.requestKey ? `<a href="https://denascan.com/transactions/${encodeURIComponent(i.requestKey)}">tx ${esc(i.requestKey.slice(0, 6))}…</a>` : '';
+    let tags = '', what = '', sub = [];
+    if (i.type === 'move') {
+      if (i.amount >= 1e6) tags += '<span class="tag hot">1M+</span>';
+      if (i.dormantDays) tags += `<span class="tag hot">idle ${i.dormantDays >= 365 ? (i.dormantDays / 365).toFixed(1) + ' yr' : i.dormantDays + ' d'}</span>`;
+      if (i.newWhale) tags += '<span class="tag hot">new 1M+ holder</span>';
+      if (i.relayOf) tags += `<span class="tag">${i.returned ? 'returned' : 'relay'}</span>`;
+      const ex = new Set((stats && stats.labelledExchanges) || []);
+      if (i.internal) tags += '<span class="tag">internal</span>';
+      else if (ex.has(i.toLabel) && ex.has(i.fromLabel)) tags += '<span class="tag x">exchange to exchange</span>';
+      else if (ex.has(i.toLabel)) tags += '<span class="tag x">to exchange</span>';
+      else if (ex.has(i.fromLabel)) tags += '<span class="tag x">from exchange</span>';
+      what = `${acct(i.from, i.fromLabel)} → ${acct(i.to, i.toLabel)}`;
+      if (i.internal) sub.push('moved between wallets of the same exchange, not posted');
+      if (i.relayOf) sub.push(i.returned ? 'same amount sent back to the earlier sender' : 'same amount passed straight on, part of an earlier move');
+      if (i.newWhale) sub.push(`receiver now holds ${compact(i.newWhale)} KDA`);
+    } else if (i.type === 'dex') {
+      tags += `<span class="tag x">${i.side === 'sell' ? 'DEX sell' : 'DEX buy'}</span>`;
+      what = `${i.side === 'sell' ? 'Sold for' : 'Bought with'} ${i.other ? tok(i.other.amount) + ' ' + esc(sym(i.other.token)) : '?'} on ${esc(i.dex)} by ${acct(i.trader, i.traderLabel)}`;
+    } else if (i.type === 'liquidity') {
+      tags += `<span class="tag">${i.side === 'add' ? 'pool add' : 'pool withdraw'}</span>`;
+      const pair = `${esc(i.dex)} KDA/${esc(sym(i.other && i.other.token))} pool`;
+      what = `${i.side === 'add' ? 'Added to' : 'Withdrawn from'} the ${pair}${i.other ? ' with ' + tok(i.other.amount) + ' ' + esc(sym(i.other.token)) : ''} by ${acct(i.trader, i.traderLabel)}`;
+    } else if (i.type === 'platform') {
+      tags += '<span class="tag hot">platform share</span>';
+      what = i.kind === 'release' ? `Allocation ${esc(i.account)} released` : i.kind === 'transfer' ? `${esc(i.account)} → ${acct(i.to)}` : 'Frozen platform share dropped';
+    }
+    if (i.posted) sub.push('posted to X');
+    return `<li><span class="when" title="${new Date(i.time).toISOString()}">${ago(i.time)}</span><span class="amt">${fmt(i.amount)} KDA${usd}</span><span class="what">${tags}${what}<span class="sub">${esc(chain)}${sub.length ? ' · ' + sub.map(esc).join(' · ') : ''}</span></span><span class="tx">${tx}</span></li>`;
+  }
+
+  function renderFeed() {
+    const items = feed.filter((i) => filter === 'all' || (filter === 'move' && i.type === 'move') || (filter === 'dex' && (i.type === 'dex' || i.type === 'liquidity')) || (filter === 'platform' && i.type === 'platform') || (filter === 'exchange' && isExchange(i, stats)));
+    $('list').innerHTML = items.length ? items.slice(0, shown).map(row).join('') : `<li class="empty">${filter === 'exchange' && !(stats && stats.labelledExchanges && stats.labelledExchanges.length) ? 'No exchange wallets are labelled yet. Labels are added only after they are checked against a public source.' : filter === 'platform' ? 'The platform share has not moved in this period.' : 'Nothing in this period yet.'}</li>`;
+    $('more').hidden = items.length <= shown;
+  }
+
+  // single-series bar chart with hover
+  function barChart(el, rows, { label, value, color }) {
+    if (!rows.length) { el.innerHTML = '<p class="note">No data yet.</p>'; return; }
+    const W = 760, H = 180, L = 34, B = 22, T = 8;
+    const max = Math.max(1, ...rows.map(value));
+    const step = (W - L) / rows.length, bw = Math.max(2, step - 2);
+    const y = (v) => T + (H - T - B) * (1 - v / max);
+    const ticks = [0, Math.ceil(max / 2), max];
+    let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">`;
+    for (const t of ticks) s += `<line class="grid" x1="${L}" x2="${W}" y1="${y(t)}" y2="${y(t)}"/><text class="ax" x="${L - 6}" y="${y(t) + 4}" text-anchor="end">${t}</text>`;
+    rows.forEach((r, i) => {
+      const v = value(r), x = L + i * step + 1, top = y(v), h = H - B - top;
+      if (v > 0) s += `<path d="M${x},${H - B}V${top + Math.min(4, h)}q0,-${Math.min(4, h)} ${Math.min(4, bw / 2)},-${Math.min(4, h)}H${x + bw - Math.min(4, bw / 2)}q${Math.min(4, bw / 2)},0 ${Math.min(4, bw / 2)},${Math.min(4, h)}V${H - B}Z" fill="${color}"/>`;
+      s += `<rect class="hit" data-i="${i}" x="${L + i * step}" y="${T}" width="${step}" height="${H - T - B}"/>`;
+    });
+    const first = rows[0].day, last = rows[rows.length - 1].day;
+    s += `<text class="ax" x="${L}" y="${H - 5}">${dayLbl(first)}</text><text class="ax" x="${W}" y="${H - 5}" text-anchor="end">${dayLbl(last)}</text></svg>`;
+    el.innerHTML = s + `<details><summary>Show as a table</summary><div class="tw"><table><thead><tr><th>Day</th><th>${esc(label)}</th></tr></thead><tbody>${rows.slice().reverse().map((r) => `<tr><td>${r.day}</td><td>${fmt(value(r))}</td></tr>`).join('')}</tbody></table></div></details>`;
+    el.querySelectorAll('.hit').forEach((h) => {
+      const r = rows[+h.dataset.i];
+      h.addEventListener('mousemove', (e) => showTip(e, `<b>${dayLbl(r.day)}</b><br>${esc(label)}: ${fmt(value(r))}${r.largest ? `<br>largest ${fmt(r.largest)} KDA` : ''}`));
+      h.addEventListener('mouseleave', hideTip);
+    });
+  }
+
+  function lineChart(el, rows, { label, value, color }) {
+    if (rows.length < 2) { el.innerHTML = `<p class="note">${rows.length ? `${fmt(value(rows[0]))} on ${dayLbl(rows[0].day)}. ` : ''}The trend line starts once there are two daily counts (counting began October 20, 2026).</p>`; return; }
+    const W = 520, H = 170, L = 40, B = 22, T = 10;
+    const vals = rows.map(value), lo = Math.min(...vals), hi = Math.max(...vals);
+    const pad = Math.max(1, Math.ceil((hi - lo) * 0.15)), min = Math.max(0, lo - pad), max = hi + pad;
+    const x = (i) => L + (W - L - 6) * (i / (rows.length - 1));
+    const y = (v) => T + (H - T - B) * (1 - (v - min) / (max - min));
+    let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">`;
+    for (const t of [min, Math.round((min + max) / 2), max]) s += `<line class="grid" x1="${L}" x2="${W}" y1="${y(t)}" y2="${y(t)}"/><text class="ax" x="${L - 6}" y="${y(t) + 4}" text-anchor="end">${Math.round(t)}</text>`;
+    s += `<path d="${rows.map((r, i) => `${i ? 'L' : 'M'}${x(i)},${y(value(r))}`).join('')}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>`;
+    s += `<circle id="${el.id}-dot" r="4" fill="${color}" stroke="#fff" stroke-width="2" style="display:none"/>`;
+    s += `<rect class="hit" x="${L}" y="${T}" width="${W - L}" height="${H - T - B}"/>`;
+    s += `<text class="ax" x="${L}" y="${H - 5}">${dayLbl(rows[0].day)}</text><text class="ax" x="${W}" y="${H - 5}" text-anchor="end">${dayLbl(rows[rows.length - 1].day)}</text></svg>`;
+    el.innerHTML = s;
+    const svg = el.querySelector('svg'), dot = el.querySelector('circle'), hit = el.querySelector('.hit');
+    hit.addEventListener('mousemove', (e) => {
+      const p = svg.getBoundingClientRect(), vx = (e.clientX - p.left) * (W / p.width);
+      const i = Math.max(0, Math.min(rows.length - 1, Math.round((vx - L) / ((W - L - 6) / (rows.length - 1)))));
+      dot.setAttribute('cx', x(i)); dot.setAttribute('cy', y(value(rows[i]))); dot.style.display = '';
+      showTip(e, `<b>${dayLbl(rows[i].day)}</b><br>${esc(label)}: ${fmt(value(rows[i]))}`);
+    });
+    hit.addEventListener('mouseleave', () => { dot.style.display = 'none'; hideTip(); });
+  }
+
+  function renderFlows() {
+    const card = $('flowCard'), ex = stats.exchanges || [];
+    if (!(stats.labelledExchanges || []).length) {
+      card.innerHTML = '<p>Exchange wallets are being verified. Flows appear here as soon as the first exchange label is confirmed from a public source, and the X daily summary adds an exchange line at the same time.</p>';
+      return;
+    }
+    if (!ex.length) { card.innerHTML = '<p>No KDA has moved to or from labelled exchange wallets since counting started. Labelled so far: ' + (stats.labelledExchanges || []).map(esc).join(', ') + '. Most exchange wallets on Kadena have no public owner yet, so they show as unknown wallets.</p>'; return; }
+    const max = Math.max(...ex.map((e) => Math.max(e.in, e.out)), 1);
+    card.innerHTML = `<div class="legend"><span><i style="background:var(--in)"></i>Into exchange</span><span><i style="background:var(--out)"></i>Out of exchange</span></div>
+      <div class="bars">${ex.map((e) => `<div class="bar"><div class="lbl"><b>${esc(e.display || e.name)}</b><span>${compact(e.in)} in · ${compact(e.out)} out · net ${e.in - e.out >= 0 ? compact(e.in - e.out) + ' in' : compact(e.out - e.in) + ' out'}</span></div>
+      <div class="track"><div class="seg" style="width:${(e.in / max) * 100}%;background:var(--in)" title="${fmt(e.in)} KDA in"></div><div class="seg" style="width:${(e.out / max) * 100}%;background:var(--out)" title="${fmt(e.out)} KDA out"></div></div></div>`).join('')}</div>
+      <p class="note">Last 30 days, all transfer sizes. Labelled exchanges: ${stats.labelledExchanges.map(esc).join(', ')}. "(likely)" means the match rests on strong circumstantial evidence, such as the wallet pausing and resuming at the exact times the exchange announced, rather than a deposit address the exchange issued.</p>`;
+  }
+
+  function renderStats() {
+    const now = Date.now();
+    const moves = feed.filter((i) => i.type === 'move' && !i.relayOf);
+    $('t24').textContent = fmt(moves.filter((i) => i.time >= now - 864e5).length);
+    const wk = moves.filter((i) => i.time >= now - 7 * 864e5);
+    $('t7').textContent = wk.length ? compact(Math.max(...wk.map((i) => i.amount))) : '0';
+    $('t7l').textContent = wk.length ? 'KDA, largest move in the last 7 days' : 'moves of 100K+ KDA in the last 7 days';
+    const conc = stats.concentration || [];
+    const c = conc[conc.length - 1];
+    if (c) { $('t1m').textContent = c.w1m; $('c100k').textContent = c.w100k; $('c1m').textContent = c.w1m; $('c10m').textContent = c.w10m; $('ctop').textContent = compact(c.top10); }
+    lineChart($('trend1m'), conc, { label: 'Wallets with 1M+ KDA', value: (r) => r.w1m, color: 'var(--in)' });
+    lineChart($('trend100k'), conc, { label: 'Wallets with 100K+ KDA', value: (r) => r.w100k, color: 'var(--in)' });
+    const p = stats.platform;
+    if (p) {
+      const days = Math.floor((now - Date.parse(p.lastMoveAt)) / 864e5);
+      $('tps').textContent = compact(p.total);
+      $('tpsl').textContent = `KDA platform share, unmoved for ${days} days`;
+      $('psTotal').textContent = fmt(p.total) + ' KDA';
+      $('psNote').textContent = `Unmoved for ${days} days (since ${new Date(p.lastMoveAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}). Checked ${ago(Date.parse(p.checkedAt))}.`;
+      $('psChains').innerHTML = Object.entries(p.perChain).map(([ch, v]) => `<div>chain ${ch}<b>${compact(v)}</b></div>`).join('');
+    }
+    const days = stats.days || [];
+    // fill gaps so quiet days show as zero
+    const filled = [];
+    if (days.length) {
+      const map = Object.fromEntries(days.map((d) => [d.day, d]));
+      for (let t = Date.parse(days[0].day); t <= Date.parse(days[days.length - 1].day); t += 864e5) {
+        const k = new Date(t).toISOString().slice(0, 10);
+        filled.push(map[k] || { day: k, moves: 0, largest: 0 });
+      }
+    }
+    barChart($('daily'), filled, { label: 'Moves of 100K+ KDA', value: (r) => r.moves, color: 'var(--in)' });
+    renderFlows();
+  }
+
+  async function load() {
+    try {
+      const get = (f) => fetch(DATA + f + '?t=' + Date.now(), { cache: 'no-store' }).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
+      const [f, s, st] = await Promise.all([get('feed.json'), get('stats.json'), get('status.json').catch(() => null)]);
+      feed = f.items || []; stats = s;
+      renderFeed(); renderStats();
+      const upd = Date.parse((st && st.updated) || s.updated);
+      const stale = Date.now() - upd > 10 * 60e3;
+      $('live').classList.toggle('stale', stale);
+      $('liveText').textContent = stale ? `Data last updated ${ago(upd)}. The watcher may be catching up.` : `Live · updated ${ago(upd)}${s.price ? ` · KDA ~$${s.price.toFixed(4)}` : ''}`;
+    } catch (e) {
+      $('live').classList.add('stale');
+      $('liveText').textContent = 'Live data is not available right now.';
+      if (!feed.length) $('list').innerHTML = '<li class="empty">The live feed could not be loaded. Please try again in a minute.</li>';
+    }
+  }
+
+  document.querySelectorAll('.chips button').forEach((b) => b.addEventListener('click', () => {
+    filter = b.dataset.f; shown = 40;
+    document.querySelectorAll('.chips button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    renderFeed();
+  }));
+  $('more').addEventListener('click', () => { shown += 40; renderFeed(); });
+  load();
+  setInterval(() => { if (!document.hidden) load(); }, 60000);
+})();
+</script>
+</body>
+</html>

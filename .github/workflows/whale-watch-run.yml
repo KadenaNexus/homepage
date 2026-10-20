@@ -1,0 +1,35 @@
+name: whale-watch-run
+# Runs Kadena Whale Watch every 5 minutes on GitHub (no server setup needed).
+# Reads new blocks, posts alerts to X when WHALE_POST_MODE is "live", and publishes
+# kadena.ws/whales/data with the existing deploy key. GitHub can delay scheduled runs;
+# the watcher catches up on every block it missed, so nothing is skipped.
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: whale-watch-run
+  cancel-in-progress: false
+jobs:
+  run:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Watch, post, publish
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          # dry (default) writes posts to kadena.ws/whales/data/watcher/posts.jsonl only
+          POST_MODE: ${{ vars.WHALE_POST_MODE || 'dry' }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+          NODE_URLS: https://api.chainweb-community.org,https://chainweb.eckowallet.com
+          LABELS_FILE: ${{ github.workspace }}/services/whale-watch/labels.json
+        run: bash services/whale-watch/actions-run.sh

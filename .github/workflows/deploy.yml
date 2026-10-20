@@ -13,7 +13,7 @@ jobs:
     uses: ./.github/workflows/deploy-static.yml
     with:
       source: site
-      files: "index.html logo-kadena-nexus.png privacy-policy.html favicon.ico apple-touch-icon.png nexus-mark.png og icons robots.txt sitemap.xml llms.txt community-edition buy-kda faq news reports tokenomics"
+      files: "index.html logo-kadena-nexus.png privacy-policy.html favicon.ico apple-touch-icon.png nexus-mark.png og icons robots.txt sitemap.xml llms.txt community-edition buy-kda faq news reports tokenomics whales"
       build: "python3 scripts/tokenomics/build_tokenomics.py && python3 scripts/update_facts.py && python3 scripts/build_news.py && python3 scripts/report/update_reports.py"
       target: /var/www/kadena.ws
       url: https://kadena.ws/

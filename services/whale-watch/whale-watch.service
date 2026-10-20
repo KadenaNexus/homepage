@@ -1,0 +1,27 @@
+[Unit]
+Description=Kadena Whale Watch (large KDA moves -> kadena.ws/whales and X)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=whalewatch
+Group=whalewatch
+EnvironmentFile=/etc/whale-watch.env
+WorkingDirectory=/opt/whale-watch
+ExecStart=NODE_BIN /opt/whale-watch/watcher.mjs
+Restart=always
+RestartSec=15
+# hardening: the service can only write its state and the page data folder
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ReadWritePaths=/var/lib/whale-watch /var/www/kadena.ws/whales/data
+CapabilityBoundingSet=
+RestrictSUIDSGID=yes
+MemoryMax=512M
+
+[Install]
+WantedBy=multi-user.target
