@@ -264,7 +264,7 @@
    "type": "exchange",
    "confidence": "confirmed",
    "role": "hot wallet (chain 1)",
-   "source": "Confirmed Oct 20, 2026: a Gate KDA deposit address issued to a Gate account holder sweeps into this wallet (10 sweeps, 462,830 KDA, Jun–Oct 2026). Consistent with: shortest pause at the Nov 2025 fork (last tx Nov 9 00:41 UTC, next Nov 11 03:55 UTC) after Gate said KDA would continue as normal (gate.com/announcements/article/47871); deposits from ~150 distinct wallets per month, swept from all chains to chain 1."
+   "source": "Confirmed Oct 20, 2026 in both directions by a Gate account holder: the KDA deposit address Gate issued to them sweeps into this wallet (10 sweeps, 462,830 KDA, Jun–Oct 2026), and their Gate withdrawal of 133,088.843 KDA on Oct 8, 2026 was paid from this wallet. Consistent with: shortest pause at the Nov 2025 fork (last tx Nov 9 00:41 UTC, next Nov 11 03:55 UTC) after Gate said KDA would continue as normal (gate.com/announcements/article/47871); deposits from ~150 distinct wallets per month, swept from all chains to chain 1."
   },
   "k:7cfe3761add000c3e711fdd3316d625365ab7b9ed97a8a814acabff0359d8e10": {
    "name": "CoinEx",
