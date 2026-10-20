@@ -193,3 +193,14 @@ test('nothing is posted when the state cannot be stored first (no double posts)'
   assert.equal(ok.posts.length, 1);
   assert.ok(fs.existsSync(path.join(dir, 'synced')));
 });
+
+test('label changes reach items already in the feed', () => {
+  const { w, dir } = tmpWatcher();
+  w.processBlock(fixture('1-7266334'));
+  assert.equal(w.feed[0].fromLabel, null);
+  fs.writeFileSync(path.join(dir, 'labels.json'), JSON.stringify({ accounts: { 'k:0d584a4cbbfd9a4878d816512894e65918e54fae13df39a6f520fc90caea2fb0': { name: 'Gate', type: 'exchange', confidence: 'confirmed', source: 'x' } } }));
+  w.loadLabels();
+  w.publish();
+  const feed = JSON.parse(fs.readFileSync(path.join(w.cfg.publicDir, 'feed.json'), 'utf8'));
+  assert.equal(feed.items[0].fromLabel, 'Gate');
+});

@@ -449,12 +449,12 @@ footer a:hover{color:var(--sand)}
       card.innerHTML = '<p>Exchange wallets are being verified. Flows appear here as soon as the first exchange label is confirmed from a public source, and the X daily summary adds an exchange line at the same time.</p>';
       return;
     }
-    if (!ex.length) { card.innerHTML = '<p>No KDA has moved to or from labelled exchange wallets since counting started. Labelled so far: ' + (stats.labelledExchanges || []).map(esc).join(', ') + '. Most exchange wallets on Kadena have no public owner yet, so they show as unknown wallets.</p>'; return; }
+    if (!ex.length) { card.innerHTML = '<p>No KDA has moved to or from labelled exchange wallets since counting started. Labelled so far: ' + (stats.exchangeList || stats.labelledExchanges || []).map(esc).join(', ') + '. Most exchange wallets on Kadena have no public owner yet, so they show as unknown wallets.</p>'; return; }
     const max = Math.max(...ex.map((e) => Math.max(e.in, e.out)), 1);
     card.innerHTML = `<div class="legend"><span><i style="background:var(--in)"></i>Into exchange</span><span><i style="background:var(--out)"></i>Out of exchange</span></div>
       <div class="bars">${ex.map((e) => `<div class="bar"><div class="lbl"><b>${esc(e.display || e.name)}</b><span>${compact(e.in)} in · ${compact(e.out)} out · net ${e.in - e.out >= 0 ? compact(e.in - e.out) + ' in' : compact(e.out - e.in) + ' out'}</span></div>
       <div class="track"><div class="seg" style="width:${(e.in / max) * 100}%;background:var(--in)" title="${fmt(e.in)} KDA in"></div><div class="seg" style="width:${(e.out / max) * 100}%;background:var(--out)" title="${fmt(e.out)} KDA out"></div></div></div>`).join('')}</div>
-      <p class="note">Last 30 days, all transfer sizes. Labelled exchanges: ${stats.labelledExchanges.map(esc).join(', ')}. "(likely)" means the match rests on strong circumstantial evidence, such as the wallet pausing and resuming at the exact times the exchange announced, rather than a deposit address the exchange issued.</p>`;
+      <p class="note">Last 30 days, all transfer sizes. Labelled exchanges: ${(stats.exchangeList || stats.labelledExchanges).map(esc).join(', ')}. "(likely)" means the match rests on strong circumstantial evidence, such as the wallet pausing and resuming at the exact times the exchange announced, rather than a deposit address the exchange issued.</p>`;
   }
 
   function renderStats() {
