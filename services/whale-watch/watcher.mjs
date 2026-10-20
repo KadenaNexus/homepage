@@ -384,7 +384,21 @@ export class Watcher {
     this.publish();
   }
 
+  // Labels change over time (new evidence, corrections), so names on stored items are refreshed on every publish.
+  relabel() {
+    for (const it of this.feed) {
+      if (it.from) it.fromLabel = F.displayName(this.labelOf(it.from));
+      if (it.to) it.toLabel = F.displayName(this.labelOf(it.to));
+      if (it.trader) it.traderLabel = F.displayName(this.labelOf(it.trader));
+      if (it.type === 'move') {
+        const fl = this.labelOf(it.from), tl = this.labelOf(it.to);
+        if (fl?.type === 'exchange' && tl?.type === 'exchange' && fl.name === tl.name) it.internal = true;
+      }
+    }
+  }
+
   publish() {
+    this.relabel();
     const now = this.now();
     const days = Object.entries(this.state.days).sort().map(([day, d]) => ({ day, moves: d.moves, largest: Math.round(d.largest), dex: d.dex, flowIn: Math.round(d.flowIn), flowOut: Math.round(d.flowOut) }));
     const exchanges = {};
@@ -408,6 +422,7 @@ export class Watcher {
       days,
       exchanges: Object.entries(exchanges).map(([name, f]) => ({ name, display: this.exchangeDisplay(name), in: Math.round(f.in), out: Math.round(f.out) })).sort((a, b) => (b.in + b.out) - (a.in + a.out)),
       labelledExchanges: [...new Set(Object.values(this.labels).filter((l) => l.type === 'exchange').map((l) => F.displayName(l)))],
+      exchangeList: [...new Set(Object.values(this.labels).filter((l) => l.type === 'exchange').map((l) => l.name))].map((n) => this.exchangeDisplay(n)).sort(),
       concentration: Object.entries(this.state.conc).sort().map(([day, c]) => ({ day, ...c })),
       platform: p.total == null ? null : { total: Math.round(p.total), perChain: p.perChain, lastMoveAt: p.lastMoveAt, checkedAt: new Date(p.checkedAt).toISOString() },
     });
