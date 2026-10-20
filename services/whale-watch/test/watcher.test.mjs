@@ -154,3 +154,30 @@ test('oauth header has the required fields and a stable signature', () => {
   // independently computed with Python hmac/hashlib for the same inputs
   assert.match(h, /oauth_signature="IkqzcoSodURYDr0EVrc6NxWWJfI%3D"/);
 });
+
+test('likely labels say so, exchange-to-exchange moves name both, sweeps inside one exchange are not posted', async () => {
+  const { w, posts, dir } = tmpWatcher();
+  const A = 'k:0d584a4cbbfd9a4878d816512894e65918e54fae13df39a6f520fc90caea2fb0';
+  const B = 'k:a143f4504985' + '0'.repeat(52);
+  fs.writeFileSync(path.join(dir, 'labels.json'), JSON.stringify({ accounts: {
+    [A]: { name: 'Gate', type: 'exchange', confidence: 'confirmed', source: 'x' },
+    'k:a143f45049850d6ae3a5e0d3dd02c0ea9b9a1f6b58c8bd29a8e8aa9cdb8d6f43': { name: 'CoinEx', type: 'exchange', confidence: 'likely', source: 'x' },
+  } }));
+  w.loadLabels();
+  w.processBlock(fixture('1-7266334'));
+  const item = w.feed[0];
+  assert.equal(item.fromLabel, 'Gate');
+  // pretend the receiver is the likely-CoinEx wallet
+  item.to = 'k:a143f45049850d6ae3a5e0d3dd02c0ea9b9a1f6b58c8bd29a8e8aa9cdb8d6f43';
+  const text = F.movePost(item, { labelOf: w.labelOf, price: 0.0108, thresholds: { big: 5e5, huge: 1e6 } });
+  assert.match(text, /moved from Gate to CoinEx \(likely\)/);
+  // a sweep between two wallets of the same exchange: kept on the page, never posted, not counted
+  w.addItem({ type: 'move', id: 'sweep', time: item.time + 1000, chain: 1, toChain: 0, requestKey: 'sweepsweep', amount: 300000, from: B, to: A, internal: true });
+  await w.postFresh();
+  assert.equal(posts.length, 1);
+  assert.equal(w.state.posted.sweep, 'internal');
+  assert.equal(w.day(item.time).moves, 1);
+  assert.deepEqual(w.publish() ?? null, null);
+  const stats = JSON.parse(fs.readFileSync(path.join(w.cfg.publicDir, 'stats.json'), 'utf8'));
+  assert.ok(stats.labelledExchanges.includes('CoinEx (likely)') && stats.labelledExchanges.includes('Gate'));
+});

@@ -107,6 +107,12 @@ export class Watcher {
     return null;
   };
 
+  // An exchange counts as confirmed when any of its wallets is confirmed.
+  exchangeDisplay(name) {
+    const ls = Object.values(this.labels).filter((l) => l.type === 'exchange' && l.name === name);
+    return ls.some((l) => l.confidence !== 'likely') ? name : `${name} (likely)`;
+  }
+
   localDay(ms) { return new Date(ms + this.cfg.tzOffsetHours * 3600e3).toISOString().slice(0, 10); }
   hourKey(ms) { return new Date(ms).toISOString().slice(0, 13); }
   day(ms) {
@@ -124,9 +130,12 @@ export class Watcher {
       if (tr.dexTx || tr.amount < t) continue;
       if (tr.from === tr.to) continue; // same wallet moving between its own chains
       if (this.pools.has(tr.from) || this.pools.has(tr.to)) continue; // handled as a DEX item
+      const fl = this.labelOf(tr.from), tl = this.labelOf(tr.to);
+      const internal = fl?.type === 'exchange' && tl?.type === 'exchange' && fl.name === tl.name; // e.g. a deposit sweep
       const item = { type: 'move', id: tr.id, time: tr.time, chain: tr.chain, toChain: tr.toChain, height: tr.height, requestKey: tr.requestKey, amount: tr.amount, from: tr.from, to: tr.to };
       // A relay hop: the same amount passed straight on from the wallet that just received it.
       const prev = this.feed.find((f) => f.type === 'move' && f.to === tr.from && Math.abs(f.amount - tr.amount) <= f.amount * 0.005 && tr.time - f.time >= 0 && tr.time - f.time < 12 * 3600e3);
+      if (internal) item.internal = true;
       if (prev) { item.relayOf = prev.id; item.via = tr.from; item.origin = prev.relayOf ? prev.origin : prev.from; if (tr.to === prev.from) item.returned = true; }
       this.addItem(item);
     }
@@ -156,11 +165,11 @@ export class Watcher {
   addItem(item) {
     if (this.feed.some((f) => f.id === item.id)) return;
     item.usd = this.state.price ? Math.round(item.amount * this.state.price) : null;
-    if (item.from) item.fromLabel = this.labelOf(item.from)?.name || null;
-    if (item.to) item.toLabel = this.labelOf(item.to)?.name || null;
-    if (item.trader) item.traderLabel = this.labelOf(item.trader)?.name || null;
+    if (item.from) item.fromLabel = F.displayName(this.labelOf(item.from));
+    if (item.to) item.toLabel = F.displayName(this.labelOf(item.to));
+    if (item.trader) item.traderLabel = F.displayName(this.labelOf(item.trader));
     const d = this.day(item.time);
-    if (item.type === 'move' && !item.relayOf) { d.moves++; d.largest = Math.max(d.largest, item.amount); }
+    if (item.type === 'move' && !item.relayOf && !item.internal) { d.moves++; d.largest = Math.max(d.largest, item.amount); }
     if (item.type === 'dex' || item.type === 'liquidity') d.dex++;
     this.feed.unshift(item);
     this.fresh.push(item);
@@ -227,6 +236,7 @@ export class Watcher {
       const platform = item.type === 'platform';
       if (!platform && item.amount < this.cfg.postMin) continue;
       if (item.relayOf) { this.state.posted[item.id] = 'relay'; continue; } // the first hop was the alert
+      if (item.internal) { this.state.posted[item.id] = 'internal'; continue; } // an exchange moving its own KDA
       const dayKey = this.localDay(this.now());
       const sent = this.state.alertsByDay[dayKey] || 0;
       if (!platform && sent >= this.cfg.maxAlertsPerDay) { this.day(this.now()).notPosted = (this.day(this.now()).notPosted || 0) + 1; this.state.posted[item.id] = 'capped'; continue; }
@@ -294,7 +304,7 @@ export class Watcher {
   windowStats(hours) {
     const since = this.now() - hours * 3600e3;
     const items = this.feed.filter((f) => f.time >= since);
-    const moves = items.filter((f) => f.type === 'move' && !f.relayOf);
+    const moves = items.filter((f) => f.type === 'move' && !f.relayOf && !f.internal);
     let flowIn = 0, flowOut = 0;
     for (const [k, v] of Object.entries(this.state.hours)) {
       if (Date.parse(`${k}:00:00Z`) >= since - 3600e3 + 1) { flowIn += v.in; flowOut += v.out; }
@@ -368,15 +378,15 @@ export class Watcher {
     const p = this.state.platform;
     writeJson(path.join(this.cfg.publicDir, 'feed.json'), {
       updated: new Date(now).toISOString(),
-      items: this.feed.slice(0, 400).map(({ posted, ...rest }) => ({ ...rest, posted: Boolean(this.state.posted[rest.id] && !['capped', 'failed', 'pending', 'relay', 'seed'].includes(this.state.posted[rest.id])) })),
+      items: this.feed.slice(0, 400).map(({ posted, ...rest }) => ({ ...rest, posted: Boolean(this.state.posted[rest.id] && !['capped', 'failed', 'pending', 'relay', 'seed', 'internal'].includes(this.state.posted[rest.id])) })),
     });
     writeJson(path.join(this.cfg.publicDir, 'stats.json'), {
       updated: new Date(now).toISOString(),
       price: this.state.price,
       thresholds: { move: this.cfg.moveMin, post: this.cfg.postMin },
       days,
-      exchanges: Object.entries(exchanges).map(([name, f]) => ({ name, in: Math.round(f.in), out: Math.round(f.out) })).sort((a, b) => (b.in + b.out) - (a.in + a.out)),
-      labelledExchanges: [...new Set(Object.values(this.labels).filter((l) => l.type === 'exchange').map((l) => l.name))],
+      exchanges: Object.entries(exchanges).map(([name, f]) => ({ name, display: this.exchangeDisplay(name), in: Math.round(f.in), out: Math.round(f.out) })).sort((a, b) => (b.in + b.out) - (a.in + a.out)),
+      labelledExchanges: [...new Set(Object.values(this.labels).filter((l) => l.type === 'exchange').map((l) => F.displayName(l)))],
       concentration: Object.entries(this.state.conc).sort().map(([day, c]) => ({ day, ...c })),
       platform: p.total == null ? null : { total: Math.round(p.total), perChain: p.perChain, lastMoveAt: p.lastMoveAt, checkedAt: new Date(p.checkedAt).toISOString() },
     });

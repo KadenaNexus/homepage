@@ -8,9 +8,15 @@ export function shortAccount(a) {
   return a;
 }
 
+// "Gate", or "CoinEx (likely)" when the label rests on circumstantial evidence.
+export function displayName(l) {
+  if (!l) return null;
+  return l.confidence === 'likely' ? `${l.name} (likely)` : l.name;
+}
+
 export function who(account, labelOf) {
   const l = labelOf(account);
-  return l ? l.name : `unknown wallet ${shortAccount(account)}`;
+  return l ? displayName(l) : `unknown wallet ${shortAccount(account)}`;
 }
 
 export function fmtKda(n) {
@@ -64,8 +70,10 @@ export function movePost(it, { labelOf, price, thresholds }) {
   const toL = labelOf(it.to);
   const amt = `${fmtKda(it.amount)} $KDA${fmtUsd(it.amount, price)}`;
   let head;
-  if (fromL?.type === 'exchange' && toL?.type !== 'exchange') head = `${amt} withdrawn from ${fromL.name}`;
-  else if (toL?.type === 'exchange' && fromL?.type !== 'exchange') head = `${amt} deposited to ${toL.name}`;
+  const fx = fromL?.type === 'exchange', tx = toL?.type === 'exchange';
+  if (fx && tx) head = `${amt} moved from ${displayName(fromL)} to ${displayName(toL)}`;
+  else if (fx) head = `${amt} withdrawn from ${displayName(fromL)}`;
+  else if (tx) head = `${amt} deposited to ${displayName(toL)}`;
   else head = `${amt} moved`;
   const lines = [];
   if (it.dormantDays) lines.push(`⏰ A wallet idle for ${idleText(it.dormantDays)} just moved`);

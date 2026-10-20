@@ -303,7 +303,8 @@ footer a:hover{color:var(--sand)}
         <li><b>Dormant wallets</b>: a sender idle for a year or more is flagged.</li>
         <li><b>New whales</b>: a receiver that crosses 1M KDA with the move is flagged.</li>
       </ul>
-      <p><b>Wallet names.</b> A wallet is named only when a public, checkable source says who owns it, such as an exchange's published address or a self-describing account name. Everything else shows as an unknown wallet with its address. Ownership is never guessed from behavior. Spotted a wrong or missing label? Tell us on <a href="https://t.me/KadenaNexus">Telegram</a>.</p>
+      <p><b>Wallet names.</b> A name is <b>confirmed</b> when the exchange itself ties the wallet to it, for example a deposit address the exchange issued sweeping into that wallet, or when contract data on the chain proves it (DEX pools, vesting lockers). A name marked <b>(likely)</b> rests on strong circumstantial evidence: the wallet paused and resumed within hours of the exchange's published suspension and resumption times around the November 2025 fork, or stopped paying out on the day the exchange closed KDA withdrawals. Everything else shows as an unknown wallet with its address. Private individuals are never named. Spotted a wrong or missing label? Tell us on <a href="https://t.me/KadenaNexus">Telegram</a>.</p>
+      <p><b>Inside one exchange.</b> When an exchange sweeps a customer deposit address into its own hot wallet, the move appears in the feed marked "internal" and is not posted or counted.</p>
       <p><b>On X.</b> Each move of 100K+ KDA posts as it happens, up to six a day. A summary posts every evening at 21:00 Riyadh time, and a weekly digest on Fridays. Platform-share alerts are never capped.</p>
       <p>Account and transaction links open on <a href="https://denascan.com/">DenaScan</a>. This page reports what happened on chain. It is not financial advice, and an exchange deposit is not proof that anyone is selling.</p>
     </div>
@@ -364,9 +365,12 @@ footer a:hover{color:var(--sand)}
       if (i.newWhale) tags += '<span class="tag hot">new 1M+ holder</span>';
       if (i.relayOf) tags += `<span class="tag">${i.returned ? 'returned' : 'relay'}</span>`;
       const ex = new Set((stats && stats.labelledExchanges) || []);
-      if (ex.has(i.toLabel) && !ex.has(i.fromLabel)) tags += '<span class="tag x">to exchange</span>';
-      if (ex.has(i.fromLabel) && !ex.has(i.toLabel)) tags += '<span class="tag x">from exchange</span>';
+      if (i.internal) tags += '<span class="tag">internal</span>';
+      else if (ex.has(i.toLabel) && ex.has(i.fromLabel)) tags += '<span class="tag x">exchange to exchange</span>';
+      else if (ex.has(i.toLabel)) tags += '<span class="tag x">to exchange</span>';
+      else if (ex.has(i.fromLabel)) tags += '<span class="tag x">from exchange</span>';
       what = `${acct(i.from, i.fromLabel)} → ${acct(i.to, i.toLabel)}`;
+      if (i.internal) sub.push('moved between wallets of the same exchange, not posted');
       if (i.relayOf) sub.push(i.returned ? 'same amount sent back to the earlier sender' : 'same amount passed straight on, part of an earlier move');
       if (i.newWhale) sub.push(`receiver now holds ${compact(i.newWhale)} KDA`);
     } else if (i.type === 'dex') {
@@ -448,9 +452,9 @@ footer a:hover{color:var(--sand)}
     if (!ex.length) { card.innerHTML = '<p>No KDA has moved to or from labelled exchange wallets since counting started. Labelled so far: ' + (stats.labelledExchanges || []).map(esc).join(', ') + '. Most exchange wallets on Kadena have no public owner yet, so they show as unknown wallets.</p>'; return; }
     const max = Math.max(...ex.map((e) => Math.max(e.in, e.out)), 1);
     card.innerHTML = `<div class="legend"><span><i style="background:var(--in)"></i>Into exchange</span><span><i style="background:var(--out)"></i>Out of exchange</span></div>
-      <div class="bars">${ex.map((e) => `<div class="bar"><div class="lbl"><b>${esc(e.name)}</b><span>${compact(e.in)} in · ${compact(e.out)} out · net ${e.in - e.out >= 0 ? compact(e.in - e.out) + ' in' : compact(e.out - e.in) + ' out'}</span></div>
+      <div class="bars">${ex.map((e) => `<div class="bar"><div class="lbl"><b>${esc(e.display || e.name)}</b><span>${compact(e.in)} in · ${compact(e.out)} out · net ${e.in - e.out >= 0 ? compact(e.in - e.out) + ' in' : compact(e.out - e.in) + ' out'}</span></div>
       <div class="track"><div class="seg" style="width:${(e.in / max) * 100}%;background:var(--in)" title="${fmt(e.in)} KDA in"></div><div class="seg" style="width:${(e.out / max) * 100}%;background:var(--out)" title="${fmt(e.out)} KDA out"></div></div></div>`).join('')}</div>
-      <p class="note">Last 30 days, all transfer sizes. Labelled exchanges: ${stats.labelledExchanges.map(esc).join(', ')}.</p>`;
+      <p class="note">Last 30 days, all transfer sizes. Labelled exchanges: ${stats.labelledExchanges.map(esc).join(', ')}. "(likely)" means the match rests on strong circumstantial evidence, such as the wallet pausing and resuming at the exact times the exchange announced, rather than a deposit address the exchange issued.</p>`;
   }
 
   function renderStats() {
