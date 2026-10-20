@@ -92,8 +92,8 @@ export function dexPost(it, { labelOf, price, thresholds }) {
   if (it.liquidity) {
     const plus = it.other ? ` + ${fmtToken(it.other.amount)} ${sym}` : '';
     head = it.side === 'add'
-      ? `🌊 ${amt}${plus} added to the ${it.dex} KDA/${sym} pool`
-      : `🌊 ${amt}${plus} withdrawn from the ${it.dex} KDA/${sym} pool`;
+      ? `🌊 ${amt}${plus} put into the ${it.dex} KDA/${sym} pool (liquidity added)`
+      : `🌊 ${amt}${plus} taken out of the ${it.dex} KDA/${sym} pool (liquidity removed)`;
   } else {
     const w = it.kda >= thresholds.huge ? '🚨 ' : '';
     head = it.side === 'sell'

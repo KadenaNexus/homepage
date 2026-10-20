@@ -377,9 +377,13 @@ footer a:hover{color:var(--sand)}
       tags += `<span class="tag x">${i.side === 'sell' ? 'DEX sell' : 'DEX buy'}</span>`;
       what = `${i.side === 'sell' ? 'Sold for' : 'Bought with'} ${i.other ? tok(i.other.amount) + ' ' + esc(sym(i.other.token)) : '?'} on ${esc(i.dex)} by ${acct(i.trader, i.traderLabel)}`;
     } else if (i.type === 'liquidity') {
-      tags += `<span class="tag">${i.side === 'add' ? 'pool add' : 'pool withdraw'}</span>`;
+      tags += `<span class="tag">${i.side === 'add' ? 'liquidity added' : 'liquidity removed'}</span>`;
       const pair = `${esc(i.dex)} KDA/${esc(sym(i.other && i.other.token))} pool`;
-      what = `${i.side === 'add' ? 'Added to' : 'Withdrawn from'} the ${pair}${i.other ? ' with ' + tok(i.other.amount) + ' ' + esc(sym(i.other.token)) : ''} by ${acct(i.trader, i.traderLabel)}`;
+      const both = `${fmt(i.amount)} KDA${i.other ? ' + ' + tok(i.other.amount) + ' ' + esc(sym(i.other.token)) : ''}`;
+      what = i.side === 'add'
+        ? `${acct(i.trader, i.traderLabel)} put ${both} into the ${pair}`
+        : `${acct(i.trader, i.traderLabel)} took ${both} out of the ${pair}`;
+      sub.push('liquidity, not a trade: a pool holds both tokens, so adding or removing moves both');
     } else if (i.type === 'platform') {
       tags += '<span class="tag hot">platform share</span>';
       what = i.kind === 'release' ? `Allocation ${esc(i.account)} released` : i.kind === 'transfer' ? `${esc(i.account)} → ${acct(i.to)}` : 'Frozen platform share dropped';
