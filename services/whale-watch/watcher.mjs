@@ -111,10 +111,11 @@ export class Watcher {
     return null;
   };
 
-  // An exchange counts as confirmed when any of its wallets is confirmed.
+  // An exchange counts as confirmed when any of its wallets is confirmed; it shows
+  // "delisted" or "closed" when its labels say it no longer trades KDA.
   exchangeDisplay(name) {
     const ls = Object.values(this.labels).filter((l) => l.type === 'exchange' && l.name === name);
-    return ls.some((l) => l.confidence !== 'likely') ? name : `${name} (likely)`;
+    return F.nameWithTags(name, ls.find((l) => l.status)?.status, !ls.some((l) => l.confidence !== 'likely'));
   }
 
   localDay(ms) { return new Date(ms + this.cfg.tzOffsetHours * 3600e3).toISOString().slice(0, 10); }
