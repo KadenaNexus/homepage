@@ -1,5 +1,5 @@
 {
- "note": "Only labels backed by a checkable source. confidence: confirmed = an exchange-issued deposit address, on-chain contract data or the exchange itself; likely = strong circumstantial evidence such as timing that matches the exchange's published suspension and resumption times. Likely labels are always shown as \"(likely)\". Never label a wallet from behaviour alone, and never name private individuals.",
+ "note": "Only labels backed by a checkable source. confidence: confirmed = an exchange-issued deposit address, on-chain contract data or the exchange itself; likely = strong circumstantial evidence such as timing that matches the exchange's published suspension and resumption times. Likely labels are always shown as \"(likely)\". Never label a wallet from behaviour alone, and never name private individuals. status: \"delisted\" or \"closed\" when the exchange no longer trades KDA; shown in the name, e.g. \"Binance (delisted, likely)\".",
  "accounts": {
   "coinmetro-multisig-3": {
    "name": "Coinmetro",
@@ -270,9 +270,9 @@
   "k:7cfe3761add000c3e711fdd3316d625365ab7b9ed97a8a814acabff0359d8e10": {
    "name": "CoinEx",
    "type": "exchange",
-   "confidence": "confirmed",
+   "confidence": "likely",
    "role": "hot wallet (chain 0)",
-   "source": "Successor of the old CoinEx wallet in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: the old CoinEx wallet k:4e1e3a…b205 sent its whole balance here on Feb 11, 2025 (1 KDA test, then 144,269 KDA), when CoinEx moved wallets after a key theft. Also matches CoinEx's Nov 2025 fork suspension (03:00 UTC Nov 8) and resumption (Nov 21) to within hours."
+   "source": "Successor of the old CoinEx wallet in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: the old CoinEx wallet k:4e1e3a…b205 sent its whole balance here on Feb 11, 2025 (1 KDA test, then 144,269 KDA), when CoinEx moved wallets after a key theft. Also matches CoinEx's Nov 2025 fork suspension (03:00 UTC Nov 8) and resumption (Nov 21) to within hours. Marked likely on Oct 21, 2026: no deposit address or withdrawal issued by the exchange ties this wallet to it yet."
   },
   "k:55de87e4501ed106e9990e4c02d045833c575ac9f45a6316d2b0fee94888398a": {
    "name": "CoinEx",
@@ -284,72 +284,88 @@
   "k:bfcfdd740857ab6be8d6acce80f9fef6c0ad99e46c9b6e2dc24e0fe2850bede9": {
    "name": "Binance",
    "type": "exchange",
-   "confidence": "confirmed",
+   "confidence": "likely",
    "role": "hot wallet (chain 2)",
-   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: at Binance's June 2022 KDA upgrade (suspension announced for about 23:00 UTC June 15, 2022) this wallet, sending about 100 tx a day, stopped at 22:48 UTC and resumed at 06:59 UTC June 16; its only pause over 3 hours that week. Paid withdrawals to 1,705 wallets Nov 2025 to Jan 2026 after Binance delisted KDA. Earlier labelled OKX (likely) here; that was wrong."
+   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: at Binance's June 2022 KDA upgrade (suspension announced for about 23:00 UTC June 15, 2022) this wallet, sending about 100 tx a day, stopped at 22:48 UTC and resumed at 06:59 UTC June 16; its only pause over 3 hours that week. Paid withdrawals to 1,705 wallets Nov 2025 to Jan 2026 after Binance delisted KDA. Earlier labelled OKX (likely) here; that was wrong. Marked likely on Oct 21, 2026: no deposit address or withdrawal issued by the exchange ties this wallet to it yet.",
+   "status": "delisted",
+   "statusSource": "Binance delisted KDA from all spot pairs on Nov 12, 2025."
   },
   "k:576b785aefc55c122cdf682c2654a2fcda3df368c8fc50c73dcd6eb49b63f666": {
    "name": "Binance",
    "type": "exchange",
    "confidence": "likely",
    "role": "funding wallet",
-   "source": "Sole funder of the Binance hot wallet k:bfcfdd…bede9 (48.7M KDA in 1,204 transfers)."
+   "source": "Sole funder of the Binance hot wallet k:bfcfdd…bede9 (48.7M KDA in 1,204 transfers).",
+   "status": "delisted",
+   "statusSource": "Binance delisted KDA from all spot pairs on Nov 12, 2025."
   },
   "k:9b067c38335f6a066bf4343f7be035d444274a48e1a794270b000c3aa37db320": {
    "name": "Binance",
    "type": "exchange",
    "confidence": "likely",
    "role": "storage wallet",
-   "source": "Received its entire 36.93M KDA in 5 transfers on May 14–15, 2026 from the Binance hot wallet k:bfcfdd…bede9, after Binance had closed KDA withdrawals; inactive since."
+   "source": "Received its entire 36.93M KDA in 5 transfers on May 14–15, 2026 from the Binance hot wallet k:bfcfdd…bede9, after Binance had closed KDA withdrawals; inactive since.",
+   "status": "delisted",
+   "statusSource": "Binance delisted KDA from all spot pairs on Nov 12, 2025."
   },
   "k:fff462ff0ac6562bfa8fe861c59bbe15499618a0890190ea566f9da8c80fce60": {
    "name": "OKX",
    "type": "exchange",
    "confidence": "likely",
    "role": "former hot wallet",
-   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Active Dec 2021 to May 2025; empty since."
+   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Active Dec 2021 to May 2025; empty since.",
+   "status": "delisted",
+   "statusSource": "OKX halted KDA deposits in Oct 2025, stopped spot trading Oct 26, 2025 and closed withdrawals Jan 22, 2026 (Decrypt, Oct 22, 2025)."
   },
   "k:620203468aab890d81ca84a7d565e2f19becf210ac7f0b869eec3f093b7a1e14": {
    "name": "KuCoin",
    "type": "exchange",
-   "confidence": "confirmed",
+   "confidence": "likely",
    "role": "hot wallet",
-   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: last withdrawal 08:45 UTC Nov 28, 2025, before KuCoin closed KDA withdrawals at 10:00 UTC that day (kucoin.com announcement 2511125); in Feb 2026 it moved 16.45M KDA to k:019ab7…44df."
+   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: last withdrawal 08:45 UTC Nov 28, 2025, before KuCoin closed KDA withdrawals at 10:00 UTC that day (kucoin.com announcement 2511125); in Feb 2026 it moved 16.45M KDA to k:019ab7…44df. Marked likely on Oct 21, 2026: no deposit address or withdrawal issued by the exchange ties this wallet to it yet.",
+   "status": "delisted",
+   "statusSource": "KuCoin announced it would delist KDA and its trading pairs (kucoin.com announcement en-st-kucoin-will-delist-kadena-KDA-and-the-associated-trading-pairs-1104); last withdrawal Nov 28, 2025."
   },
   "k:019ab78de5e2c4da865d579d6d92cebd74d9fbcf282da1574a2eb509348f44df": {
    "name": "KuCoin",
    "type": "exchange",
    "confidence": "likely",
    "role": "storage wallet",
-   "source": "Received its 16.45M KDA from the KuCoin hot wallet k:620203…1e14 in Feb 2026, after KuCoin closed KDA."
+   "source": "Received its 16.45M KDA from the KuCoin hot wallet k:620203…1e14 in Feb 2026, after KuCoin closed KDA.",
+   "status": "delisted",
+   "statusSource": "KuCoin announced it would delist KDA and its trading pairs (kucoin.com announcement en-st-kucoin-will-delist-kadena-KDA-and-the-associated-trading-pairs-1104); last withdrawal Nov 28, 2025."
   },
   "k:882ecbed177a274519c7576bad3f2900abc06e9d592346929c422a86e4f0f96c": {
    "name": "Binance.US",
    "type": "exchange",
-   "confidence": "confirmed",
+   "confidence": "likely",
    "role": "hot wallet (chain 2)",
-   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: withdrawals jumped to 869 in Oct 2025, the month Binance.US delisted KDA (Oct 28, 2025); funded only by k:d7bf62…dc4d."
+   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: withdrawals jumped to 869 in Oct 2025, the month Binance.US delisted KDA (Oct 28, 2025); funded only by k:d7bf62…dc4d. Marked likely on Oct 21, 2026: no deposit address or withdrawal issued by the exchange ties this wallet to it yet.",
+   "status": "delisted",
+   "statusSource": "Binance.US delisted KDA on Oct 28, 2025 (support.binance.us article 12640254)."
   },
   "k:d7bf621636d4fc45c0c50f59b511f88eb0a737837a7b6d800756762a295fdc4d": {
    "name": "Binance.US",
    "type": "exchange",
    "confidence": "likely",
    "role": "funding wallet",
-   "source": "Sole funder of the Binance.US hot wallet k:882ecb…f96c (7.59M KDA, Sep 2025 to Aug 2026)."
+   "source": "Sole funder of the Binance.US hot wallet k:882ecb…f96c (7.59M KDA, Sep 2025 to Aug 2026).",
+   "status": "delisted",
+   "statusSource": "Binance.US delisted KDA on Oct 28, 2025 (support.binance.us article 12640254)."
   },
   "k:4e1e3a50cd2ee49c3b1389cdb5509e43603f1a7f690f7cf341f68f54e6b7b205": {
    "name": "CoinEx",
    "type": "exchange",
-   "confidence": "confirmed",
+   "confidence": "likely",
    "role": "former hot wallet (until Feb 2025)",
-   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Marked as the old CoinEx wallet; it handed its balance to k:7cfe37…8e10 on Feb 11, 2025."
+   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Marked as the old CoinEx wallet; it handed its balance to k:7cfe37…8e10 on Feb 11, 2025. Marked likely on Oct 21, 2026: no deposit address or withdrawal issued by the exchange ties this wallet to it yet."
   },
   "k:66cf19914ff4a908bc8fd60e5de14d2f1341ede16b060b57fe9a723a54288409": {
    "name": "MEXC",
    "type": "exchange",
-   "confidence": "confirmed",
+   "confidence": "likely",
    "role": "hot wallet",
-   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: paused from Nov 11 to Nov 28, 2025, resuming the day MEXC announced withdrawals on the community-maintained chain (announcement dated Nov 28, 2025)."
+   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: paused from Nov 11 to Nov 28, 2025, resuming the day MEXC announced withdrawals on the community-maintained chain (announcement dated Nov 28, 2025). Marked likely on Oct 21, 2026: no deposit address or withdrawal issued by the exchange ties this wallet to it yet."
   },
   "k:32ccd7e8b53f023821820cfe7c8dabe7facd29a0425d11d8dc022c75110c39b6": {
    "name": "Bybit",
@@ -363,7 +379,9 @@
    "type": "exchange",
    "confidence": "likely",
    "role": "former hot wallet",
-   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). TradeOgre has since closed."
+   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). TradeOgre has since closed.",
+   "status": "closed",
+   "statusSource": "TradeOgre shut down as an exchange."
   },
   "acc28032a1bb725b7ba0a3593ab86f393894fa6659281f3dfdfee0afe48559a2": {
    "name": "Coinmetro",

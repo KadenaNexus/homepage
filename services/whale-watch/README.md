@@ -31,7 +31,11 @@ Dry mode (the default) writes every post to `posts.jsonl` (on Actions: kadena.ws
 - **confirmed**: the exchange itself ties the wallet to it (a deposit address it issued sweeps into the wallet, or a withdrawal it made came from it), or on-chain contract data proves it (DEX pools from `get-pair`, OTC lockers from their capability guard).
 - **likely**: strong circumstantial evidence, such as the wallet pausing and resuming within hours of the exchange's published suspension and resumption times. Always shown as "(likely)" on the page and in posts.
 
-Exchanges so far: Gate, Binance, Binance.US, KuCoin, MEXC and CoinEx (confirmed hot wallets); OKX, Bybit, TradeOgre and Coinmetro (likely), plus storage and funding wallets marked likely. Most were listed by Kadena community developers and then checked on chain. Wallets are never labelled from behaviour alone, and private individuals are never named.
+Exchanges so far: Gate (confirmed: a Gate deposit address sweeps into its hot wallet and a Gate withdrawal came from it). Binance, Binance.US, KuCoin, MEXC, CoinEx, OKX, Bybit, TradeOgre and Coinmetro are all likely: they come from the community developers' list, checked against timing on chain, but no exchange-issued deposit address or withdrawal ties them yet.
+
+A label can also carry `status`: `delisted` (Binance, Binance.US, KuCoin, OKX) or `closed` (TradeOgre), for exchanges that no longer trade KDA. It shows in the name, for example "Binance (delisted, likely)". Their wallets are still tracked, since KDA can still move in or out of them.
+
+Wallets are never labelled from behaviour alone, and private individuals are never named.
 
 To add a label, edit `labels.json` with its source and open a PR. After the merge, the next Actions run uses it. On the server option, re-run `install.sh`.
 
