@@ -161,9 +161,10 @@ export class Watcher {
     if (!fx && !tx) return;
     if (fx && tx && fx === tx) return; // internal shuffle
     const d = this.day(tr.time);
-    const h = (this.state.hours[this.hourKey(tr.time)] ||= { in: 0, out: 0 });
-    if (tx) { d.flowIn += tr.amount; h.in += tr.amount; (d.flows[tx] ||= { in: 0, out: 0 }).in += tr.amount; }
-    if (fx) { d.flowOut += tr.amount; h.out += tr.amount; (d.flows[fx] ||= { in: 0, out: 0 }).out += tr.amount; }
+    const h = (this.state.hours[this.hourKey(tr.time)] ||= { in: 0, out: 0, ex: {} });
+    h.ex ||= {}; // hours recorded before per-exchange counts existed have none
+    if (tx) { d.flowIn += tr.amount; h.in += tr.amount; (d.flows[tx] ||= { in: 0, out: 0 }).in += tr.amount; (h.ex[tx] ||= { in: 0, out: 0 }).in += tr.amount; }
+    if (fx) { d.flowOut += tr.amount; h.out += tr.amount; (d.flows[fx] ||= { in: 0, out: 0 }).out += tr.amount; (h.ex[fx] ||= { in: 0, out: 0 }).out += tr.amount; }
   }
 
   addItem(item) {
@@ -310,11 +311,22 @@ export class Watcher {
     const since = this.now() - hours * 3600e3;
     const items = this.feed.filter((f) => f.time >= since);
     const moves = items.filter((f) => f.type === 'move' && !f.relayOf && !f.internal);
-    let flowIn = 0, flowOut = 0;
+    let flowIn = 0, flowOut = 0, complete = true;
+    const byEx = {};
     for (const [k, v] of Object.entries(this.state.hours)) {
-      if (Date.parse(`${k}:00:00Z`) >= since - 3600e3 + 1) { flowIn += v.in; flowOut += v.out; }
+      if (Date.parse(`${k}:00:00Z`) < since - 3600e3 + 1) continue;
+      flowIn += v.in; flowOut += v.out;
+      if (!v.ex) { complete = false; continue; }
+      for (const [name, f] of Object.entries(v.ex)) {
+        const e = (byEx[name] ||= { in: 0, out: 0 });
+        e.in += f.in; e.out += f.out;
+      }
     }
-    return { moves: moves.length, largest: Math.max(0, ...moves.map((m) => m.amount)), dex: items.filter((f) => f.type === 'dex' || f.type === 'liquidity').length, flowIn, flowOut };
+    // Name exchanges only when every hour in the window has its breakdown, so the names add up to the totals.
+    const exchanges = complete
+      ? Object.entries(byEx).map(([name, f]) => ({ name, display: this.exchangeDisplay(name), in: f.in, out: f.out })).sort((a, b) => (b.in + b.out) - (a.in + a.out))
+      : null;
+    return { moves: moves.length, largest: Math.max(0, ...moves.map((m) => m.amount)), dex: items.filter((f) => f.type === 'dex' || f.type === 'liquidity').length, flowIn, flowOut, exchanges };
   }
 
   async scheduledPosts() {
