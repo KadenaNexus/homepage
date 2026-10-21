@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Kadena Nexus database backups every night at 03:15 UTC
+
+[Timer]
+# 03:15 UTC: after the Adoption Index's midnight run and its retries, before Saudi morning traffic (06:15 AST).
+OnCalendar=*-*-* 03:15:00 UTC
+RandomizedDelaySec=10min
+Persistent=true
+
+[Install]
+WantedBy=timers.target
