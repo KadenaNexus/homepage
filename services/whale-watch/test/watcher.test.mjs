@@ -212,5 +212,6 @@ test('names carry delisted / closed and likely tags', () => {
   const labels = JSON.parse(fs.readFileSync(new URL('../labels.json', import.meta.url), 'utf8')).accounts;
   const ex = Object.values(labels).filter((l) => l.type === 'exchange');
   assert.deepEqual([...new Set(ex.filter((l) => l.confidence === 'confirmed').map((l) => l.name))], ['Gate']);
-  for (const n of ['Binance', 'Binance.US', 'KuCoin', 'OKX', 'MEXC', 'CoinEx', 'Bybit', 'Coinmetro']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'delisted'), n);
+  for (const n of ['Binance', 'Binance.US', 'KuCoin', 'OKX', 'MEXC', 'Bybit', 'Coinmetro']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'delisted'), n);
+  for (const n of ['CoinEx', 'TradeOgre']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'closed'), n);
 });

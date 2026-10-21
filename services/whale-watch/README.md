@@ -33,7 +33,7 @@ Dry mode (the default) writes every post to `posts.jsonl` (on Actions: kadena.ws
 
 Exchanges so far: Gate (confirmed: a Gate deposit address sweeps into its hot wallet and a Gate withdrawal came from it). Binance, Binance.US, KuCoin, MEXC, CoinEx, OKX, Bybit, TradeOgre and Coinmetro are all likely: they come from the community developers' list, checked against timing on chain, but no exchange-issued deposit address or withdrawal ties them yet.
 
-A label can also carry `status`: `delisted` (Binance, Binance.US, KuCoin, OKX, MEXC, CoinEx, Bybit, Coinmetro) or `closed` (TradeOgre), for exchanges that no longer trade KDA. Gate is the only centralized exchange still trading it. It shows in the name, for example "Binance (delisted, likely)". Their wallets are still tracked, since KDA can still move in or out of them.
+A label can also carry `status`: `delisted` (Binance, Binance.US, KuCoin, OKX, MEXC, Bybit, Coinmetro) or `closed` (TradeOgre, and CoinEx, which shut down as an exchange in Sep 2026; withdrawals close Dec 22, 2026), for exchanges that no longer trade KDA. Gate is the only centralized exchange still trading it. It shows in the name, for example "Binance (delisted, likely)". Their wallets are still tracked, since KDA can still move in or out of them.
 
 Wallets are never labelled from behaviour alone, and private individuals are never named.
 

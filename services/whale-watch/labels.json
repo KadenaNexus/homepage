@@ -275,8 +275,8 @@
    "confidence": "likely",
    "role": "hot wallet (chain 0)",
    "source": "Successor of the old CoinEx wallet in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: the old CoinEx wallet k:4e1e3a…b205 sent its whole balance here on Feb 11, 2025 (1 KDA test, then 144,269 KDA), when CoinEx moved wallets after a key theft. Also matches CoinEx's Nov 2025 fork suspension (03:00 UTC Nov 8) and resumption (Nov 21) to within hours. Marked likely on Oct 21, 2026: no deposit address or withdrawal issued by the exchange ties this wallet to it yet.",
-   "status": "delisted",
-   "statusSource": "Per Kadena Nexus (Saudi.KDA), Oct 21, 2026: Gate is the only centralized exchange still trading KDA."
+   "status": "closed",
+   "statusSource": "CoinEx announced on Sep 15, 2026 that it is shutting down as an exchange: spot trading ended Sep 29, 2026, and withdrawals close for good on Dec 22, 2026 (Decrypt, Sep 16, 2026)."
   },
   "k:55de87e4501ed106e9990e4c02d045833c575ac9f45a6316d2b0fee94888398a": {
    "name": "CoinEx",
@@ -284,8 +284,8 @@
    "confidence": "likely",
    "role": "deposit address (chain 1)",
    "source": "Forwards everything it receives (11.08M KDA, Feb–Sep 2026, all from the Gate hot wallet) cross-chain to the likely-CoinEx hot wallet k:7cfe37…8e10 on chain 0: a deposit address being swept.",
-   "status": "delisted",
-   "statusSource": "Per Kadena Nexus (Saudi.KDA), Oct 21, 2026: Gate is the only centralized exchange still trading KDA."
+   "status": "closed",
+   "statusSource": "CoinEx announced on Sep 15, 2026 that it is shutting down as an exchange: spot trading ended Sep 29, 2026, and withdrawals close for good on Dec 22, 2026 (Decrypt, Sep 16, 2026)."
   },
   "k:bfcfdd740857ab6be8d6acce80f9fef6c0ad99e46c9b6e2dc24e0fe2850bede9": {
    "name": "Binance",
@@ -365,8 +365,8 @@
    "confidence": "likely",
    "role": "former hot wallet (until Feb 2025)",
    "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Marked as the old CoinEx wallet; it handed its balance to k:7cfe37…8e10 on Feb 11, 2025. Marked likely on Oct 21, 2026: no deposit address or withdrawal issued by the exchange ties this wallet to it yet.",
-   "status": "delisted",
-   "statusSource": "Per Kadena Nexus (Saudi.KDA), Oct 21, 2026: Gate is the only centralized exchange still trading KDA."
+   "status": "closed",
+   "statusSource": "CoinEx announced on Sep 15, 2026 that it is shutting down as an exchange: spot trading ended Sep 29, 2026, and withdrawals close for good on Dec 22, 2026 (Decrypt, Sep 16, 2026)."
   },
   "k:66cf19914ff4a908bc8fd60e5de14d2f1341ede16b060b57fe9a723a54288409": {
    "name": "MEXC",
