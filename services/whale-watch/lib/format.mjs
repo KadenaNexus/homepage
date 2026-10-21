@@ -120,7 +120,7 @@ export const dayLabel = (iso) => `${MONTHS[Number(iso.slice(5, 7)) - 1]} ${Numbe
 
 export function flowLine(flowIn, flowOut) {
   if (!flowIn && !flowOut) return null;
-  return `Exchange flow: ${compact(flowIn)} in · ${compact(flowOut)} out`;
+  return `Exchanges: ${compact(flowIn)} KDA deposited · ${compact(flowOut)} KDA withdrawn`;
 }
 
 export function dailyPost(s) {
@@ -147,7 +147,8 @@ export function weeklyPost(w) {
   }
   if (w.flowIn || w.flowOut) {
     const net = w.flowIn - w.flowOut;
-    lines.push(`Exchange net flow: ${compact(Math.abs(net))} ${net >= 0 ? 'in' : 'out'}`);
+    lines.push(net === 0 ? 'Exchanges: deposits and withdrawals even'
+      : `Exchanges: ${compact(Math.abs(net))} more KDA ${net > 0 ? 'deposited than withdrawn' : 'withdrawn than deposited'}`);
   }
   return lines.join('\n');
 }
