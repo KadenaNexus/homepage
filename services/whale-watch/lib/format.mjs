@@ -123,21 +123,39 @@ export function platformPost(it, { price }) {
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 export const dayLabel = (iso) => `${MONTHS[Number(iso.slice(5, 7)) - 1]} ${Number(iso.slice(8, 10))}`;
 
-export function flowLine(flowIn, flowOut) {
-  if (!flowIn && !flowOut) return null;
-  return `Exchange flow: ${compact(flowIn)} in · ${compact(flowOut)} out`;
+// One exchange's 24h activity, e.g. "Gate: 15K KDA deposited · 80K withdrawn".
+export function exchangeLine(e) {
+  const parts = [];
+  if (Math.round(e.in) > 0) parts.push(`${compact(e.in)} KDA deposited`);
+  if (Math.round(e.out) > 0) parts.push(`${compact(e.out)} ${parts.length ? '' : 'KDA '}withdrawn`);
+  return parts.length ? `${e.display}: ${parts.join(' · ')}` : null;
+}
+
+// Exchange lines for the daily summary. With a per-exchange breakdown, names the
+// busiest exchanges (up to max); without one, gives the totals only.
+export function flowLines(flowIn, flowOut, exchanges, max = 3) {
+  if (!flowIn && !flowOut) return [];
+  const named = (exchanges || []).map(exchangeLine).filter(Boolean);
+  if (!named.length || max < 1) return [`Exchanges: ${compact(flowIn)} KDA deposited · ${compact(flowOut)} KDA withdrawn`];
+  const lines = ['Exchanges:', ...named.slice(0, max)];
+  const rest = named.length - max;
+  if (rest > 0) lines.push(`+ ${rest} more ${rest === 1 ? 'exchange' : 'exchanges'}`);
+  return lines;
 }
 
 export function dailyPost(s) {
-  const lines = [`📊 Kadena whale summary · ${dayLabel(s.day)}`, ''];
-  if (s.moves) lines.push(`100K+ KDA moves: ${s.moves} (largest ${fmtKda(s.largest)})`);
-  else lines.push('No moves of 100K+ KDA in the last 24h');
-  if (s.dex) lines.push(`DEX trades and pool moves 100K+: ${s.dex}`);
-  const f = flowLine(s.flowIn, s.flowOut);
-  if (f) lines.push(f);
-  if (s.notPosted) lines.push(`(${s.notPosted} more ${s.notPosted === 1 ? 'move' : 'moves'} not posted today)`);
-  if (s.platform != null) lines.push(`Platform share: ${compact(s.platform)} KDA, unmoved for ${s.platformDays} days`);
-  return lines.join('\n');
+  // Name as many exchanges as fit in one post (X allows 280).
+  for (let max = 3; ; max--) {
+    const lines = [`📊 Kadena whale summary · ${dayLabel(s.day)}`, ''];
+    if (s.moves) lines.push(`100K+ KDA moves: ${s.moves} (largest ${fmtKda(s.largest)})`);
+    else lines.push('No moves of 100K+ KDA in the last 24h');
+    if (s.dex) lines.push(`DEX trades and pool moves 100K+: ${s.dex}`);
+    lines.push(...flowLines(s.flowIn, s.flowOut, s.exchanges, max));
+    if (s.notPosted) lines.push(`(${s.notPosted} more ${s.notPosted === 1 ? 'move' : 'moves'} not posted today)`);
+    if (s.platform != null) lines.push(`Platform share: ${compact(s.platform)} KDA, unmoved for ${s.platformDays} days`);
+    const text = lines.join('\n');
+    if (max <= 0 || weightedLength(text) <= 280) return text;
+  }
 }
 
 const delta = (now, before) => (before == null ? '' : ` (${now - before >= 0 ? '+' : '−'}${Math.abs(now - before)})`);
@@ -152,7 +170,9 @@ export function weeklyPost(w) {
   }
   if (w.flowIn || w.flowOut) {
     const net = w.flowIn - w.flowOut;
-    lines.push(`Exchange net flow: ${compact(Math.abs(net))} ${net >= 0 ? 'in' : 'out'}`);
+    lines.push(net === 0 ? 'Exchanges: deposits and withdrawals even'
+      : `Exchanges: ${compact(Math.abs(net))} more KDA ${net > 0 ? 'deposited than withdrawn' : 'withdrawn than deposited'}`);
+    if (w.exchanges?.length) lines.push(`Busiest: ${w.exchanges.slice(0, 3).map((e) => e.display).join(', ')}`);
   }
   return lines.join('\n');
 }

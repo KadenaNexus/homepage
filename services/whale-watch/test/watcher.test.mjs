@@ -140,12 +140,26 @@ test('formats: tiers, dormant line, DEX and platform posts stay short', () => {
   assert.match(ps, /3 of the 5 community keys/);
   for (const t of [dormant, dex, ps]) assert.ok(F.weightedLength(t) <= 280, t);
   const daily = F.dailyPost({ day: '2026-10-20', moves: 3, largest: 456638, dex: 1, flowIn: 820000, flowOut: 1100000, platform: 87344000, platformDays: 377, notPosted: 0 });
-  assert.match(daily, /Exchange flow: 820K in · 1\.1M out/);
+  assert.match(daily, /Exchanges: 820K KDA deposited · 1\.1M KDA withdrawn/);
   assert.match(daily, /87\.3M KDA, unmoved for 377 days/);
   const weekly = F.weeklyPost({ from: '2026-10-14', to: '2026-10-20', moves: 9, largest: 999746, conc: { w1m: 43, w100k: 404, top10: 131009517 }, prev: { w1m: 42, w100k: 407 }, flowIn: 1e6, flowOut: 2.2e6 });
   assert.match(weekly, /1M\+ KDA: 43 \(\+1\)/);
   assert.match(weekly, /100K\+ KDA: 404 \(−3\)/);
-  assert.match(weekly, /net flow: 1\.2M out/);
+  assert.match(weekly, /Exchanges: 1\.2M more KDA withdrawn than deposited/);
+  // with a per-exchange breakdown the summaries name the exchanges
+  const ex = [
+    { display: 'Gate', in: 15000, out: 80000 },
+    { display: 'Binance', in: 7000, out: 0 },
+    { display: 'Bybit (likely)', in: 0, out: 400 },
+    { display: 'KuCoin', in: 38, out: 0 },
+  ];
+  const named = F.dailyPost({ day: '2026-10-21', moves: 0, flowIn: 22038, flowOut: 80400, exchanges: ex, platform: 87344000, platformDays: 377 });
+  assert.match(named, /Exchanges:\nGate: 15K KDA deposited · 80K withdrawn\nBinance: 7K KDA deposited\nBybit \(likely\): 400 KDA withdrawn\n\+ 1 more exchange/);
+  assert.ok(F.weightedLength(named) <= 280, named);
+  const busy = F.dailyPost({ day: '2026-10-21', moves: 4, largest: 1234567, dex: 2, notPosted: 3, flowIn: 1e6, flowOut: 1e6,
+    exchanges: ['Binance.US (likely)', 'Coinmetro (likely)', 'TradeOgre (likely)', 'KuCoin (likely)'].map((display) => ({ display, in: 123456, out: 654321 })), platform: 87344000, platformDays: 377 });
+  assert.ok(F.weightedLength(busy) <= 280, busy);
+  assert.match(F.weeklyPost({ from: '2026-10-14', to: '2026-10-20', moves: 0, flowIn: 1, flowOut: 2, exchanges: ex }), /Busiest: Gate, Binance, Bybit \(likely\)/);
 });
 
 test('oauth header has the required fields and a stable signature', () => {
