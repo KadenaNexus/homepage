@@ -1,0 +1,24 @@
+# /etc/kadena-backups.conf (root:root, mode 600). Read by kadena-backup-databases and kadena-restore-test.
+
+# Databases on this server's PostgreSQL to back up, separated by spaces. List them with:
+#   sudo -u postgres psql -Atc "SELECT datname FROM pg_database WHERE NOT datistemplate"
+# kadena_nexus = marketplace.kadena.ws, kadena_advanced = marketplace-advanced.kadena.ws; add Earn's and the
+# Adoption Index's databases by their real names.
+DATABASES="kadena_nexus kadena_advanced"
+
+# Local copies, kept for KEEP_DAYS days.
+BACKUP_DIR=/var/backups/kadena-db
+KEEP_DAYS=14
+
+# Off-server copy (Hetzner Storage Box over SSH/rsync, port 23). Leave REMOTE empty until the box exists.
+#   REMOTE=u123456@u123456.your-storagebox.de:kadena-db
+REMOTE=
+REMOTE_PORT=23
+REMOTE_KEY=/root/.ssh/kadena-backups
+
+# Optional: a URL pinged after every successful run (for example a free healthchecks.io check that emails when a
+# night is missed).
+HEALTHCHECK_URL=
+
+# PostgreSQL port, if not 5432.
+PGPORT=5432

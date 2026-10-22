@@ -1,0 +1,11 @@
+[Unit]
+Description=Kadena Nexus nightly PostgreSQL backups (local + off-server)
+Wants=network-online.target
+After=network-online.target postgresql.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/kadena-backup-databases
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=2h
