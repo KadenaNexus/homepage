@@ -204,3 +204,14 @@ test('label changes reach items already in the feed', () => {
   const feed = JSON.parse(fs.readFileSync(path.join(w.cfg.publicDir, 'feed.json'), 'utf8'));
   assert.equal(feed.items[0].fromLabel, 'Gate');
 });
+
+test('names carry delisted / closed and likely tags', () => {
+  assert.equal(F.displayName({ name: 'Binance', status: 'delisted', confidence: 'likely' }), 'Binance (delisted, likely)');
+  assert.equal(F.displayName({ name: 'Gate', confidence: 'confirmed' }), 'Gate');
+  assert.equal(F.displayName({ name: 'TradeOgre', status: 'closed', confidence: 'confirmed' }), 'TradeOgre (closed)');
+  const labels = JSON.parse(fs.readFileSync(new URL('../labels.json', import.meta.url), 'utf8')).accounts;
+  const ex = Object.values(labels).filter((l) => l.type === 'exchange');
+  assert.deepEqual([...new Set(ex.filter((l) => l.confidence === 'confirmed').map((l) => l.name))], ['Gate']);
+  for (const n of ['Binance', 'Binance.US', 'KuCoin', 'OKX', 'MEXC', 'Bybit', 'Coinmetro']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'delisted'), n);
+  for (const n of ['CoinEx', 'TradeOgre']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'closed'), n);
+});
