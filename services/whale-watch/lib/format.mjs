@@ -8,10 +8,15 @@ export function shortAccount(a) {
   return a;
 }
 
-// "Gate", or "CoinEx (likely)" when the label rests on circumstantial evidence.
+// "Gate"; "CoinEx (likely)" when the label rests on circumstantial evidence;
+// "Binance (delisted, likely)" when the exchange no longer trades KDA.
+export const nameWithTags = (name, status, likely) => {
+  const tags = [status, likely && 'likely'].filter(Boolean);
+  return tags.length ? `${name} (${tags.join(', ')})` : name;
+};
 export function displayName(l) {
   if (!l) return null;
-  return l.confidence === 'likely' ? `${l.name} (likely)` : l.name;
+  return nameWithTags(l.name, l.status, l.confidence === 'likely');
 }
 
 export function who(account, labelOf) {
