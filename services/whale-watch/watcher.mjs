@@ -249,6 +249,8 @@ export class Watcher {
       const text = item.type === 'move' ? F.movePost(item, ctx)
         : platform ? F.platformPost({ ...item, remaining: this.state.platform.total }, ctx)
           : F.dexPost(item, ctx);
+      const problem = F.postProblem(text);
+      if (problem) { this.state.posted[item.id] = 'bad-text'; log(`not posted (${problem}):`, text); continue; } // X would reject it, or a number is broken
       this.state.posted[item.id] = 'pending';
       this.checkpoint(); // throws if the state could not be stored: then nothing is posted
       const r = await this.x.post(text, { kind: item.type, item: item.id });

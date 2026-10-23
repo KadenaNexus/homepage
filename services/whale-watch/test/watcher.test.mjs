@@ -231,3 +231,26 @@ test('names carry delisted / closed and likely tags', () => {
   for (const n of ['Binance', 'Binance.US', 'KuCoin', 'OKX', 'MEXC', 'Bybit', 'Coinmetro']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'delisted'), n);
   for (const n of ['CoinEx', 'TradeOgre']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'closed'), n);
 });
+
+test('watcher: DEX and pool alerts post with the real KDA amount and one cashtag', async () => {
+  const { w, posts } = tmpWatcher();
+  w.processBlock(fixture('2-7314870')); // 501,772 KDA taken out of the Mercatus KDA/BRO pool
+  const lp = w.feed.find((f) => f.type === 'liquidity');
+  assert.ok(lp, 'liquidity item');
+  w.now = () => lp.time + 60000;
+  w.fresh = [...w.feed];
+  // a DEX sale stored the way the watcher stores it (amount, not kda)
+  w.addItem({ type: 'dex', id: 'sale1', time: lp.time, chain: 2, height: 1, requestKey: 'pNCPDjedezU3_wwfpw2fwZHUY3tnAnAAAAAAAAAAAAA', amount: 475868, side: 'sell', other: { token: 'n_e595727b657fbbb3b8e362a05a7bb8d12865c1ff.kb-USDC', amount: 3307.39 }, trader: 'k:' + 'c'.repeat(64), dex: 'Mercatus' });
+  await w.postFresh();
+  const texts = posts.map((p) => p.text);
+  const pool = texts.find((t) => /pool/.test(t)), sale = texts.find((t) => /sold for/.test(t));
+  assert.match(pool, /501,772 \$KDA .*taken out of the Mercatus KDA\/BRO pool \(liquidity removed\)/);
+  assert.match(sale, /^💱 475,868 \$KDA( \(~\$[\d,]+\))? sold for 3,307 kb-USDC on Mercatus/);
+  for (const t of texts) assert.equal(F.postProblem(t), null, t);
+});
+
+test('postProblem catches what X rejects', () => {
+  assert.equal(F.postProblem('💱 NaN $KDA (~$NaN) sold'), 'broken value in text');
+  assert.equal(F.postProblem('$KDA and $BRO'), 'more than one cashtag');
+  assert.equal(F.postProblem('🐋 100,000 $KDA (~$1,060) moved'), null);
+});

@@ -91,22 +91,25 @@ export function movePost(it, { labelOf, price, thresholds }) {
   return lines.join('\n');
 }
 
+// Takes a parsed trade ({ kda, liquidity }) or a stored feed item ({ amount, type: 'liquidity' }).
 export function dexPost(it, { labelOf, price, thresholds }) {
+  const kda = it.kda ?? it.amount;
+  const liquidity = it.liquidity ?? it.type === 'liquidity';
   const sym = it.other ? tokenSymbol(it.other.token) : null;
-  const amt = `${fmtKda(it.kda)} $KDA${fmtUsd(it.kda, price)}`;
+  const amt = `${fmtKda(kda)} $KDA${fmtUsd(kda, price)}`;
   let head;
-  if (it.liquidity) {
+  if (liquidity) {
     const plus = it.other ? ` + ${fmtToken(it.other.amount)} ${sym}` : '';
     head = it.side === 'add'
       ? `🌊 ${amt}${plus} put into the ${it.dex} KDA/${sym} pool (liquidity added)`
       : `🌊 ${amt}${plus} taken out of the ${it.dex} KDA/${sym} pool (liquidity removed)`;
   } else {
-    const w = it.kda >= thresholds.huge ? '🚨 ' : '';
+    const w = kda >= thresholds.huge ? '🚨 ' : '';
     head = it.side === 'sell'
       ? `${w}💱 ${amt} sold for ${fmtToken(it.other.amount)} ${sym} on ${it.dex}`
       : `${w}💱 ${amt} bought with ${fmtToken(it.other.amount)} ${sym} on ${it.dex}`;
   }
-  return [head, '', `${it.liquidity ? 'Wallet' : 'Trader'}: ${who(it.trader, labelOf)}`, '', `Chain ${it.chain}`, txUrl(it.requestKey)].join('\n');
+  return [head, '', `${liquidity ? 'Wallet' : 'Trader'}: ${who(it.trader, labelOf)}`, '', `Chain ${it.chain}`, txUrl(it.requestKey)].join('\n');
 }
 
 export function platformPost(it, { price }) {
@@ -185,4 +188,12 @@ export function weightedLength(text) {
   const plain = text.replace(/https?:\/\/\S+/g, () => { n += 23; return ''; }); // X counts every link as 23
   for (const ch of plain) n += ch.codePointAt(0) > 0x10ff ? 2 : 1;
   return n;
+}
+
+// A post X would reject or that shows a broken number: more than one cashtag
+// (X allows one), or NaN / undefined / null in the text.
+export function postProblem(text) {
+  if (/\b(NaN|undefined|null)\b/.test(text)) return 'broken value in text';
+  if ((text.match(/\$[A-Za-z][A-Za-z0-9_]*/g) || []).length > 1) return 'more than one cashtag';
+  return null;
 }
