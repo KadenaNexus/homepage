@@ -134,9 +134,12 @@ test('formats: tiers, dormant line, DEX and platform posts stay short', () => {
   assert.match(F.movePost({ ...base, amount: 150000 }, ctx), /^🐋 150,000/);
   assert.match(F.movePost({ ...base, amount: 2500000 }, ctx), /^🚨🐋🐋🐋 2,500,000/);
   const dormant = F.movePost({ ...base, amount: 150000, dormantDays: 900 }, ctx);
-  assert.match(dormant, /idle for 2\.5 years/);
+  assert.match(dormant, /^⏰ Dormant wallet woke up: no transactions for over 2 years/);
+  const woke = F.movePost({ ...base, amount: 199999.99, time: Date.parse('2026-10-23T01:08:20Z'), dormantDays: 366, lastActive: Date.parse('2025-10-22T09:00:00Z') }, ctx);
+  assert.match(woke, /^⏰ Dormant wallet woke up: no transactions for over a year \(last active Oct 22, 2025\)\n🐋 200,000 \$KDA/);
+  assert.ok(F.weightedLength(woke) <= 280, woke);
   const dex = F.dexPost({ chain: 2, requestKey: base.requestKey, kda: 180000, side: 'sell', other: { token: 'n_e595727b657fbbb3b8e362a05a7bb8d12865c1ff.kb-USDC', amount: 1925.4 }, trader: base.from, dex: 'Mercatus' }, ctx);
-  assert.match(dex, /180,000 \$KDA \(~\$1,926\) sold for 1,925 kb-USDC on Mercatus/);
+  assert.match(dex, /180,000 \$KDA \(~\$1,926\) sold on Mercatus for 1,925 kb-USDC\nAbout \$0\.011 per KDA, close to the market price/);
   const ps = F.platformPost({ kind: 'release', account: 'PS_C5_001', amount: 400000, chain: 5, requestKey: base.requestKey, remaining: 86944000 }, ctx);
   assert.match(ps, /3 of the 5 community keys/);
   for (const t of [dormant, dex, ps]) assert.ok(F.weightedLength(t) <= 280, t);
@@ -243,9 +246,9 @@ test('watcher: DEX and pool alerts post with the real KDA amount and one cashtag
   w.addItem({ type: 'dex', id: 'sale1', time: lp.time, chain: 2, height: 1, requestKey: 'pNCPDjedezU3_wwfpw2fwZHUY3tnAnAAAAAAAAAAAAA', amount: 475868, side: 'sell', other: { token: 'n_e595727b657fbbb3b8e362a05a7bb8d12865c1ff.kb-USDC', amount: 3307.39 }, trader: 'k:' + 'c'.repeat(64), dex: 'Mercatus' });
   await w.postFresh();
   const texts = posts.map((p) => p.text);
-  const pool = texts.find((t) => /pool/.test(t)), sale = texts.find((t) => /sold for/.test(t));
-  assert.match(pool, /501,772 \$KDA .*taken out of the Mercatus KDA\/BRO pool \(liquidity removed\)/);
-  assert.match(sale, /^💱 475,868 \$KDA( \(~\$[\d,]+\))? sold for 3,307 kb-USDC on Mercatus/);
+  const pool = texts.find((t) => /pool/.test(t)), sale = texts.find((t) => /sold on/.test(t));
+  assert.match(pool, /501,772 \$KDA .*taken out of the Mercatus KDA\/BRO pool\nLiquidity removed, not a sale/);
+  assert.match(sale, /^💱 475,868 \$KDA( \(~\$[\d,]+\))? sold on Mercatus for 3,307 kb-USDC/);
   for (const t of texts) assert.equal(F.postProblem(t), null, t);
 });
 
@@ -253,4 +256,29 @@ test('postProblem catches what X rejects', () => {
   assert.equal(F.postProblem('💱 NaN $KDA (~$NaN) sold'), 'broken value in text');
   assert.equal(F.postProblem('$KDA and $BRO'), 'more than one cashtag');
   assert.equal(F.postProblem('🐋 100,000 $KDA (~$1,060) moved'), null);
+});
+
+test('alerts explain themselves in one plain line', () => {
+  const gate = { name: 'Gate', type: 'exchange', confidence: 'confirmed' };
+  const bin = { name: 'Binance', type: 'exchange', confidence: 'likely', status: 'delisted' };
+  const cx = { name: 'CoinEx', type: 'exchange', confidence: 'likely', status: 'closed' };
+  const A = 'k:' + '1'.repeat(64), B = 'k:' + '2'.repeat(64), G = 'k:' + '3'.repeat(64), N = 'k:' + '4'.repeat(64), C = 'k:' + '5'.repeat(64);
+  const labels = { [G]: gate, [N]: bin, [C]: cx };
+  const ctx = { labelOf: (a) => labels[a] || null, price: 0.0106, thresholds: { big: 500000, huge: 1000000 } };
+  const base = { chain: 1, toChain: 1, requestKey: 'vWiX6xDWQ7EMcM0YbgKRO1tBXEDRVnNneJkfUXkQ20g', time: Date.parse('2026-10-23T01:00:00Z') };
+  const dep = F.movePost({ ...base, amount: 250000, from: A, to: G }, ctx);
+  assert.match(dep, /deposited to Gate\n📥 Exchange deposit: KDA sent to an exchange can be sold there/);
+  assert.match(F.movePost({ ...base, amount: 250000, from: G, to: A }, ctx), /withdrawn from Gate\n📤 Exchange withdrawal/);
+  assert.match(F.movePost({ ...base, amount: 250000, from: A, to: N }, ctx), /\n📥 Sent to an exchange that no longer trades KDA/);
+  assert.match(F.movePost({ ...base, amount: 250000, from: C, to: A }, ctx), /\n📤 Leaving a closed exchange/);
+  assert.match(F.movePost({ ...base, amount: 2e6, from: A, to: B, newWhale: 1.2e6 }, ctx), /🆕 New whale: the receiver now holds 1\.2M KDA \(under 1M before this move\)/);
+  // the longest case still fits: dormant + delisted to closed + new whale
+  const long = F.movePost({ ...base, amount: 12345678, from: N, to: C, dormantDays: 1500, lastActive: Date.parse('2022-09-14T00:00:00Z'), newWhale: 1.3e6 }, ctx);
+  assert.ok(F.weightedLength(long) <= 280, long);
+  // a sale far below market says so
+  const sale = F.dexPost({ chain: 2, requestKey: base.requestKey, amount: 475868, type: 'dex', side: 'sell', other: { token: 'n_e595727b657fbbb3b8e362a05a7bb8d12865c1ff.kb-USDC', amount: 3307.39 }, trader: A, dex: 'Mercatus' }, ctx);
+  assert.match(sale, /\n📉 About \$0\.0070 per KDA, 34% below the market price\n/);
+  const add = F.dexPost({ chain: 2, requestKey: base.requestKey, amount: 370000, type: 'liquidity', side: 'add', other: { token: 'n_582fed11af00dc626812cd7890bb88e72067f28c.bro', amount: 0.764 }, trader: A, dex: 'Mercatus' }, ctx);
+  assert.match(add, /put into the Mercatus KDA\/BRO pool\nLiquidity added, not a purchase/);
+  for (const t of [dep, long, sale, add]) assert.equal(F.postProblem(t), null, t);
 });
