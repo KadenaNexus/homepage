@@ -80,7 +80,8 @@ test('watcher: posts the 999,746 move once, with the exchange label, under 280 c
   assert.match(t, /999,746 \$KDA \(~\$10,797\) withdrawn from Example Exchange/);
   assert.match(t, /^🐋🐋 /m);
   assert.match(t, /To: unknown wallet k:a143…/);
-  assert.doesNotMatch(t, /https?:|\.ws|\.com/); // no links: plain posts cost $0.015, link posts $0.20
+  assert.match(t, /\nhttps:\/\/denascan\.com\/transactions\/[A-Za-z0-9_-]{43}$/); // alerts end with the DenaScan tx link
+  assert.equal((t.match(/https?:/g) || []).length, 1);
   assert.ok(F.weightedLength(t) <= 280);
   // exchange outflow counted
   const day = w.state.days['2026-09-27'];
@@ -142,6 +143,7 @@ test('formats: tiers, dormant line, DEX and platform posts stay short', () => {
   const daily = F.dailyPost({ day: '2026-10-20', moves: 3, largest: 456638, dex: 1, flowIn: 820000, flowOut: 1100000, platform: 87344000, platformDays: 377, notPosted: 0 });
   assert.match(daily, /Exchanges: 820K KDA deposited · 1\.1M KDA withdrawn/);
   assert.match(daily, /87\.3M KDA, unmoved for 377 days/);
+  assert.doesNotMatch(daily, /https?:/); // summaries stay link-free ($0.015)
   const weekly = F.weeklyPost({ from: '2026-10-14', to: '2026-10-20', moves: 9, largest: 999746, conc: { w1m: 43, w100k: 404, top10: 131009517 }, prev: { w1m: 42, w100k: 407 }, flowIn: 1e6, flowOut: 2.2e6 });
   assert.match(weekly, /1M\+ KDA: 43 \(\+1\)/);
   assert.match(weekly, /100K\+ KDA: 404 \(−3\)/);

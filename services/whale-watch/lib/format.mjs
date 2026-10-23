@@ -1,5 +1,6 @@
 // Text for posts and the page. Pure functions, unit-tested.
-// Posts never contain URLs: on X's pay-per-use API a post with a link costs ~13x more.
+// Alerts end with a DenaScan link to the transaction (Naif's choice, Oct 2026: on X's
+// pay-per-use API a post with a link costs about $0.20 instead of $0.015). Summaries stay link-free.
 
 export function shortAccount(a) {
   if (!a) return '?';
@@ -61,7 +62,7 @@ export function whales(amount, t) {
   return '🐋';
 }
 
-const shortTx = (rk) => `${rk.slice(0, 6)}…${rk.slice(-4)}`;
+export const txUrl = (rk) => `https://denascan.com/transactions/${encodeURIComponent(rk)}`;
 const chainText = (it) => (it.toChain != null && it.toChain !== it.chain ? `Chain ${it.chain} → ${it.toChain}` : `Chain ${it.chain}`);
 
 export function idleText(days) {
@@ -86,7 +87,7 @@ export function movePost(it, { labelOf, price, thresholds }) {
   lines.push(`From: ${who(it.from, labelOf)}`);
   lines.push(`To: ${who(it.to, labelOf)}`);
   if (it.newWhale) lines.push(`🆕 Receiver now holds ${compact(it.newWhale)} KDA`);
-  lines.push('', `${chainText(it)} · tx ${shortTx(it.requestKey)}`);
+  lines.push('', chainText(it), txUrl(it.requestKey));
   return lines.join('\n');
 }
 
@@ -105,7 +106,7 @@ export function dexPost(it, { labelOf, price, thresholds }) {
       ? `${w}💱 ${amt} sold for ${fmtToken(it.other.amount)} ${sym} on ${it.dex}`
       : `${w}💱 ${amt} bought with ${fmtToken(it.other.amount)} ${sym} on ${it.dex}`;
   }
-  return [head, '', `${it.liquidity ? 'Wallet' : 'Trader'}: ${who(it.trader, labelOf)}`, '', `Chain ${it.chain} · tx ${shortTx(it.requestKey)}`].join('\n');
+  return [head, '', `${it.liquidity ? 'Wallet' : 'Trader'}: ${who(it.trader, labelOf)}`, '', `Chain ${it.chain}`, txUrl(it.requestKey)].join('\n');
 }
 
 export function platformPost(it, { price }) {
@@ -116,7 +117,8 @@ export function platformPost(it, { price }) {
       : `The frozen Kadena platform share dropped by ${fmtKda(it.amount)} $KDA${fmtUsd(it.amount, price)}`;
   const lines = [`🚨 Platform share moved`, '', what, '', 'Moving it needs 3 of the 5 community keys.'];
   if (it.remaining != null) lines.push(`Still frozen: ${compact(it.remaining)} KDA`);
-  lines.push('', `Chain ${it.chain}${it.requestKey ? ` · tx ${shortTx(it.requestKey)}` : ''}`);
+  lines.push('', `Chain ${it.chain}`);
+  if (it.requestKey) lines.push(txUrl(it.requestKey));
   return lines.join('\n');
 }
 
@@ -180,6 +182,7 @@ export function weeklyPost(w) {
 // X counts characters with some characters (emoji) weighted 2; stay well under 280.
 export function weightedLength(text) {
   let n = 0;
-  for (const ch of text) n += ch.codePointAt(0) > 0x10ff ? 2 : 1;
+  const plain = text.replace(/https?:\/\/\S+/g, () => { n += 23; return ''; }); // X counts every link as 23
+  for (const ch of plain) n += ch.codePointAt(0) > 0x10ff ? 2 : 1;
   return n;
 }

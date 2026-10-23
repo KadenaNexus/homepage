@@ -20,7 +20,7 @@ It writes `feed.json`, `stats.json` and `status.json` into `/var/www/kadena.ws/w
 | Daily summary | 21:00 Riyadh. |
 | Weekly digest | Friday 21:00 Riyadh, instead of that day's summary. |
 
-Posts contain no links: on X's pay-per-use API a plain post costs about $0.015 and a post with a link about $0.20. Expected volume is 2–3 posts a day, about $1–2 a month.
+Each alert ends with a DenaScan link to its transaction (`https://denascan.com/transactions/<request key>`). On X's pay-per-use API a post with a link costs about $0.20, against about $0.015 for a plain one, so alerts cost about $0.20 each: roughly $6–15 a month at 1–2 alerts a day, at most about $36 if the 6-a-day cap is reached every day. Daily and weekly summaries carry no link and stay at about $0.015.
 
 Dry mode (the default) writes every post to `posts.jsonl` (on Actions: kadena.ws/whales/data/watcher/posts.jsonl) and sends nothing. Switch to `live` only after the bot account and keys are ready.
 
