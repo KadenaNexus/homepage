@@ -5,7 +5,7 @@ Reads every block on all 20 Kadena chains and reports large KDA activity:
 - **Wallet moves** of 100,000 KDA or more (cross-chain moves count once; a wallet moving its own KDA between chains is skipped; a relay hop with the same amount is merged into the first alert).
 - **DEX trades** (net KDA bought or sold in one transaction, Mercatus and sushi-exchange) and **pool liquidity** adds/withdrawals of 100K+ KDA.
 - **Platform share**: the 87,344,000 KDA in frozen `PS_C*` allocations is re-read every hour; any release, transfer or drop is alerted at once and never capped.
-- **Flags**: sender idle 365+ days, receiver crossing 1M KDA.
+- **Flags**: "dormant wallet woke up" when the sender had no transactions for 365+ days (with its last active date), and receiver crossing 1M KDA.
 - **Exchange flows**: every transfer to or from a labelled exchange wallet, any size.
 - **Holder counts**: wallets with 100K+, 1M+, 10M+ KDA once a day (from the public indexer).
 

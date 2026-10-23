@@ -214,7 +214,7 @@ export class Watcher {
         const last = await this.ix.lastActivityBefore(item.from, item.time, item.requestKey);
         if (last) {
           const days = Math.floor((item.time - last) / 86400e3);
-          if (days >= this.cfg.dormantDays) item.dormantDays = days;
+          if (days >= this.cfg.dormantDays) { item.dormantDays = days; item.lastActive = last; }
         }
       } catch (e) { log('dormant check skipped:', e.message); }
     }

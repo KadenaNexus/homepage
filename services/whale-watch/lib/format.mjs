@@ -65,10 +65,23 @@ export function whales(amount, t) {
 export const txUrl = (rk) => `https://denascan.com/transactions/${encodeURIComponent(rk)}`;
 const chainText = (it) => (it.toChain != null && it.toChain !== it.chain ? `Chain ${it.chain} → ${it.toChain}` : `Chain ${it.chain}`);
 
+// How long a wallet sat unused, in plain words: "over a year", "over 3 years", "200 days".
 export function idleText(days) {
-  if (days >= 730) return `${(days / 365).toFixed(1)} years`;
-  if (days >= 365) return `${(days / 365).toFixed(1)} year${days >= 548 ? 's' : ''}`;
+  if (days >= 730) return `over ${Math.floor(days / 365)} years`;
+  if (days >= 365) return 'over a year';
   return `${days} days`;
+}
+
+// "Oct 22, 2025"
+export const dateText = (ms) => {
+  const d = new Date(ms);
+  return `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+};
+
+// "⏰ Dormant wallet woke up: no transactions for over a year (last active Oct 22, 2025)"
+export function dormantLine(it) {
+  const last = it.lastActive ?? (it.time != null ? it.time - it.dormantDays * 86400e3 : null);
+  return `⏰ Dormant wallet woke up: no transactions for ${idleText(it.dormantDays)}${last != null ? ` (last active ${dateText(last)})` : ''}`;
 }
 
 export function movePost(it, { labelOf, price, thresholds }) {
@@ -82,7 +95,7 @@ export function movePost(it, { labelOf, price, thresholds }) {
   else if (tx) head = `${amt} deposited to ${displayName(toL)}`;
   else head = `${amt} moved`;
   const lines = [];
-  if (it.dormantDays) lines.push(`⏰ A wallet idle for ${idleText(it.dormantDays)} just moved`);
+  if (it.dormantDays) lines.push(dormantLine(it));
   lines.push(`${whales(it.amount, thresholds)} ${head}`, '');
   lines.push(`From: ${who(it.from, labelOf)}`);
   lines.push(`To: ${who(it.to, labelOf)}`);

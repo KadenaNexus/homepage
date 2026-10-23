@@ -134,7 +134,10 @@ test('formats: tiers, dormant line, DEX and platform posts stay short', () => {
   assert.match(F.movePost({ ...base, amount: 150000 }, ctx), /^🐋 150,000/);
   assert.match(F.movePost({ ...base, amount: 2500000 }, ctx), /^🚨🐋🐋🐋 2,500,000/);
   const dormant = F.movePost({ ...base, amount: 150000, dormantDays: 900 }, ctx);
-  assert.match(dormant, /idle for 2\.5 years/);
+  assert.match(dormant, /^⏰ Dormant wallet woke up: no transactions for over 2 years/);
+  const woke = F.movePost({ ...base, amount: 199999.99, time: Date.parse('2026-10-23T01:08:20Z'), dormantDays: 366, lastActive: Date.parse('2025-10-22T09:00:00Z') }, ctx);
+  assert.match(woke, /^⏰ Dormant wallet woke up: no transactions for over a year \(last active Oct 22, 2025\)\n🐋 200,000 \$KDA/);
+  assert.ok(F.weightedLength(woke) <= 280, woke);
   const dex = F.dexPost({ chain: 2, requestKey: base.requestKey, kda: 180000, side: 'sell', other: { token: 'n_e595727b657fbbb3b8e362a05a7bb8d12865c1ff.kb-USDC', amount: 1925.4 }, trader: base.from, dex: 'Mercatus' }, ctx);
   assert.match(dex, /180,000 \$KDA \(~\$1,926\) sold for 1,925 kb-USDC on Mercatus/);
   const ps = F.platformPost({ kind: 'release', account: 'PS_C5_001', amount: 400000, chain: 5, requestKey: base.requestKey, remaining: 86944000 }, ctx);

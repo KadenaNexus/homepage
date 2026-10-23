@@ -301,7 +301,7 @@ footer a:hover{color:var(--sand)}
         <li><b>Cross-chain moves</b> count once, on the chain they leave from. A wallet moving its own KDA between chains is not a whale move and is left out.</li>
         <li><b>DEX trades</b> show the net KDA bought or sold in one transaction, so a round trip through two pools is not counted twice. Liquidity added to or taken out of a pool is shown separately.</li>
         <li><b>Relay hops</b>: when a wallet passes the same amount straight on, the second hop is shown under the first and not posted again.</li>
-        <li><b>Dormant wallets</b>: a sender idle for a year or more is flagged.</li>
+        <li><b>Dormant wallets</b>: when the sender had made no transactions for a year or more, the move is marked "dormant wallet woke up", with the date the wallet was last active. Long-held coins moving again is often worth watching.</li>
         <li><b>New whales</b>: a receiver that crosses 1M KDA with the move is flagged.</li>
       </ul>
       <p><b>Wallet names.</b> A name is <b>confirmed</b> when the exchange itself ties the wallet to it, for example a deposit address the exchange issued sweeping into that wallet or a withdrawal the exchange made, or when contract data on the chain proves it (DEX pools, vesting lockers). A name marked <b>(likely)</b> rests on strong circumstantial evidence: wallet lists shared by Kadena community developers, checked against timing such as the wallet pausing and resuming within minutes of the exchange's published suspension and resumption times, or paying out to many customers right after the exchange delisted KDA. <b>(delisted)</b> marks an exchange that no longer trades KDA. Today Gate is the only centralized exchange that still does; the others' wallets are still tracked, because KDA can still move in or out of them. Everything else shows as an unknown wallet with its address. Private individuals are never named. Spotted a wrong or missing label? Tell us on <a href="https://t.me/KadenaNexus">Telegram</a>.</p>
@@ -365,7 +365,7 @@ footer a:hover{color:var(--sand)}
     let tags = '', what = '', sub = [];
     if (i.type === 'move') {
       if (i.amount >= 1e6) tags += '<span class="tag hot">1M+</span>';
-      if (i.dormantDays) tags += `<span class="tag hot">idle ${i.dormantDays >= 365 ? (i.dormantDays / 365).toFixed(1) + ' yr' : i.dormantDays + ' d'}</span>`;
+      if (i.dormantDays) tags += '<span class="tag hot">dormant wallet woke up</span>';
       if (i.newWhale) tags += '<span class="tag hot">new 1M+ holder</span>';
       if (i.relayOf) tags += `<span class="tag">${i.returned ? 'returned' : 'relay'}</span>`;
       const ex = new Set((stats && stats.labelledExchanges) || []);
@@ -376,6 +376,11 @@ footer a:hover{color:var(--sand)}
       what = `${acct(i.from, i.fromLabel)} → ${acct(i.to, i.toLabel)}`;
       if (i.internal) sub.push('moved between wallets of the same exchange, not posted');
       if (i.relayOf) sub.push(i.returned ? 'same amount sent back to the earlier sender' : 'same amount passed straight on, part of an earlier move');
+      if (i.dormantDays) {
+        const idle = i.dormantDays >= 730 ? `over ${Math.floor(i.dormantDays / 365)} years` : i.dormantDays >= 365 ? 'over a year' : `${i.dormantDays} days`;
+        const last = new Date(i.lastActive || (i.time - i.dormantDays * 86400e3));
+        sub.push(`sender had made no transactions for ${idle} (last active ${last.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })})`);
+      }
       if (i.newWhale) sub.push(`receiver now holds ${compact(i.newWhale)} KDA`);
     } else if (i.type === 'dex') {
       tags += `<span class="tag x">${i.side === 'sell' ? 'DEX sell' : 'DEX buy'}</span>`;
