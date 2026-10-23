@@ -84,6 +84,29 @@ export function dormantLine(it) {
   return `⏰ Dormant wallet woke up: no transactions for ${idleText(it.dormantDays)}${last != null ? ` (last active ${dateText(last)})` : ''}`;
 }
 
+// One plain line saying what an exchange move means. Exchanges that no longer trade
+// KDA get their own wording, so nobody reads a deposit there as selling pressure.
+export function exchangeNote(fromL, toL) {
+  const fx = fromL?.type === 'exchange', tx = toL?.type === 'exchange';
+  const gone = (l) => (l.status === 'closed' ? 'a closed exchange' : l.status === 'delisted' ? 'an exchange that no longer trades KDA' : null);
+  if (fx && tx) return '🔁 Moved between two exchanges';
+  if (tx) return gone(toL) ? `📥 Sent to ${gone(toL)}` : '📥 Exchange deposit: KDA sent to an exchange can be sold there';
+  if (fx) return gone(fromL) ? `📤 Leaving ${gone(fromL)}` : "📤 Exchange withdrawal: KDA taken off an exchange, usually into the owner's own wallet";
+  return null;
+}
+
+export const newWhaleLine = (n, detail = true) => `🆕 New whale: the receiver now holds ${compact(n)} KDA${detail ? ' (under 1M before this move)' : ''}`;
+
+// Fits a post into X's 280 by dropping the optional explanation lines, least important first.
+function fit(build, optional) {
+  let keep = [...optional];
+  for (;;) {
+    const text = build(new Set(keep));
+    if (weightedLength(text) <= 280 || !keep.length) return text;
+    keep = keep.slice(0, -1);
+  }
+}
+
 export function movePost(it, { labelOf, price, thresholds }) {
   const fromL = labelOf(it.from);
   const toL = labelOf(it.to);
@@ -94,14 +117,33 @@ export function movePost(it, { labelOf, price, thresholds }) {
   else if (fx) head = `${amt} withdrawn from ${displayName(fromL)}`;
   else if (tx) head = `${amt} deposited to ${displayName(toL)}`;
   else head = `${amt} moved`;
-  const lines = [];
-  if (it.dormantDays) lines.push(dormantLine(it));
-  lines.push(`${whales(it.amount, thresholds)} ${head}`, '');
-  lines.push(`From: ${who(it.from, labelOf)}`);
-  lines.push(`To: ${who(it.to, labelOf)}`);
-  if (it.newWhale) lines.push(`🆕 Receiver now holds ${compact(it.newWhale)} KDA`);
-  lines.push('', chainText(it), txUrl(it.requestKey));
-  return lines.join('\n');
+  const note = exchangeNote(fromL, toL);
+  return fit((keep) => {
+    const lines = [];
+    if (it.dormantDays) lines.push(keep.has('dormantDate') ? dormantLine(it) : dormantLine({ dormantDays: it.dormantDays }));
+    lines.push(`${whales(it.amount, thresholds)} ${head}`);
+    if (note && keep.has('note')) lines.push(note);
+    lines.push('');
+    if (!(fx && tx)) lines.push(`From: ${who(it.from, labelOf)}`, `To: ${who(it.to, labelOf)}`); // the headline already names both exchanges
+    if (it.newWhale) lines.push(newWhaleLine(it.newWhale, keep.has('whaleDetail')));
+    lines.push('', chainText(it), txUrl(it.requestKey));
+    return lines.join('\n');
+  }, ['note', 'whaleDetail', 'dormantDate']);
+}
+
+const isStable = (sym) => /USD/i.test(sym || '');
+const fmtPrice = (p) => `$${p >= 0.1 ? p.toFixed(3) : p.toPrecision(2)}`;
+
+// For trades against a dollar stablecoin: the price the trader actually got, against the
+// market (pool) price, e.g. "📉 About $0.0070 per KDA, 35% below the market price".
+export function tradePriceLine(it, price) {
+  const kda = it.kda ?? it.amount;
+  const sym = it.other ? tokenSymbol(it.other.token) : null;
+  if (!price || !kda || !it.other || !isStable(sym)) return null;
+  const got = it.other.amount / kda;
+  const diff = Math.round((got / price - 1) * 100);
+  if (Math.abs(diff) < 3) return `About ${fmtPrice(got)} per KDA, close to the market price`;
+  return `${diff < 0 ? '📉' : '📈'} About ${fmtPrice(got)} per KDA, ${Math.abs(diff)}% ${diff < 0 ? 'below' : 'above'} the market price`;
 }
 
 // Takes a parsed trade ({ kda, liquidity }) or a stored feed item ({ amount, type: 'liquidity' }).
@@ -110,19 +152,23 @@ export function dexPost(it, { labelOf, price, thresholds }) {
   const liquidity = it.liquidity ?? it.type === 'liquidity';
   const sym = it.other ? tokenSymbol(it.other.token) : null;
   const amt = `${fmtKda(kda)} $KDA${fmtUsd(kda, price)}`;
-  let head;
+  let head, note;
   if (liquidity) {
     const plus = it.other ? ` + ${fmtToken(it.other.amount)} ${sym}` : '';
     head = it.side === 'add'
-      ? `🌊 ${amt}${plus} put into the ${it.dex} KDA/${sym} pool (liquidity added)`
-      : `🌊 ${amt}${plus} taken out of the ${it.dex} KDA/${sym} pool (liquidity removed)`;
+      ? `🌊 ${amt}${plus} put into the ${it.dex} KDA/${sym} pool`
+      : `🌊 ${amt}${plus} taken out of the ${it.dex} KDA/${sym} pool`;
+    note = it.side === 'add'
+      ? 'Liquidity added, not a purchase: the wallet put both tokens into the pool so others can trade against it'
+      : 'Liquidity removed, not a sale: the wallet took its share of both tokens back out of the pool';
   } else {
     const w = kda >= thresholds.huge ? '🚨 ' : '';
     head = it.side === 'sell'
-      ? `${w}💱 ${amt} sold for ${fmtToken(it.other.amount)} ${sym} on ${it.dex}`
-      : `${w}💱 ${amt} bought with ${fmtToken(it.other.amount)} ${sym} on ${it.dex}`;
+      ? `${w}💱 ${amt} sold on ${it.dex} for ${fmtToken(it.other.amount)} ${sym}`
+      : `${w}💱 ${amt} bought on ${it.dex} with ${fmtToken(it.other.amount)} ${sym}`;
+    note = tradePriceLine({ ...it, kda }, price);
   }
-  return [head, '', `${liquidity ? 'Wallet' : 'Trader'}: ${who(it.trader, labelOf)}`, '', `Chain ${it.chain}`, txUrl(it.requestKey)].join('\n');
+  return fit((keep) => [head, ...(note && keep.has('note') ? [note] : []), '', `${liquidity ? 'Wallet' : 'Trader'}: ${who(it.trader, labelOf)}`, '', `Chain ${it.chain}`, txUrl(it.requestKey)].join('\n'), ['note']);
 }
 
 export function platformPost(it, { price }) {
