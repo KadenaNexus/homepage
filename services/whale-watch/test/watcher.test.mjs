@@ -232,7 +232,7 @@ test('names carry delisted / closed and likely tags', () => {
   assert.equal(F.displayName({ name: 'TradeOgre', status: 'closed', confidence: 'confirmed' }), 'TradeOgre (closed)');
   const labels = JSON.parse(fs.readFileSync(new URL('../labels.json', import.meta.url), 'utf8')).accounts;
   const ex = Object.values(labels).filter((l) => l.type === 'exchange');
-  assert.deepEqual([...new Set(ex.filter((l) => l.confidence === 'confirmed').map((l) => l.name))], ['Gate']);
+  assert.deepEqual([...new Set(ex.filter((l) => l.confidence === 'confirmed').map((l) => l.name))].sort(), ['CoinEx', 'Gate']);
   for (const n of ['Binance.US', 'KuCoin', 'OKX', 'Bybit', 'Coinmetro']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'delisted'), n);
   for (const n of ['CoinEx', 'TradeOgre']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'closed'), n);
 });
@@ -308,4 +308,39 @@ test('summaries name Gate and group every other exchange', () => {
   const t = F.movePost({ chain: 2, toChain: 2, requestKey: 'vWiX6xDWQ7EMcM0YbgKRO1tBXEDRVnNneJkfUXkQ20g', amount: 150000, from: MX, to: U }, { labelOf: (a) => (a === MX ? mexc : null), price: 0.0106, thresholds: { big: 5e5, huge: 1e6 } });
   assert.match(t, /withdrawn from an exchange\n📤 Leaving an exchange that no longer trades KDA/);
   assert.doesNotMatch(t, /MEXC/);
+});
+
+test('CoinEx is named once confirmed, and its closing is reported', async () => {
+  const { w, dir } = tmpWatcher();
+  const HOT = 'k:7cfe3761add000c3e711fdd3316d625365ab7b9ed97a8a814acabff0359d8e10', DEP = 'k:55de87' + '0'.repeat(58), U = 'k:' + '8'.repeat(64);
+  fs.writeFileSync(path.join(dir, 'labels.json'), JSON.stringify({ accounts: {
+    [HOT]: { name: 'CoinEx', type: 'exchange', confidence: 'confirmed', status: 'closed', closesOn: '2026-12-22', source: 'x' },
+    [DEP]: { name: 'CoinEx', type: 'exchange', confidence: 'likely', status: 'closed', closesOn: '2026-12-22', source: 'x' },
+    ['k:' + '9'.repeat(64)]: { name: 'MEXC', type: 'exchange', confidence: 'likely', status: 'withdrawals only', source: 'x' },
+  } }));
+  w.loadLabels();
+  assert.equal(F.displayName(w.labelOf(HOT)), 'CoinEx (closed)');
+  assert.equal(F.displayName(w.labelOf(DEP)), 'CoinEx (closed, likely)');
+  assert.equal(F.displayName(w.labelOf('k:' + '9'.repeat(64))), 'Other exchange');
+  const ctx = { labelOf: w.labelOf, price: 0.0106, thresholds: { big: 5e5, huge: 1e6 } };
+  const t = F.movePost({ chain: 0, toChain: 0, requestKey: 'vWiX6xDWQ7EMcM0YbgKRO1tBXEDRVnNneJkfUXkQ20g', amount: 300000, from: HOT, to: U }, ctx);
+  assert.match(t, /withdrawn from CoinEx \(closed\)\n📤 CoinEx is closing: withdrawals end Dec 22, 2026\n/);
+  // the hourly balance read feeds the daily summary
+  w.now = () => Date.parse('2026-10-24T18:00:00Z');
+  const seen = [];
+  w.cw = { local: async (c, code) => { seen.push(code); return c === 0 ? 3244927.55 : 0; } };
+  await w.checkClosing();
+  assert.equal(Math.round(w.state.closing.CoinEx.balance), 3244928);
+  assert.ok(seen[0].includes(HOT) && seen[0].includes(DEP));
+  const daily = F.dailyPost({ day: '2026-10-24', moves: 0, flowIn: 0, flowOut: 0, closing: Object.values(w.state.closing), platform: 87344000, platformDays: 380 });
+  assert.match(daily, /\n⏳ CoinEx closes Dec 22: 3\.24M KDA left\n/);
+  // a busy day: Gate, CoinEx's own flow folded into its closing line, other exchanges, all under 280
+  const ex = [{ name: 'Gate', display: 'Gate', label: 'Gate', in: 140157, out: 758 }, { name: 'CoinEx (closed)', display: 'CoinEx (closed)', label: 'CoinEx', status: 'closed', in: 0, out: 24 }, { name: 'Other exchanges', display: 'Other exchanges', other: true, in: 515, out: 1000 }];
+  const busy = F.dailyPost({ day: '2026-10-24', moves: 0, flowIn: 140672, flowOut: 1782, exchanges: ex, closing: Object.values(w.state.closing), platform: 87344000, platformDays: 380 });
+  assert.match(busy, /Exchanges:\nGate: 140K KDA deposited · 758 withdrawn\nOther exchanges: 515 KDA deposited · 1K withdrawn\n⏳ CoinEx closes Dec 22: 24 KDA withdrawn, 3\.24M left\n/);
+  assert.ok(F.weightedLength(busy) <= 280, busy);
+  // after the closing date it is no longer read
+  w.now = () => Date.parse('2026-12-23T00:00:00Z');
+  await w.checkClosing();
+  assert.deepEqual(w.state.closing, {});
 });

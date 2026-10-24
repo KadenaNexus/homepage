@@ -14,7 +14,8 @@ export function shortAccount(a) {
 // (Naif, Oct 24, 2026); labels.json keeps the likely name and its evidence for us.
 export const OTHER_EXCHANGE = 'Other exchange';
 export const OTHER_EXCHANGES = 'Other exchanges';
-export const isNamed = (l) => !(l?.type === 'exchange' && l.confidence !== 'confirmed');
+// An exchange is public once any of its wallets is confirmed (the watcher marks all its labels `public`).
+export const isNamed = (l) => !(l?.type === 'exchange' && l.confidence !== 'confirmed' && !l.public);
 export const nameWithTags = (name, status, likely) => {
   const tags = [status, likely && 'likely'].filter(Boolean);
   return tags.length ? `${name} (${tags.join(', ')})` : name;
@@ -93,6 +94,9 @@ export function dormantLine(it) {
 // KDA get their own wording, so nobody reads a deposit there as selling pressure.
 export function exchangeNote(fromL, toL) {
   const fx = fromL?.type === 'exchange', tx = toL?.type === 'exchange';
+  const closing = (l) => (isNamed(l) && l.closesOn ? `withdrawals end ${dateText(Date.parse(l.closesOn))}` : null);
+  if (fx && !tx && closing(fromL)) return `📤 ${fromL.name} is closing: ${closing(fromL)}`;
+  if (tx && !fx && closing(toL)) return `📥 Sent to a closing exchange: ${closing(toL)}`;
   const gone = (l) => (l.status ? 'an exchange that no longer trades KDA' : null);
   if (fx && tx) return '🔁 Moved between two exchanges';
   if (tx) return gone(toL) ? `📥 Sent to ${gone(toL)}` : '📥 Exchange deposit: KDA sent to an exchange can be sold there';
@@ -205,9 +209,9 @@ export function exchangeLine(e) {
 // Exchange lines for the daily summary: named (confirmed) exchanges one per line, busiest
 // first (up to max), then everything else as one "Other exchanges" line. Without a
 // breakdown: the totals only.
-export function flowLines(flowIn, flowOut, exchanges, max = 3) {
+export function flowLines(flowIn, flowOut, exchanges, max = 3, skip = new Set()) {
   if (!flowIn && !flowOut) return [];
-  const ex = exchanges || [];
+  const ex = (exchanges || []).filter((e) => !skip.has(e.label)); // closing exchanges get their own line
   const named = ex.filter((e) => !e.other).map(exchangeLine).filter(Boolean);
   const other = exchangeLine({ display: OTHER_EXCHANGES, in: ex.filter((e) => e.other).reduce((a, e) => a + e.in, 0), out: ex.filter((e) => e.other).reduce((a, e) => a + e.out, 0) });
   if ((!named.length && !other) || max < 1) return [`Exchanges: ${compact(flowIn)} KDA deposited · ${compact(flowOut)} KDA withdrawn`];
@@ -218,6 +222,15 @@ export function flowLines(flowIn, flowOut, exchanges, max = 3) {
   return lines;
 }
 
+// "⏳ CoinEx closes Dec 22: 24 KDA withdrawn, 3.24M left" (the 24h flow, then the KDA still in its wallets)
+export function closingLine(c, flow) {
+  const parts = [];
+  if (flow && Math.round(flow.out) > 0) parts.push(`${compact(flow.out)} KDA withdrawn`);
+  if (flow && Math.round(flow.in) > 0) parts.push(`${compact(flow.in)} deposited`);
+  parts.push(`${compact(c.balance)}${parts.length ? '' : ' KDA'} left`);
+  return `⏳ ${c.name} closes ${dateText(Date.parse(c.closesOn)).replace(/, \d{4}$/, '')}: ${parts.join(', ')}`;
+}
+
 export function dailyPost(s) {
   // Name as many exchanges as fit in one post (X allows 280).
   for (let max = 3; ; max--) {
@@ -225,8 +238,10 @@ export function dailyPost(s) {
     if (s.moves) lines.push(`100K+ KDA moves: ${s.moves} (largest ${fmtKda(s.largest)})`);
     else lines.push('No moves of 100K+ KDA in the last 24h');
     if (s.dex) lines.push(`DEX trades and pool moves 100K+: ${s.dex}`);
-    lines.push(...flowLines(s.flowIn, s.flowOut, s.exchanges, max));
+    const closing = s.closing || [];
+    lines.push(...flowLines(s.flowIn, s.flowOut, s.exchanges, max, new Set(closing.map((c) => c.name))));
     if (s.notPosted) lines.push(`(${s.notPosted} more ${s.notPosted === 1 ? 'move' : 'moves'} not posted today)`);
+    for (const c of closing) lines.push(closingLine(c, (s.exchanges || []).find((e) => e.label === c.name)));
     if (s.platform != null) lines.push(`Platform share: ${compact(s.platform)} KDA, unmoved for ${s.platformDays} days`);
     const text = lines.join('\n');
     if (max <= 0 || weightedLength(text) <= 280) return text;
@@ -244,7 +259,7 @@ export function weeklyPost(w) {
     lines.push(`Top 10 wallets hold ${compact(w.conc.top10)} KDA`);
   }
   // with a breakdown, only named (confirmed) exchanges count toward the net flow
-  const live = w.exchanges?.filter((e) => !e.other);
+  const live = w.exchanges?.filter((e) => !e.other && !e.status);
   const fIn = live ? live.reduce((a, e) => a + e.in, 0) : w.flowIn, fOut = live ? live.reduce((a, e) => a + e.out, 0) : w.flowOut;
   if (Math.round(fIn) || Math.round(fOut)) {
     const net = fIn - fOut;

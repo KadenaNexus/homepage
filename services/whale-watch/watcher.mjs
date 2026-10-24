@@ -99,6 +99,9 @@ export class Watcher {
   loadLabels() {
     const raw = readJson(this.cfg.labelsFile, { accounts: {} });
     this.labels = raw.accounts || {};
+    // an exchange is public (named) once any of its wallets is confirmed
+    const confirmedNames = new Set(Object.values(this.labels).filter((l) => l.type === 'exchange' && l.confidence === 'confirmed').map((l) => l.name));
+    for (const l of Object.values(this.labels)) if (l.type === 'exchange') l.public = confirmedNames.has(l.name);
     if (this.pools) for (const [a, l] of Object.entries(this.labels)) if (l.type === 'dex') this.pools.add(a);
     this.labelsMtime = fs.existsSync(this.cfg.labelsFile) ? fs.statSync(this.cfg.labelsFile).mtimeMs : 0;
   }
@@ -119,11 +122,16 @@ export class Watcher {
     return confirmed ? F.displayName(confirmed) : F.OTHER_EXCHANGES;
   }
 
+  exchangeStatus(name) {
+    return Object.values(this.labels).find((l) => l.type === 'exchange' && l.name === name && l.status)?.status || null;
+  }
+
   groupFlows(byName) {
     const out = {};
     for (const [name, f] of Object.entries(byName)) {
       const display = this.exchangeDisplay(name);
-      const e = (out[display] ||= { name: display, display, other: display === F.OTHER_EXCHANGES, in: 0, out: 0 });
+      const other = display === F.OTHER_EXCHANGES;
+      const e = (out[display] ||= { name: display, display, label: other ? null : name, other, status: other ? null : this.exchangeStatus(name), in: 0, out: 0 });
       e.in += f.in; e.out += f.out;
     }
     return Object.values(out).sort((a, b) => (b.in + b.out) - (a.in + a.out));
@@ -283,6 +291,26 @@ export class Watcher {
     } catch (e) { log('price skipped:', e.message); }
   }
 
+  // Public exchanges that are shutting down (closesOn in the future): the KDA still in
+  // their labelled wallets, read hourly, for the daily summary and the page.
+  async checkClosing() {
+    if (this.now() - (this.state.closingAt || 0) < 60 * 60e3) return;
+    const byName = {};
+    for (const [a, l] of Object.entries(this.labels)) {
+      if (l.type === 'exchange' && l.public && l.closesOn && Date.parse(l.closesOn) > this.now()) (byName[l.name] ||= { closesOn: l.closesOn, accounts: [] }).accounts.push(a);
+    }
+    const out = {};
+    try {
+      for (const [name, { closesOn, accounts }] of Object.entries(byName)) {
+        const code = `(fold (+) 0.0 (map (lambda (a) (try 0.0 (coin.get-balance a))) ${JSON.stringify(accounts).replace(/,/g, ' ')}))`;
+        const vals = await Promise.all(Array.from({ length: 20 }, (_, c) => this.cw.local(c, code).then(num)));
+        out[name] = { name, closesOn, balance: vals.reduce((a, b) => a + b, 0) };
+      }
+      this.state.closing = out;
+      this.state.closingAt = this.now();
+    } catch (e) { log('closing-exchange balance skipped:', e.message); }
+  }
+
   async checkPlatformShare() {
     if (this.now() - this.state.platform.checkedAt < 60 * 60e3) return;
     const code = `(fold (+) 0.0 (map (lambda (k) (let ((r (read coin.allocation-table k))) (if (at 'redeemed r) 0.0 (at 'balance r)))) (filter (lambda (k) (= "PS_" (take 3 k))) (keys coin.allocation-table))))`;
@@ -365,7 +393,7 @@ export class Watcher {
     const s = this.windowStats(24);
     const p = this.state.platform;
     const text = F.dailyPost({
-      ...s, day: dayKey, notPosted: this.state.days[dayKey]?.notPosted || 0,
+      ...s, day: dayKey, notPosted: this.state.days[dayKey]?.notPosted || 0, closing: Object.values(this.state.closing || {}),
       platform: p.total, platformDays: Math.floor((this.now() - Date.parse(p.lastMoveAt)) / 86400e3),
     });
     this.state.lastDaily = dayKey;
@@ -450,6 +478,7 @@ export class Watcher {
       labelledExchanges: [...new Set(Object.values(this.labels).filter((l) => l.type === 'exchange').map((l) => F.displayName(l)))],
       exchangeList: [...new Set(Object.values(this.labels).filter((l) => l.type === 'exchange').map((l) => this.exchangeDisplay(l.name)))].sort(),
       concentration: Object.entries(this.state.conc).sort().map(([day, c]) => ({ day, ...c })),
+      closing: Object.values(this.state.closing || {}).map((c) => ({ ...c, balance: Math.round(c.balance), checkedAt: new Date(this.state.closingAt).toISOString() })),
       platform: p.total == null ? null : { total: Math.round(p.total), perChain: p.perChain, lastMoveAt: p.lastMoveAt, checkedAt: new Date(p.checkedAt).toISOString() },
     });
     writeJson(path.join(this.cfg.publicDir, 'status.json'), {
@@ -463,6 +492,7 @@ export class Watcher {
     const n = await this.catchUp();
     for (const item of this.fresh) await this.enrich(item);
     await this.checkPlatformShare();
+    await this.checkClosing();
     await this.postFresh();
     await this.snapshotConcentration();
     await this.scheduledPosts();
