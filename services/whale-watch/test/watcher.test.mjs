@@ -68,7 +68,7 @@ function tmpWatcher(extra = {}) {
 
 test('watcher: posts the 999,746 move once, with the exchange label, under 280 characters', async () => {
   const { w, posts, dir } = tmpWatcher();
-  fs.writeFileSync(path.join(dir, 'labels.json'), JSON.stringify({ accounts: { 'k:0d584a4cbbfd9a4878d816512894e65918e54fae13df39a6f520fc90caea2fb0': { name: 'Example Exchange', type: 'exchange' } } }));
+  fs.writeFileSync(path.join(dir, 'labels.json'), JSON.stringify({ accounts: { 'k:0d584a4cbbfd9a4878d816512894e65918e54fae13df39a6f520fc90caea2fb0': { name: 'Example Exchange', type: 'exchange', confidence: 'confirmed' } } }));
   w.loadLabels();
   w.state.price = 0.0108;
   w.processBlock(fixture('1-7266334'));
@@ -174,7 +174,7 @@ test('oauth header has the required fields and a stable signature', () => {
   assert.match(h, /oauth_signature="IkqzcoSodURYDr0EVrc6NxWWJfI%3D"/);
 });
 
-test('likely labels say so, exchange-to-exchange moves name both, sweeps inside one exchange are not posted', async () => {
+test('only confirmed exchanges are named, sweeps inside one exchange are not posted', async () => {
   const { w, posts, dir } = tmpWatcher();
   const A = 'k:0d584a4cbbfd9a4878d816512894e65918e54fae13df39a6f520fc90caea2fb0';
   const B = 'k:a143f4504985' + '0'.repeat(52);
@@ -189,7 +189,8 @@ test('likely labels say so, exchange-to-exchange moves name both, sweeps inside 
   // pretend the receiver is the likely-CoinEx wallet
   item.to = 'k:a143f45049850d6ae3a5e0d3dd02c0ea9b9a1f6b58c8bd29a8e8aa9cdb8d6f43';
   const text = F.movePost(item, { labelOf: w.labelOf, price: 0.0108, thresholds: { big: 5e5, huge: 1e6 } });
-  assert.match(text, /moved from Gate to CoinEx \(likely\)/);
+  assert.match(text, /moved from Gate to an exchange\n🔁 Moved between two exchanges\n\nChain 1\n/);
+  assert.doesNotMatch(text, /CoinEx/);
   // a sweep between two wallets of the same exchange: kept on the page, never posted, not counted
   w.addItem({ type: 'move', id: 'sweep', time: item.time + 1000, chain: 1, toChain: 0, requestKey: 'sweepsweep', amount: 300000, from: B, to: A, internal: true });
   await w.postFresh();
@@ -198,7 +199,8 @@ test('likely labels say so, exchange-to-exchange moves name both, sweeps inside 
   assert.equal(w.day(item.time).moves, 1);
   assert.deepEqual(w.publish() ?? null, null);
   const stats = JSON.parse(fs.readFileSync(path.join(w.cfg.publicDir, 'stats.json'), 'utf8'));
-  assert.ok(stats.labelledExchanges.includes('CoinEx (likely)') && stats.labelledExchanges.includes('Gate'));
+  assert.deepEqual(stats.labelledExchanges.sort(), ['Gate', 'Other exchange']);
+  assert.deepEqual(stats.exchangeList, ['Gate', 'Other exchanges']);
 });
 
 test('nothing is posted when the state cannot be stored first (no double posts)', async () => {
@@ -230,8 +232,8 @@ test('names carry delisted / closed and likely tags', () => {
   assert.equal(F.displayName({ name: 'TradeOgre', status: 'closed', confidence: 'confirmed' }), 'TradeOgre (closed)');
   const labels = JSON.parse(fs.readFileSync(new URL('../labels.json', import.meta.url), 'utf8')).accounts;
   const ex = Object.values(labels).filter((l) => l.type === 'exchange');
-  assert.deepEqual([...new Set(ex.filter((l) => l.confidence === 'confirmed').map((l) => l.name))], ['Gate']);
-  for (const n of ['Binance', 'Binance.US', 'KuCoin', 'OKX', 'MEXC', 'Bybit', 'Coinmetro']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'delisted'), n);
+  assert.deepEqual([...new Set(ex.filter((l) => l.confidence === 'confirmed').map((l) => l.name))].sort(), ['CoinEx', 'Gate']);
+  for (const n of ['Binance.US', 'KuCoin', 'OKX', 'Bybit', 'Coinmetro']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'delisted'), n);
   for (const n of ['CoinEx', 'TradeOgre']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'closed'), n);
 });
 
@@ -270,7 +272,10 @@ test('alerts explain themselves in one plain line', () => {
   assert.match(dep, /deposited to Gate\n📥 Exchange deposit: KDA sent to an exchange can be sold there/);
   assert.match(F.movePost({ ...base, amount: 250000, from: G, to: A }, ctx), /withdrawn from Gate\n📤 Exchange withdrawal/);
   assert.match(F.movePost({ ...base, amount: 250000, from: A, to: N }, ctx), /\n📥 Sent to an exchange that no longer trades KDA/);
-  assert.match(F.movePost({ ...base, amount: 250000, from: C, to: A }, ctx), /\n📤 Leaving a closed exchange/);
+  const leave = F.movePost({ ...base, amount: 250000, from: C, to: A }, ctx);
+  assert.match(leave, /withdrawn from an exchange\n📤 Leaving an exchange that no longer trades KDA\n\nFrom: Other exchange\n/);
+  assert.doesNotMatch(leave, /CoinEx|closed|likely/);
+  assert.match(F.movePost({ ...base, amount: 250000, from: N, to: C }, ctx), /moved between two exchanges/);
   assert.match(F.movePost({ ...base, amount: 2e6, from: A, to: B, newWhale: 1.2e6 }, ctx), /🆕 New whale: the receiver now holds 1\.2M KDA \(under 1M before this move\)/);
   // the longest case still fits: dormant + delisted to closed + new whale
   const long = F.movePost({ ...base, amount: 12345678, from: N, to: C, dormantDays: 1500, lastActive: Date.parse('2022-09-14T00:00:00Z'), newWhale: 1.3e6 }, ctx);
@@ -281,4 +286,61 @@ test('alerts explain themselves in one plain line', () => {
   const add = F.dexPost({ chain: 2, requestKey: base.requestKey, amount: 370000, type: 'liquidity', side: 'add', other: { token: 'n_582fed11af00dc626812cd7890bb88e72067f28c.bro', amount: 0.764 }, trader: A, dex: 'Mercatus' }, ctx);
   assert.match(add, /put into the Mercatus KDA\/BRO pool\nLiquidity added, not a purchase/);
   for (const t of [dep, long, sale, add]) assert.equal(F.postProblem(t), null, t);
+});
+
+test('summaries name Gate and group every other exchange', () => {
+  const ex = [
+    { name: 'Gate', display: 'Gate', in: 140157, out: 758 },
+    { name: 'Other exchanges', display: 'Other exchanges', other: true, in: 515, out: 1024 },
+  ];
+  const daily = F.dailyPost({ day: '2026-10-24', moves: 0, flowIn: 140672, flowOut: 1782, exchanges: ex, platform: 87344000, platformDays: 380 });
+  assert.match(daily, /Exchanges:\nGate: 140K KDA deposited · 758 withdrawn\nOther exchanges: 515 KDA deposited · 1K withdrawn\n/);
+  assert.doesNotMatch(daily, /more exchange/);
+  assert.ok(F.weightedLength(daily) <= 280, daily);
+  const weekly = F.weeklyPost({ from: '2026-10-18', to: '2026-10-24', moves: 0, flowIn: 140672, flowOut: 1782, exchanges: ex });
+  assert.match(weekly, /Exchanges: 139K more KDA deposited than withdrawn/);
+  assert.doesNotMatch(weekly, /Busiest/); // only one exchange still trades
+  const L = JSON.parse(fs.readFileSync(new URL('../labels.json', import.meta.url), 'utf8')).accounts;
+  assert.equal(L['k:bfcfdd740857ab6be8d6acce80f9fef6c0ad99e46c9b6e2dc24e0fe2850bede9'].name, 'OKX');
+  assert.ok(!Object.values(L).some((l) => l.name === 'Binance'), 'no wallet is labelled Binance any more');
+  const mexc = { name: 'MEXC', type: 'exchange', confidence: 'likely', status: 'withdrawals only' };
+  const MX = 'k:' + '6'.repeat(64), U = 'k:' + '7'.repeat(64);
+  const t = F.movePost({ chain: 2, toChain: 2, requestKey: 'vWiX6xDWQ7EMcM0YbgKRO1tBXEDRVnNneJkfUXkQ20g', amount: 150000, from: MX, to: U }, { labelOf: (a) => (a === MX ? mexc : null), price: 0.0106, thresholds: { big: 5e5, huge: 1e6 } });
+  assert.match(t, /withdrawn from an exchange\n📤 Leaving an exchange that no longer trades KDA/);
+  assert.doesNotMatch(t, /MEXC/);
+});
+
+test('CoinEx is named once confirmed, and its closing is reported', async () => {
+  const { w, dir } = tmpWatcher();
+  const HOT = 'k:7cfe3761add000c3e711fdd3316d625365ab7b9ed97a8a814acabff0359d8e10', DEP = 'k:55de87' + '0'.repeat(58), U = 'k:' + '8'.repeat(64);
+  fs.writeFileSync(path.join(dir, 'labels.json'), JSON.stringify({ accounts: {
+    [HOT]: { name: 'CoinEx', type: 'exchange', confidence: 'confirmed', status: 'closed', closesOn: '2026-12-22', source: 'x' },
+    [DEP]: { name: 'CoinEx', type: 'exchange', confidence: 'likely', status: 'closed', closesOn: '2026-12-22', source: 'x' },
+    ['k:' + '9'.repeat(64)]: { name: 'MEXC', type: 'exchange', confidence: 'likely', status: 'withdrawals only', source: 'x' },
+  } }));
+  w.loadLabels();
+  assert.equal(F.displayName(w.labelOf(HOT)), 'CoinEx (closed)');
+  assert.equal(F.displayName(w.labelOf(DEP)), 'CoinEx (closed, likely)');
+  assert.equal(F.displayName(w.labelOf('k:' + '9'.repeat(64))), 'Other exchange');
+  const ctx = { labelOf: w.labelOf, price: 0.0106, thresholds: { big: 5e5, huge: 1e6 } };
+  const t = F.movePost({ chain: 0, toChain: 0, requestKey: 'vWiX6xDWQ7EMcM0YbgKRO1tBXEDRVnNneJkfUXkQ20g', amount: 300000, from: HOT, to: U }, ctx);
+  assert.match(t, /withdrawn from CoinEx \(closed\)\n📤 CoinEx is closing: withdrawals end Dec 22, 2026\n/);
+  // the hourly balance read feeds the daily summary
+  w.now = () => Date.parse('2026-10-24T18:00:00Z');
+  const seen = [];
+  w.cw = { local: async (c, code) => { seen.push(code); return c === 0 ? 3244927.55 : 0; } };
+  await w.checkClosing();
+  assert.equal(Math.round(w.state.closing.CoinEx.balance), 3244928);
+  assert.ok(seen[0].includes(HOT) && seen[0].includes(DEP));
+  const daily = F.dailyPost({ day: '2026-10-24', moves: 0, flowIn: 0, flowOut: 0, closing: Object.values(w.state.closing), platform: 87344000, platformDays: 380 });
+  assert.match(daily, /\n⏳ CoinEx closes Dec 22: 3\.24M KDA left\n/);
+  // a busy day: Gate, CoinEx's own flow folded into its closing line, other exchanges, all under 280
+  const ex = [{ name: 'Gate', display: 'Gate', label: 'Gate', in: 140157, out: 758 }, { name: 'CoinEx (closed)', display: 'CoinEx (closed)', label: 'CoinEx', status: 'closed', in: 0, out: 24 }, { name: 'Other exchanges', display: 'Other exchanges', other: true, in: 515, out: 1000 }];
+  const busy = F.dailyPost({ day: '2026-10-24', moves: 0, flowIn: 140672, flowOut: 1782, exchanges: ex, closing: Object.values(w.state.closing), platform: 87344000, platformDays: 380 });
+  assert.match(busy, /Exchanges:\nGate: 140K KDA deposited · 758 withdrawn\nOther exchanges: 515 KDA deposited · 1K withdrawn\n⏳ CoinEx closes Dec 22: 24 KDA withdrawn, 3\.24M left\n/);
+  assert.ok(F.weightedLength(busy) <= 280, busy);
+  // after the closing date it is no longer read
+  w.now = () => Date.parse('2026-12-23T00:00:00Z');
+  await w.checkClosing();
+  assert.deepEqual(w.state.closing, {});
 });
