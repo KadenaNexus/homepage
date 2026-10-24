@@ -71,3 +71,9 @@ For the node-API fields to appear, on the Oracle node (193.122.85.1):
        add_header Access-Control-Allow-Origin "https://kadena.ws" always;
 3. Keep the P2P port (1789) reachable so the crawler finds the node and uptime starts.
 Nothing else on the kadena.ws server changes.
+
+## Nginx canonical host and 404 rules
+
+The Kadena homepage nginx reference is `site/nginx-kadena.ws.conf`. It redirects both HTTP hosts to `https://kadena.ws` and redirects HTTPS `www.kadena.ws` to the bare host. The marketplace vhost reference is `deploy/marketplace.kadena.ws.conf`; it forwards only the React routes defined by the app, static assets, APIs, uploads, and `/s/:ref` share previews. Other marketplace paths return nginx 404.
+
+Nginx is installed separately from the static site files. Before reloading a changed vhost, back up the current file, install the reference, run `sudo nginx -t`, and reload only if the test succeeds.
