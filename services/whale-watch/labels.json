@@ -288,31 +288,31 @@
    "statusSource": "CoinEx announced on Sep 15, 2026 that it is shutting down as an exchange: spot trading ended Sep 29, 2026, and withdrawals close for good on Dec 22, 2026 (Decrypt, Sep 16, 2026)."
   },
   "k:bfcfdd740857ab6be8d6acce80f9fef6c0ad99e46c9b6e2dc24e0fe2850bede9": {
-   "name": "Binance",
+   "name": "OKX",
    "type": "exchange",
    "confidence": "likely",
    "role": "hot wallet (chain 2)",
-   "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: at Binance's June 2022 KDA upgrade (suspension announced for about 23:00 UTC June 15, 2022) this wallet, sending about 100 tx a day, stopped at 22:48 UTC and resumed at 06:59 UTC June 16; its only pause over 3 hours that week. Paid withdrawals to 1,705 wallets Nov 2025 to Jan 2026 after Binance delisted KDA. Earlier labelled OKX (likely) here; that was wrong. Marked likely on Oct 21, 2026: no deposit address or withdrawal issued by the exchange ties this wallet to it yet.",
+   "source": "OKX (likely), relabelled from Binance on Oct 24, 2026. Decisive check: customer payouts from the hot wallet k:bfcfdd…bede9 ran straight through Binance's KDA withdrawal deadline (Jan 12, 2026: 35 that day, 102 on Jan 14) and stopped at OKX's (Jan 22, 2026: 23 on Jan 21, 10 on Jan 22, 1 on Jan 23). The June 2022 pause used earlier was a network-wide upgrade that every exchange paused for, so it cannot tell exchanges apart. The Kadena developers' list named this wallet Binance; that looks like a mix-up. Earlier evidence: Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: at Binance's June 2022 KDA upgrade (suspension announced for about 23:00 UTC June 15, 2022) this wallet, sending about 100 tx a day, stopped at 22:48 UTC and resumed at 06:59 UTC June 16; its only pause over 3 hours that week. Paid withdrawals to 1,705 wallets Nov 2025 to Jan 2026 after Binance delisted KDA. Earlier labelled OKX (likely) here; that was wrong. Marked likely on Oct 21, 2026: no deposit address or withdrawal issued by the exchange ties this wallet to it yet.",
    "status": "delisted",
-   "statusSource": "Binance delisted KDA from all spot pairs on Nov 12, 2025."
+   "statusSource": "OKX halted KDA deposits in Oct 2025, stopped spot trading Oct 26, 2025 and closed withdrawals Jan 22, 2026 (Decrypt, Oct 22, 2025)."
   },
   "k:576b785aefc55c122cdf682c2654a2fcda3df368c8fc50c73dcd6eb49b63f666": {
-   "name": "Binance",
+   "name": "OKX",
    "type": "exchange",
    "confidence": "likely",
-   "role": "funding wallet",
-   "source": "Sole funder of the Binance hot wallet k:bfcfdd…bede9 (48.7M KDA in 1,204 transfers).",
+   "role": "deposit sweep wallet",
+   "source": "OKX (likely), relabelled from Binance on Oct 24, 2026. Decisive check: customer payouts from the hot wallet k:bfcfdd…bede9 ran straight through Binance's KDA withdrawal deadline (Jan 12, 2026: 35 that day, 102 on Jan 14) and stopped at OKX's (Jan 22, 2026: 23 on Jan 21, 10 on Jan 22, 1 on Jan 23). The June 2022 pause used earlier was a network-wide upgrade that every exchange paused for, so it cannot tell exchanges apart. The Kadena developers' list named this wallet Binance; that looks like a mix-up. This wallet collects customer deposit addresses twice a day (about 00:04 and 12:04 UTC) and forwards to the hot wallet; in Oct 2026 the deposits are mining-pool payouts still sent to old deposit addresses. Earlier evidence: Sole funder of the Binance hot wallet k:bfcfdd…bede9 (48.7M KDA in 1,204 transfers).",
    "status": "delisted",
-   "statusSource": "Binance delisted KDA from all spot pairs on Nov 12, 2025."
+   "statusSource": "OKX halted KDA deposits in Oct 2025, stopped spot trading Oct 26, 2025 and closed withdrawals Jan 22, 2026 (Decrypt, Oct 22, 2025)."
   },
   "k:9b067c38335f6a066bf4343f7be035d444274a48e1a794270b000c3aa37db320": {
-   "name": "Binance",
+   "name": "OKX",
    "type": "exchange",
    "confidence": "likely",
    "role": "storage wallet",
-   "source": "Received its entire 36.93M KDA in 5 transfers on May 14–15, 2026 from the Binance hot wallet k:bfcfdd…bede9, after Binance had closed KDA withdrawals; inactive since.",
+   "source": "OKX (likely), relabelled from Binance on Oct 24, 2026. Decisive check: customer payouts from the hot wallet k:bfcfdd…bede9 ran straight through Binance's KDA withdrawal deadline (Jan 12, 2026: 35 that day, 102 on Jan 14) and stopped at OKX's (Jan 22, 2026: 23 on Jan 21, 10 on Jan 22, 1 on Jan 23). The June 2022 pause used earlier was a network-wide upgrade that every exchange paused for, so it cannot tell exchanges apart. The Kadena developers' list named this wallet Binance; that looks like a mix-up. Received its 36.93M KDA from the hot wallet on May 14–15, 2026. Earlier evidence: Received its entire 36.93M KDA in 5 transfers on May 14–15, 2026 from the Binance hot wallet k:bfcfdd…bede9, after Binance had closed KDA withdrawals; inactive since.",
    "status": "delisted",
-   "statusSource": "Binance delisted KDA from all spot pairs on Nov 12, 2025."
+   "statusSource": "OKX halted KDA deposits in Oct 2025, stopped spot trading Oct 26, 2025 and closed withdrawals Jan 22, 2026 (Decrypt, Oct 22, 2025)."
   },
   "k:fff462ff0ac6562bfa8fe861c59bbe15499618a0890190ea566f9da8c80fce60": {
    "name": "OKX",
@@ -374,8 +374,8 @@
    "confidence": "likely",
    "role": "hot wallet",
    "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: paused from Nov 11 to Nov 28, 2025, resuming the day MEXC announced withdrawals on the community-maintained chain (announcement dated Nov 28, 2025). Marked likely on Oct 21, 2026: no deposit address or withdrawal issued by the exchange ties this wallet to it yet.",
-   "status": "delisted",
-   "statusSource": "Per Kadena Nexus (Saudi.KDA), Oct 21, 2026: Gate is the only centralized exchange still trading KDA."
+   "status": "withdrawals only",
+   "statusSource": "MEXC has processed KDA withdrawals on the community chain since Nov 29, 2025, with no deadline given (MEXC announcement, Nov 28, 2025); trading stopped (Naif, Oct 21, 2026). Its hot wallet still pays out small withdrawals in Oct 2026."
   },
   "k:32ccd7e8b53f023821820cfe7c8dabe7facd29a0425d11d8dc022c75110c39b6": {
    "name": "Bybit",

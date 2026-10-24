@@ -231,7 +231,7 @@ test('names carry delisted / closed and likely tags', () => {
   const labels = JSON.parse(fs.readFileSync(new URL('../labels.json', import.meta.url), 'utf8')).accounts;
   const ex = Object.values(labels).filter((l) => l.type === 'exchange');
   assert.deepEqual([...new Set(ex.filter((l) => l.confidence === 'confirmed').map((l) => l.name))], ['Gate']);
-  for (const n of ['Binance', 'Binance.US', 'KuCoin', 'OKX', 'MEXC', 'Bybit', 'Coinmetro']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'delisted'), n);
+  for (const n of ['Binance.US', 'KuCoin', 'OKX', 'Bybit', 'Coinmetro']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'delisted'), n);
   for (const n of ['CoinEx', 'TradeOgre']) assert.ok(ex.filter((l) => l.name === n).every((l) => l.status === 'closed'), n);
 });
 
@@ -281,4 +281,27 @@ test('alerts explain themselves in one plain line', () => {
   const add = F.dexPost({ chain: 2, requestKey: base.requestKey, amount: 370000, type: 'liquidity', side: 'add', other: { token: 'n_582fed11af00dc626812cd7890bb88e72067f28c.bro', amount: 0.764 }, trader: A, dex: 'Mercatus' }, ctx);
   assert.match(add, /put into the Mercatus KDA\/BRO pool\nLiquidity added, not a purchase/);
   for (const t of [dep, long, sale, add]) assert.equal(F.postProblem(t), null, t);
+});
+
+test('summaries keep delisted exchanges apart from the ones that still trade', () => {
+  const ex = [
+    { name: 'Gate', display: 'Gate', in: 140157, out: 758 },
+    { name: 'MEXC', display: 'MEXC (withdrawals only, likely)', status: 'withdrawals only', in: 0, out: 1000 },
+    { name: 'OKX', display: 'OKX (delisted, likely)', status: 'delisted', in: 515, out: 0 },
+    { name: 'CoinEx', display: 'CoinEx (closed, likely)', status: 'closed', in: 0, out: 24 },
+  ];
+  const daily = F.dailyPost({ day: '2026-10-24', moves: 0, flowIn: 140672, flowOut: 1782, exchanges: ex, platform: 87344000, platformDays: 380 });
+  assert.match(daily, /Exchanges:\nGate: 140K KDA deposited · 758 withdrawn\nOld wallets of delisted exchanges \(MEXC, OKX, CoinEx\): 515 KDA received · 1K paid out\n/);
+  assert.doesNotMatch(daily, /more exchange/);
+  assert.ok(F.weightedLength(daily) <= 280, daily);
+  const weekly = F.weeklyPost({ from: '2026-10-18', to: '2026-10-24', moves: 0, flowIn: 140672, flowOut: 1782, exchanges: ex });
+  assert.match(weekly, /Exchanges: 139K more KDA deposited than withdrawn/);
+  assert.doesNotMatch(weekly, /Busiest/); // only one exchange still trades
+  const L = JSON.parse(fs.readFileSync(new URL('../labels.json', import.meta.url), 'utf8')).accounts;
+  assert.equal(L['k:bfcfdd740857ab6be8d6acce80f9fef6c0ad99e46c9b6e2dc24e0fe2850bede9'].name, 'OKX');
+  assert.ok(!Object.values(L).some((l) => l.name === 'Binance'), 'no wallet is labelled Binance any more');
+  const mexc = { name: 'MEXC', type: 'exchange', confidence: 'likely', status: 'withdrawals only' };
+  const MX = 'k:' + '6'.repeat(64), U = 'k:' + '7'.repeat(64);
+  const t = F.movePost({ chain: 2, toChain: 2, requestKey: 'vWiX6xDWQ7EMcM0YbgKRO1tBXEDRVnNneJkfUXkQ20g', amount: 150000, from: MX, to: U }, { labelOf: (a) => (a === MX ? mexc : null), price: 0.0106, thresholds: { big: 5e5, huge: 1e6 } });
+  assert.match(t, /withdrawn from MEXC \(withdrawals only, likely\)\n📤 Leaving an exchange that only processes KDA withdrawals now/);
 });

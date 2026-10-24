@@ -113,6 +113,10 @@ export class Watcher {
 
   // An exchange counts as confirmed when any of its wallets is confirmed; it shows
   // "delisted" or "closed" when its labels say it no longer trades KDA.
+  exchangeStatus(name) {
+    return Object.values(this.labels).find((l) => l.type === 'exchange' && l.name === name && l.status)?.status || null;
+  }
+
   exchangeDisplay(name) {
     const ls = Object.values(this.labels).filter((l) => l.type === 'exchange' && l.name === name);
     return F.nameWithTags(name, ls.find((l) => l.status)?.status, !ls.some((l) => l.confidence !== 'likely'));
@@ -327,7 +331,7 @@ export class Watcher {
     }
     // Name exchanges only when every hour in the window has its breakdown, so the names add up to the totals.
     const exchanges = complete
-      ? Object.entries(byEx).map(([name, f]) => ({ name, display: this.exchangeDisplay(name), in: f.in, out: f.out })).sort((a, b) => (b.in + b.out) - (a.in + a.out))
+      ? Object.entries(byEx).map(([name, f]) => ({ name, display: this.exchangeDisplay(name), status: this.exchangeStatus(name), in: f.in, out: f.out })).sort((a, b) => (b.in + b.out) - (a.in + a.out))
       : null;
     return { moves: moves.length, largest: Math.max(0, ...moves.map((m) => m.amount)), dex: items.filter((f) => f.type === 'dex' || f.type === 'liquidity').length, flowIn, flowOut, exchanges };
   }
