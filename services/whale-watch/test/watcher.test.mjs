@@ -68,7 +68,7 @@ function tmpWatcher(extra = {}) {
 
 test('watcher: posts the 999,746 move once, with the exchange label, under 280 characters', async () => {
   const { w, posts, dir } = tmpWatcher();
-  fs.writeFileSync(path.join(dir, 'labels.json'), JSON.stringify({ accounts: { 'k:0d584a4cbbfd9a4878d816512894e65918e54fae13df39a6f520fc90caea2fb0': { name: 'Example Exchange', type: 'exchange' } } }));
+  fs.writeFileSync(path.join(dir, 'labels.json'), JSON.stringify({ accounts: { 'k:0d584a4cbbfd9a4878d816512894e65918e54fae13df39a6f520fc90caea2fb0': { name: 'Example Exchange', type: 'exchange', confidence: 'confirmed' } } }));
   w.loadLabels();
   w.state.price = 0.0108;
   w.processBlock(fixture('1-7266334'));
@@ -174,7 +174,7 @@ test('oauth header has the required fields and a stable signature', () => {
   assert.match(h, /oauth_signature="IkqzcoSodURYDr0EVrc6NxWWJfI%3D"/);
 });
 
-test('likely labels say so, exchange-to-exchange moves name both, sweeps inside one exchange are not posted', async () => {
+test('only confirmed exchanges are named, sweeps inside one exchange are not posted', async () => {
   const { w, posts, dir } = tmpWatcher();
   const A = 'k:0d584a4cbbfd9a4878d816512894e65918e54fae13df39a6f520fc90caea2fb0';
   const B = 'k:a143f4504985' + '0'.repeat(52);
@@ -189,7 +189,8 @@ test('likely labels say so, exchange-to-exchange moves name both, sweeps inside 
   // pretend the receiver is the likely-CoinEx wallet
   item.to = 'k:a143f45049850d6ae3a5e0d3dd02c0ea9b9a1f6b58c8bd29a8e8aa9cdb8d6f43';
   const text = F.movePost(item, { labelOf: w.labelOf, price: 0.0108, thresholds: { big: 5e5, huge: 1e6 } });
-  assert.match(text, /moved from Gate to CoinEx \(likely\)/);
+  assert.match(text, /moved from Gate to an exchange\n🔁 Moved between two exchanges\n\nChain 1\n/);
+  assert.doesNotMatch(text, /CoinEx/);
   // a sweep between two wallets of the same exchange: kept on the page, never posted, not counted
   w.addItem({ type: 'move', id: 'sweep', time: item.time + 1000, chain: 1, toChain: 0, requestKey: 'sweepsweep', amount: 300000, from: B, to: A, internal: true });
   await w.postFresh();
@@ -198,7 +199,8 @@ test('likely labels say so, exchange-to-exchange moves name both, sweeps inside 
   assert.equal(w.day(item.time).moves, 1);
   assert.deepEqual(w.publish() ?? null, null);
   const stats = JSON.parse(fs.readFileSync(path.join(w.cfg.publicDir, 'stats.json'), 'utf8'));
-  assert.ok(stats.labelledExchanges.includes('CoinEx (likely)') && stats.labelledExchanges.includes('Gate'));
+  assert.deepEqual(stats.labelledExchanges.sort(), ['Gate', 'Other exchange']);
+  assert.deepEqual(stats.exchangeList, ['Gate', 'Other exchanges']);
 });
 
 test('nothing is posted when the state cannot be stored first (no double posts)', async () => {
@@ -270,7 +272,10 @@ test('alerts explain themselves in one plain line', () => {
   assert.match(dep, /deposited to Gate\n📥 Exchange deposit: KDA sent to an exchange can be sold there/);
   assert.match(F.movePost({ ...base, amount: 250000, from: G, to: A }, ctx), /withdrawn from Gate\n📤 Exchange withdrawal/);
   assert.match(F.movePost({ ...base, amount: 250000, from: A, to: N }, ctx), /\n📥 Sent to an exchange that no longer trades KDA/);
-  assert.match(F.movePost({ ...base, amount: 250000, from: C, to: A }, ctx), /\n📤 Leaving a closed exchange/);
+  const leave = F.movePost({ ...base, amount: 250000, from: C, to: A }, ctx);
+  assert.match(leave, /withdrawn from an exchange\n📤 Leaving an exchange that no longer trades KDA\n\nFrom: Other exchange\n/);
+  assert.doesNotMatch(leave, /CoinEx|closed|likely/);
+  assert.match(F.movePost({ ...base, amount: 250000, from: N, to: C }, ctx), /moved between two exchanges/);
   assert.match(F.movePost({ ...base, amount: 2e6, from: A, to: B, newWhale: 1.2e6 }, ctx), /🆕 New whale: the receiver now holds 1\.2M KDA \(under 1M before this move\)/);
   // the longest case still fits: dormant + delisted to closed + new whale
   const long = F.movePost({ ...base, amount: 12345678, from: N, to: C, dormantDays: 1500, lastActive: Date.parse('2022-09-14T00:00:00Z'), newWhale: 1.3e6 }, ctx);
@@ -283,15 +288,13 @@ test('alerts explain themselves in one plain line', () => {
   for (const t of [dep, long, sale, add]) assert.equal(F.postProblem(t), null, t);
 });
 
-test('summaries keep delisted exchanges apart from the ones that still trade', () => {
+test('summaries name Gate and group every other exchange', () => {
   const ex = [
     { name: 'Gate', display: 'Gate', in: 140157, out: 758 },
-    { name: 'MEXC', display: 'MEXC (withdrawals only, likely)', status: 'withdrawals only', in: 0, out: 1000 },
-    { name: 'OKX', display: 'OKX (delisted, likely)', status: 'delisted', in: 515, out: 0 },
-    { name: 'CoinEx', display: 'CoinEx (closed, likely)', status: 'closed', in: 0, out: 24 },
+    { name: 'Other exchanges', display: 'Other exchanges', other: true, in: 515, out: 1024 },
   ];
   const daily = F.dailyPost({ day: '2026-10-24', moves: 0, flowIn: 140672, flowOut: 1782, exchanges: ex, platform: 87344000, platformDays: 380 });
-  assert.match(daily, /Exchanges:\nGate: 140K KDA deposited · 758 withdrawn\nOld wallets of delisted exchanges \(MEXC, OKX, CoinEx\): 515 KDA received · 1K paid out\n/);
+  assert.match(daily, /Exchanges:\nGate: 140K KDA deposited · 758 withdrawn\nOther exchanges: 515 KDA deposited · 1K withdrawn\n/);
   assert.doesNotMatch(daily, /more exchange/);
   assert.ok(F.weightedLength(daily) <= 280, daily);
   const weekly = F.weeklyPost({ from: '2026-10-18', to: '2026-10-24', moves: 0, flowIn: 140672, flowOut: 1782, exchanges: ex });
@@ -303,5 +306,6 @@ test('summaries keep delisted exchanges apart from the ones that still trade', (
   const mexc = { name: 'MEXC', type: 'exchange', confidence: 'likely', status: 'withdrawals only' };
   const MX = 'k:' + '6'.repeat(64), U = 'k:' + '7'.repeat(64);
   const t = F.movePost({ chain: 2, toChain: 2, requestKey: 'vWiX6xDWQ7EMcM0YbgKRO1tBXEDRVnNneJkfUXkQ20g', amount: 150000, from: MX, to: U }, { labelOf: (a) => (a === MX ? mexc : null), price: 0.0106, thresholds: { big: 5e5, huge: 1e6 } });
-  assert.match(t, /withdrawn from MEXC \(withdrawals only, likely\)\n📤 Leaving an exchange that only processes KDA withdrawals now/);
+  assert.match(t, /withdrawn from an exchange\n📤 Leaving an exchange that no longer trades KDA/);
+  assert.doesNotMatch(t, /MEXC/);
 });

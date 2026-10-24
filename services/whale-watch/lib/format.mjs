@@ -9,14 +9,19 @@ export function shortAccount(a) {
   return a;
 }
 
-// "Gate"; "CoinEx (likely)" when the label rests on circumstantial evidence;
-// "OKX (delisted, likely)" when the exchange no longer trades KDA.
+// Public names. Only exchanges tied to their wallets by the exchange itself (confirmed;
+// today that is Gate) are named. Every other exchange wallet shows as "Other exchange"
+// (Naif, Oct 24, 2026); labels.json keeps the likely name and its evidence for us.
+export const OTHER_EXCHANGE = 'Other exchange';
+export const OTHER_EXCHANGES = 'Other exchanges';
+export const isNamed = (l) => !(l?.type === 'exchange' && l.confidence !== 'confirmed');
 export const nameWithTags = (name, status, likely) => {
   const tags = [status, likely && 'likely'].filter(Boolean);
   return tags.length ? `${name} (${tags.join(', ')})` : name;
 };
 export function displayName(l) {
   if (!l) return null;
+  if (!isNamed(l)) return OTHER_EXCHANGE;
   return nameWithTags(l.name, l.status, l.confidence === 'likely');
 }
 
@@ -88,7 +93,7 @@ export function dormantLine(it) {
 // KDA get their own wording, so nobody reads a deposit there as selling pressure.
 export function exchangeNote(fromL, toL) {
   const fx = fromL?.type === 'exchange', tx = toL?.type === 'exchange';
-  const gone = (l) => (l.status === 'closed' ? 'a closed exchange' : l.status === 'withdrawals only' ? 'an exchange that only processes KDA withdrawals now' : l.status ? 'an exchange that no longer trades KDA' : null);
+  const gone = (l) => (l.status ? 'an exchange that no longer trades KDA' : null);
   if (fx && tx) return '🔁 Moved between two exchanges';
   if (tx) return gone(toL) ? `📥 Sent to ${gone(toL)}` : '📥 Exchange deposit: KDA sent to an exchange can be sold there';
   if (fx) return gone(fromL) ? `📤 Leaving ${gone(fromL)}` : "📤 Exchange withdrawal: KDA taken off an exchange, usually into the owner's own wallet";
@@ -113,9 +118,10 @@ export function movePost(it, { labelOf, price, thresholds }) {
   const amt = `${fmtKda(it.amount)} $KDA${fmtUsd(it.amount, price)}`;
   let head;
   const fx = fromL?.type === 'exchange', tx = toL?.type === 'exchange';
-  if (fx && tx) head = `${amt} moved from ${displayName(fromL)} to ${displayName(toL)}`;
-  else if (fx) head = `${amt} withdrawn from ${displayName(fromL)}`;
-  else if (tx) head = `${amt} deposited to ${displayName(toL)}`;
+  const exName = (l) => (isNamed(l) ? displayName(l) : 'an exchange');
+  if (fx && tx) head = !isNamed(fromL) && !isNamed(toL) ? `${amt} moved between two exchanges` : `${amt} moved from ${exName(fromL)} to ${exName(toL)}`;
+  else if (fx) head = `${amt} withdrawn from ${exName(fromL)}`;
+  else if (tx) head = `${amt} deposited to ${exName(toL)}`;
   else head = `${amt} moved`;
   const note = exchangeNote(fromL, toL);
   return fit((keep) => {
@@ -123,9 +129,10 @@ export function movePost(it, { labelOf, price, thresholds }) {
     if (it.dormantDays) lines.push(keep.has('dormantDate') ? dormantLine(it) : dormantLine({ dormantDays: it.dormantDays }));
     lines.push(`${whales(it.amount, thresholds)} ${head}`);
     if (note && keep.has('note')) lines.push(note);
-    lines.push('');
-    if (!(fx && tx)) lines.push(`From: ${who(it.from, labelOf)}`, `To: ${who(it.to, labelOf)}`); // the headline already names both exchanges
-    if (it.newWhale) lines.push(newWhaleLine(it.newWhale, keep.has('whaleDetail')));
+    const body = [];
+    if (!(fx && tx)) body.push(`From: ${who(it.from, labelOf)}`, `To: ${who(it.to, labelOf)}`); // the headline already names both exchanges
+    if (it.newWhale) body.push(newWhaleLine(it.newWhale, keep.has('whaleDetail')));
+    if (body.length) lines.push('', ...body);
     lines.push('', chainText(it), txUrl(it.requestKey));
     return lines.join('\n');
   }, ['note', 'whaleDetail', 'dormantDate']);
@@ -195,29 +202,19 @@ export function exchangeLine(e) {
   return parts.length ? `${e.display}: ${parts.join(' · ')}` : null;
 }
 
-// Exchange lines for the daily summary. Exchanges that still trade KDA (no status) are
-// named one per line, busiest first (up to max). Wallets of delisted or closed exchanges
-// get one separate line, since what moves there is leftovers (late withdrawals, deposits
-// still sent to old addresses), not trading. Without a breakdown: the totals only.
+// Exchange lines for the daily summary: named (confirmed) exchanges one per line, busiest
+// first (up to max), then everything else as one "Other exchanges" line. Without a
+// breakdown: the totals only.
 export function flowLines(flowIn, flowOut, exchanges, max = 3) {
   if (!flowIn && !flowOut) return [];
   const ex = exchanges || [];
-  const named = ex.filter((e) => !e.status).map(exchangeLine).filter(Boolean);
-  const old = ex.filter((e) => e.status && (Math.round(e.in) > 0 || Math.round(e.out) > 0));
-  if ((!named.length && !old.length) || max < 1) return [`Exchanges: ${compact(flowIn)} KDA deposited · ${compact(flowOut)} KDA withdrawn`];
-  const lines = [];
-  if (named.length) {
-    lines.push('Exchanges:', ...named.slice(0, max));
-    const rest = named.length - max;
-    if (rest > 0) lines.push(`+ ${rest} more ${rest === 1 ? 'exchange' : 'exchanges'}`);
-  }
-  if (old.length) {
-    const oin = old.reduce((a, e) => a + e.in, 0), oout = old.reduce((a, e) => a + e.out, 0);
-    const parts = [];
-    if (Math.round(oin) > 0) parts.push(`${compact(oin)} KDA received`);
-    if (Math.round(oout) > 0) parts.push(`${compact(oout)} ${parts.length ? '' : 'KDA '}paid out`);
-    lines.push(`Old wallets of delisted exchanges (${old.map((e) => e.name).join(', ')}): ${parts.join(' · ')}`);
-  }
+  const named = ex.filter((e) => !e.other).map(exchangeLine).filter(Boolean);
+  const other = exchangeLine({ display: OTHER_EXCHANGES, in: ex.filter((e) => e.other).reduce((a, e) => a + e.in, 0), out: ex.filter((e) => e.other).reduce((a, e) => a + e.out, 0) });
+  if ((!named.length && !other) || max < 1) return [`Exchanges: ${compact(flowIn)} KDA deposited · ${compact(flowOut)} KDA withdrawn`];
+  const lines = ['Exchanges:', ...named.slice(0, max)];
+  const rest = named.length - max;
+  if (rest > 0) lines.push(`+ ${rest} more ${rest === 1 ? 'exchange' : 'exchanges'}`);
+  if (other) lines.push(other);
   return lines;
 }
 
@@ -246,8 +243,8 @@ export function weeklyPost(w) {
     lines.push(`Wallets holding 100K+ KDA: ${w.conc.w100k}${delta(w.conc.w100k, w.prev?.w100k)}`);
     lines.push(`Top 10 wallets hold ${compact(w.conc.top10)} KDA`);
   }
-  // with a breakdown, only exchanges that still trade KDA count toward the net flow
-  const live = w.exchanges?.filter((e) => !e.status);
+  // with a breakdown, only named (confirmed) exchanges count toward the net flow
+  const live = w.exchanges?.filter((e) => !e.other);
   const fIn = live ? live.reduce((a, e) => a + e.in, 0) : w.flowIn, fOut = live ? live.reduce((a, e) => a + e.out, 0) : w.flowOut;
   if (Math.round(fIn) || Math.round(fOut)) {
     const net = fIn - fOut;

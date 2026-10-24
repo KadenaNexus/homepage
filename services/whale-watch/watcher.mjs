@@ -111,15 +111,22 @@ export class Watcher {
     return null;
   };
 
-  // An exchange counts as confirmed when any of its wallets is confirmed; it shows
-  // "delisted" or "closed" when its labels say it no longer trades KDA.
-  exchangeStatus(name) {
-    return Object.values(this.labels).find((l) => l.type === 'exchange' && l.name === name && l.status)?.status || null;
-  }
-
+  // Public name of an exchange: its own name when any of its wallets is confirmed,
+  // otherwise "Other exchanges". Flows are grouped by this name.
   exchangeDisplay(name) {
     const ls = Object.values(this.labels).filter((l) => l.type === 'exchange' && l.name === name);
-    return F.nameWithTags(name, ls.find((l) => l.status)?.status, !ls.some((l) => l.confidence !== 'likely'));
+    const confirmed = ls.find((l) => l.confidence === 'confirmed');
+    return confirmed ? F.displayName(confirmed) : F.OTHER_EXCHANGES;
+  }
+
+  groupFlows(byName) {
+    const out = {};
+    for (const [name, f] of Object.entries(byName)) {
+      const display = this.exchangeDisplay(name);
+      const e = (out[display] ||= { name: display, display, other: display === F.OTHER_EXCHANGES, in: 0, out: 0 });
+      e.in += f.in; e.out += f.out;
+    }
+    return Object.values(out).sort((a, b) => (b.in + b.out) - (a.in + a.out));
   }
 
   localDay(ms) { return new Date(ms + this.cfg.tzOffsetHours * 3600e3).toISOString().slice(0, 10); }
@@ -331,7 +338,7 @@ export class Watcher {
     }
     // Name exchanges only when every hour in the window has its breakdown, so the names add up to the totals.
     const exchanges = complete
-      ? Object.entries(byEx).map(([name, f]) => ({ name, display: this.exchangeDisplay(name), status: this.exchangeStatus(name), in: f.in, out: f.out })).sort((a, b) => (b.in + b.out) - (a.in + a.out))
+      ? this.groupFlows(byEx)
       : null;
     return { moves: moves.length, largest: Math.max(0, ...moves.map((m) => m.amount)), dex: items.filter((f) => f.type === 'dex' || f.type === 'liquidity').length, flowIn, flowOut, exchanges };
   }
@@ -439,9 +446,9 @@ export class Watcher {
       price: this.state.price,
       thresholds: { move: this.cfg.moveMin, post: this.cfg.postMin },
       days,
-      exchanges: Object.entries(exchanges).map(([name, f]) => ({ name, display: this.exchangeDisplay(name), in: Math.round(f.in), out: Math.round(f.out) })).sort((a, b) => (b.in + b.out) - (a.in + a.out)),
+      exchanges: this.groupFlows(exchanges).map((e) => ({ ...e, in: Math.round(e.in), out: Math.round(e.out) })),
       labelledExchanges: [...new Set(Object.values(this.labels).filter((l) => l.type === 'exchange').map((l) => F.displayName(l)))],
-      exchangeList: [...new Set(Object.values(this.labels).filter((l) => l.type === 'exchange').map((l) => l.name))].map((n) => this.exchangeDisplay(n)).sort(),
+      exchangeList: [...new Set(Object.values(this.labels).filter((l) => l.type === 'exchange').map((l) => this.exchangeDisplay(l.name)))].sort(),
       concentration: Object.entries(this.state.conc).sort().map(([day, c]) => ({ day, ...c })),
       platform: p.total == null ? null : { total: Math.round(p.total), perChain: p.perChain, lastMoveAt: p.lastMoveAt, checkedAt: new Date(p.checkedAt).toISOString() },
     });
