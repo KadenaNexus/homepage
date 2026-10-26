@@ -79,7 +79,7 @@ test('watcher: posts the 999,746 move once, with the exchange label, under 280 c
   const t = posts[0].text;
   assert.match(t, /999,746 \$KDA \(~\$10,797\) withdrawn from Example Exchange/);
   assert.match(t, /^🐋🐋 /m);
-  assert.match(t, /To: unknown wallet k:a143…/);
+  assert.match(t, /\n🔸 To: unknown wallet k:a143…/);
   assert.match(t, /\nhttps:\/\/denascan\.com\/transactions\/[A-Za-z0-9_-]{43}$/); // alerts end with the DenaScan tx link
   assert.equal((t.match(/https?:/g) || []).length, 1);
   assert.ok(F.weightedLength(t) <= 280);
@@ -188,7 +188,7 @@ test('only confirmed exchanges are named, sweeps inside one exchange are not pos
   // pretend the receiver is the likely-CoinEx wallet
   item.to = 'k:a143f45049850d6ae3a5e0d3dd02c0ea9b9a1f6b58c8bd29a8e8aa9cdb8d6f43';
   const text = F.movePost(item, { labelOf: w.labelOf, price: 0.0108, thresholds: { big: 5e5, huge: 1e6 } });
-  assert.match(text, /moved from Gate to an exchange\n🔁 Moved between two exchanges\n\nChain 1\n/);
+  assert.match(text, /moved from Gate to an exchange\n🔁 Moved between two exchanges\n\n⛓ Chain 1\n/);
   assert.doesNotMatch(text, /CoinEx/);
   // a sweep between two wallets of the same exchange: kept on the page, never posted, not counted
   w.addItem({ type: 'move', id: 'sweep', time: item.time + 1000, chain: 1, toChain: 0, requestKey: 'sweepsweep', amount: 300000, from: B, to: A, internal: true });
@@ -272,7 +272,7 @@ test('alerts explain themselves in one plain line', () => {
   assert.match(F.movePost({ ...base, amount: 250000, from: G, to: A }, ctx), /withdrawn from Gate\n📤 Exchange withdrawal/);
   assert.match(F.movePost({ ...base, amount: 250000, from: A, to: N }, ctx), /\n📥 Sent to an exchange that no longer trades KDA/);
   const leave = F.movePost({ ...base, amount: 250000, from: C, to: A }, ctx);
-  assert.match(leave, /withdrawn from an exchange\n📤 Leaving an exchange that no longer trades KDA\n\nFrom: Other exchange\n/);
+  assert.match(leave, /withdrawn from an exchange\n📤 Leaving an exchange that no longer trades KDA\n\n🔹 From: Other exchange\n/);
   assert.doesNotMatch(leave, /CoinEx|closed|likely/);
   assert.match(F.movePost({ ...base, amount: 250000, from: N, to: C }, ctx), /moved between two exchanges/);
   assert.match(F.movePost({ ...base, amount: 2e6, from: A, to: B, newWhale: 1.2e6 }, ctx), /🆕 New whale: the receiver now holds 1\.2M KDA \(under 1M before this move\)/);
@@ -390,6 +390,23 @@ test('the Friday digest stays under 280 on a full week, dropping the least impor
   assert.match(t, /⏳ CoinEx closes Dec 22: 2\.93M KDA (left|still remaining on the exchange)/);
   assert.equal(F.postProblem(t), null);
   const ps = F.platformPost({ kind: 'release', account: 'PS_C5_001', amount: 400000, chain: 5, requestKey: 'vWiX6xDWQ7EMcM0YbgKRO1tBXEDRVnNneJkfUXkQ20g', remaining: 86944000 }, { price: 0.0106 });
-  assert.match(ps, /^🚨 Platform share moved\n\n🔓 400,000 \$KDA \(~\$4,240\) of the frozen Kadena platform share was released from allocation PS_C5_001\n\n🔑 Moving it needs 3 of the 5 community keys\n🧊 Still frozen: 86\.9M KDA\n\nChain 5\n/);
+  assert.match(ps, /^🚨 Platform share moved\n\n🔓 400,000 \$KDA \(~\$4,240\) of the frozen Kadena platform share was released from allocation PS_C5_001\n\n🔑 Moving it needs 3 of the 5 community keys\n🧊 Still frozen: 86\.9M KDA\n\n⛓ Chain 5\n/);
+});
+
+test('alert layout matches the summaries (Oct 26 CoinEx repeat)', () => {
+  const HOT = 'k:7cfe3761add000c3e711fdd3316d625365ab7b9ed97a8a814acabff0359d8e10', B = 'k:175d5d7fa286' + '0'.repeat(48) + '00a3';
+  const cx = { name: 'CoinEx', type: 'exchange', confidence: 'confirmed', status: 'closed', closesOn: '2026-12-22', public: true };
+  const t = F.movePost({ chain: 0, toChain: 0, requestKey: 'b5RvcxjKN70RxhUwz61NmX7e6U_FGcyti_EXrWav5-A', amount: 100000, from: HOT, to: B, repeat: { n: 2, span: 6 * 60e3, total: 200000 } },
+    { labelOf: (a) => (a === HOT ? cx : null), price: 0.00958, thresholds: { big: 5e5, huge: 1e6 } });
+  assert.equal(t, [
+    '🐋 100,000 $KDA (~$958) withdrawn from CoinEx (closed)',
+    '📤 CoinEx is closing: withdrawals end Dec 22, 2026',
+    '🔁 2nd transfer to this wallet in 6 minutes · 200,000 KDA so far', '',
+    '🔹 From: CoinEx (closed)',
+    '🔸 To: unknown wallet k:175d…00a3', '',
+    '⛓ Chain 0',
+    'https://denascan.com/transactions/b5RvcxjKN70RxhUwz61NmX7e6U_FGcyti_EXrWav5-A',
+  ].join('\n'));
+  assert.ok(F.weightedLength(t) <= 280);
 });
 

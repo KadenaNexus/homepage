@@ -69,7 +69,8 @@ export function whales(amount, t) {
 }
 
 export const txUrl = (rk) => `https://denascan.com/transactions/${encodeURIComponent(rk)}`;
-const chainText = (it) => (it.toChain != null && it.toChain !== it.chain ? `Chain ${it.chain} → ${it.toChain}` : `Chain ${it.chain}`);
+// Alert detail lines lead with an icon, like the summaries: 🔹 From · 🔸 To · 👤 Trader/Wallet · ⛓ Chain
+const chainText = (it) => (it.toChain != null && it.toChain !== it.chain ? `⛓ Chain ${it.chain} → ${it.toChain}` : `⛓ Chain ${it.chain}`);
 
 // How long a wallet sat unused, in plain words: "over a year", "over 3 years", "200 days".
 export function idleText(days) {
@@ -147,7 +148,7 @@ export function movePost(it, { labelOf, price, thresholds }) {
     if (note && keep.has('note')) lines.push(note);
     if (it.repeat && keep.has('repeat')) lines.push(repeatLine(it.repeat));
     const body = [];
-    if (!(fx && tx)) body.push(`From: ${who(it.from, labelOf)}`, `To: ${who(it.to, labelOf)}`); // the headline already names both exchanges
+    if (!(fx && tx)) body.push(`🔹 From: ${who(it.from, labelOf)}`, `🔸 To: ${who(it.to, labelOf)}`); // the headline already names both exchanges
     if (it.newWhale) body.push(newWhaleLine(it.newWhale, keep.has('whaleDetail')));
     if (body.length) lines.push('', ...body);
     lines.push('', chainText(it), txUrl(it.requestKey));
@@ -192,7 +193,7 @@ export function dexPost(it, { labelOf, price, thresholds }) {
       : `${w}💱 ${amt} bought on ${it.dex} with ${fmtToken(it.other.amount)} ${sym}`;
     note = tradePriceLine({ ...it, kda }, price);
   }
-  return fit((keep) => [head, ...(note && keep.has('note') ? [note] : []), '', `${liquidity ? 'Wallet' : 'Trader'}: ${who(it.trader, labelOf)}`, '', `Chain ${it.chain}`, txUrl(it.requestKey)].join('\n'), ['note']);
+  return fit((keep) => [head, ...(note && keep.has('note') ? [note] : []), '', `👤 ${liquidity ? 'Wallet' : 'Trader'}: ${who(it.trader, labelOf)}`, '', `⛓ Chain ${it.chain}`, txUrl(it.requestKey)].join('\n'), ['note']);
 }
 
 export function platformPost(it, { price }) {
@@ -203,7 +204,7 @@ export function platformPost(it, { price }) {
       : `📉 The frozen Kadena platform share dropped by ${fmtKda(it.amount)} $KDA${fmtUsd(it.amount, price)}`;
   const lines = [`🚨 Platform share moved`, '', what, '', '🔑 Moving it needs 3 of the 5 community keys'];
   if (it.remaining != null) lines.push(`🧊 Still frozen: ${compact(it.remaining)} KDA`);
-  lines.push('', `Chain ${it.chain}`);
+  lines.push('', `⛓ Chain ${it.chain}`);
   if (it.requestKey) lines.push(txUrl(it.requestKey));
   return lines.join('\n');
 }
