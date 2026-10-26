@@ -129,6 +129,20 @@ def network_today():
     return " · ".join(parts)
 
 
+def gate_status():
+    """Gate.io's own status for KDA (its public API): listed, and whether deposits and withdrawals are open."""
+    c = json.loads(fetch("https://api.gateio.ws/api/v4/spot/currencies/KDA"))
+    if c.get("currency") != "KDA":
+        raise ValueError("unexpected answer")
+    if c.get("delisted"):
+        return "Gate.io now marks KDA as delisted: do not deposit there"
+    dep, wd, tr = not c.get("deposit_disabled"), not c.get("withdraw_disabled"), not c.get("trade_disabled")
+    if dep and wd and tr:
+        return "trading, deposits and withdrawals are open"
+    off = [w for w, ok in (("trading", tr), ("deposits", dep), ("withdrawals", wd)) if not ok]
+    return f"{join(off, 'and')} {'are' if len(off) > 1 else 'is'} paused right now"
+
+
 def tokenomics():
     """Circulating supply and frozen platform share, as counted by
     scripts/tokenomics/build_tokenomics.py earlier in the same build."""
@@ -163,6 +177,7 @@ def gather():
     put(wallets, lambda w: {"wallets-and": esc(join(w, "and"))})
     put(node_release, lambda s: {"node-release": esc(s)})
     put(network_today, lambda s: {"network-today": esc(s)})
+    put(gate_status, lambda s: {"gate-status": esc(s)})
     put(tokenomics, lambda s: {"supply": f"about {s[0] / 1e6:.0f} million KDA", "frozen": f"{s[1]:,.0f} KDA"})
     return facts
 
