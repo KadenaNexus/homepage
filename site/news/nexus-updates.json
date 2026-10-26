@@ -1,5 +1,20 @@
 [
   {
+    "date": "2026-10-26",
+    "text": "Kadena Garden is live at mine.kadena.ws: open-source solo mining through shared nodes, built with Pascal (@CryptoPascal31)",
+    "links": {"mine.kadena.ws": "https://mine.kadena.ws/"}
+  },
+  {
+    "date": "2026-10-20",
+    "text": "Launched Kadena Whale Watch: every move of 100,000 KDA or more on all 20 chains, live",
+    "links": {"Kadena Whale Watch": "/whales/"}
+  },
+  {
+    "date": "2026-10-15",
+    "text": "New pages: KDA tokenomics after the fork, read from mainnet daily, and monthly Kadena network reports",
+    "links": {"KDA tokenomics after the fork": "/tokenomics/", "Kadena network reports": "/reports/"}
+  },
+  {
     "date": "2026-10-13",
     "text": "New guides: How to buy KDA in 2026 and the Kadena FAQ",
     "links": {"How to buy KDA in 2026": "/buy-kda/", "Kadena FAQ": "/faq/"}
