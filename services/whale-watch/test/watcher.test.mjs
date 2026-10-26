@@ -344,3 +344,28 @@ test('CoinEx is named once confirmed, and its closing is reported', async () => 
   await w.checkClosing();
   assert.deepEqual(w.state.closing, {});
 });
+
+test('a repeated transfer between the same wallets says so, not a duplicate', async () => {
+  const { w, posts } = tmpWatcher();
+  const A = 'k:7cfe3761add000c3e711fdd3316d625365ab7b9ed97a8a814acabff0359d8e10', B = 'k:175d5d7fa286' + '0'.repeat(48) + '00a3';
+  const t0 = Date.parse('2026-10-26T17:36:00Z');
+  w.now = () => t0 + 60e3;
+  w.addItem({ type: 'move', id: 'r1', time: t0, chain: 0, toChain: 0, requestKey: 'VWjg-ehwLDod2xZPL8k5zOr7DLATaShygf4ByL0TxS0', amount: 100000, from: A, to: B });
+  await w.postFresh();
+  w.now = () => t0 + 7 * 60e3;
+  w.addItem({ type: 'move', id: 'r2', time: t0 + 6 * 60e3, chain: 0, toChain: 0, requestKey: 'b5RvcxjKN70RxhUwz61NmX7e6U_FGcyti_EXrWav5-A', amount: 100000, from: A, to: B });
+  await w.postFresh();
+  assert.equal(posts.length, 2);
+  assert.doesNotMatch(posts[0].text, /🔁/);
+  assert.match(posts[1].text, /\n🔁 2nd transfer to this wallet in 6 minutes · 200,000 KDA so far\n/);
+  // a third, two hours later
+  w.now = () => t0 + 121 * 60e3;
+  w.addItem({ type: 'move', id: 'r3', time: t0 + 120 * 60e3, chain: 0, toChain: 0, requestKey: 'c'.repeat(43), amount: 150000, from: A, to: B });
+  await w.postFresh();
+  assert.match(posts[2].text, /🔁 3rd transfer to this wallet in 2 hours · 350,000 KDA so far/);
+  // outside the 6-hour window it is a fresh first transfer again
+  assert.equal(w.repeatOf({ type: 'move', id: 'r4', time: t0 + 7 * 3600e3, from: A, to: B, amount: 1 }).n, 2);
+  assert.equal(w.repeatOf({ type: 'move', id: 'r5', time: t0 + 9 * 3600e3, from: A, to: B, amount: 1 }), null);
+  assert.equal(F.repeatLine({ n: 11, span: 30e3, total: 1 }), '🔁 11th transfer to this wallet in 1 minute · 1 KDA so far');
+});
+

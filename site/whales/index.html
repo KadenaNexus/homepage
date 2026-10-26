@@ -374,9 +374,18 @@ footer a:hover{color:var(--sand)}
       else if (ex.has(i.toLabel)) tags += '<span class="tag x">deposited to exchange</span>';
       else if (ex.has(i.fromLabel)) tags += '<span class="tag x">withdrawn from exchange</span>';
       // one plain line on what an exchange move means; delisted or closed exchanges no longer trade KDA
-      const gone = (l) => l === 'Other exchange' ? 'an exchange that no longer trades KDA' : null;
-      if (!i.internal && ex.has(i.toLabel) && !ex.has(i.fromLabel)) sub.push(gone(i.toLabel) ? `sent to ${gone(i.toLabel)}` : 'KDA sent to an exchange can be sold there');
-      if (!i.internal && ex.has(i.fromLabel) && !ex.has(i.toLabel)) sub.push(gone(i.fromLabel) ? `leaving ${gone(i.fromLabel)}` : "taken off an exchange, usually into the owner's own wallet");
+      // same notes as the X alerts: a closing exchange gives its deadline; other non-trading ones say so
+      const closing = (l) => ((stats && stats.closing) || []).find((c) => (l || '').startsWith(c.name + ' ('));
+      const closeDate = (c) => new Date(c.closesOn + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+      const gone = (l) => l === 'Other exchange' || /\((closed|delisted|withdrawals only)/.test(l || '') ? 'an exchange that no longer trades KDA' : null;
+      if (!i.internal && ex.has(i.toLabel) && !ex.has(i.fromLabel)) {
+        const c = closing(i.toLabel);
+        sub.push(c ? `sent to a closing exchange: withdrawals end ${closeDate(c)}` : gone(i.toLabel) ? `sent to ${gone(i.toLabel)}` : 'KDA sent to an exchange can be sold there');
+      }
+      if (!i.internal && ex.has(i.fromLabel) && !ex.has(i.toLabel)) {
+        const c = closing(i.fromLabel);
+        sub.push(c ? `${c.name} is closing: withdrawals end ${closeDate(c)}` : gone(i.fromLabel) ? `leaving ${gone(i.fromLabel)}` : "taken off an exchange, usually into the owner's own wallet");
+      }
       what = `${acct(i.from, i.fromLabel)} → ${acct(i.to, i.toLabel)}`;
       if (i.internal) sub.push('moved between wallets of the same exchange, not posted');
       if (i.relayOf) sub.push(i.returned ? 'same amount sent back to the earlier sender' : 'same amount passed straight on, part of an earlier move');
@@ -386,6 +395,16 @@ footer a:hover{color:var(--sand)}
         sub.push(`sender had made no transactions for ${idle} (last active ${last.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })})`);
       }
       if (i.newWhale) sub.push(`receiver now holds ${compact(i.newWhale)} KDA (under 1M before this move)`);
+      // repeated transfers between the same two wallets within 6 hours (same rule as the X alerts)
+      if (!i.internal && !i.relayOf) {
+        const prev = feed.filter((f) => f !== i && f.type === 'move' && !f.internal && !f.relayOf && f.from === i.from && f.to === i.to && f.time <= i.time && i.time - f.time < 6 * 3600e3);
+        if (prev.length) {
+          const n = prev.length + 1, ord = n + (n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th');
+          const m = Math.max(1, Math.round((i.time - Math.min(...prev.map((f) => f.time))) / 60e3)), h = Math.round(m / 60);
+          const span = m < 60 ? `${m} minute${m === 1 ? '' : 's'}` : `${h} hour${h === 1 ? '' : 's'}`;
+          sub.push(`${ord} transfer to this wallet in ${span} · ${fmt(prev.reduce((a, f) => a + f.amount, i.amount))} KDA so far`);
+        }
+      }
     } else if (i.type === 'dex') {
       tags += `<span class="tag x">${i.side === 'sell' ? 'sold on DEX' : 'bought on DEX'}</span>`;
       what = `${i.side === 'sell' ? 'Sold for' : 'Bought with'} ${i.other ? tok(i.other.amount) + ' ' + esc(sym(i.other.token)) : '?'} on ${esc(i.dex)} by ${acct(i.trader, i.traderLabel)}`;

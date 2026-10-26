@@ -35,6 +35,7 @@ export const CONFIG = {
   huge: Number(env.HUGE_MIN || 1000000),
   whaleLine: Number(env.WHALE_LINE || 1000000),
   dormantDays: Number(env.DORMANT_DAYS || 365),
+  repeatHours: Number(env.REPEAT_HOURS || 6),
   confirmations: Number(env.CONFIRMATIONS || 6),
   pollSeconds: Number(env.POLL_SECONDS || 30),
   maxBlocksPerLoop: Number(env.MAX_BLOCKS_PER_LOOP || 300),
@@ -265,7 +266,7 @@ export class Watcher {
       const dayKey = this.localDay(this.now());
       const sent = this.state.alertsByDay[dayKey] || 0;
       if (!platform && sent >= this.cfg.maxAlertsPerDay) { this.day(this.now()).notPosted = (this.day(this.now()).notPosted || 0) + 1; this.state.posted[item.id] = 'capped'; continue; }
-      const text = item.type === 'move' ? F.movePost(item, ctx)
+      const text = item.type === 'move' ? F.movePost({ ...item, repeat: this.repeatOf(item) }, ctx)
         : platform ? F.platformPost({ ...item, remaining: this.state.platform.total }, ctx)
           : F.dexPost(item, ctx);
       const problem = F.postProblem(text);
@@ -309,6 +310,15 @@ export class Watcher {
       this.state.closing = out;
       this.state.closingAt = this.now();
     } catch (e) { log('closing-exchange balance skipped:', e.message); }
+  }
+
+  // Earlier 100K+ moves between the same two wallets within the repeat window (6 hours).
+  repeatOf(item) {
+    const prev = this.feed.filter((f) => f.type === 'move' && f.id !== item.id && !f.internal && !f.relayOf
+      && f.from === item.from && f.to === item.to && f.time <= item.time && item.time - f.time < this.cfg.repeatHours * 3600e3);
+    if (!prev.length) return null;
+    const first = Math.min(...prev.map((f) => f.time));
+    return { n: prev.length + 1, span: item.time - first, total: prev.reduce((a, f) => a + f.amount, item.amount) };
   }
 
   async checkPlatformShare() {

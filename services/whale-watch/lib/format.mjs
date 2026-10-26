@@ -116,6 +116,18 @@ function fit(build, optional) {
   }
 }
 
+const ordinal = (n) => `${n}${n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th'}`;
+const spanText = (ms) => {
+  const m = Math.max(1, Math.round(ms / 60e3));
+  if (m < 60) return `${m} minute${m === 1 ? '' : 's'}`;
+  const h = Math.round(m / 60);
+  return `${h} hour${h === 1 ? '' : 's'}`;
+};
+
+// Repeated transfers between the same two wallets within a few hours, so a second alert
+// does not look like a duplicate: "🔁 2nd transfer to this wallet in 6 minutes · 200,000 KDA so far"
+export const repeatLine = (r) => `🔁 ${ordinal(r.n)} transfer to this wallet in ${spanText(r.span)} · ${fmtKda(r.total)} KDA so far`;
+
 export function movePost(it, { labelOf, price, thresholds }) {
   const fromL = labelOf(it.from);
   const toL = labelOf(it.to);
@@ -133,13 +145,14 @@ export function movePost(it, { labelOf, price, thresholds }) {
     if (it.dormantDays) lines.push(keep.has('dormantDate') ? dormantLine(it) : dormantLine({ dormantDays: it.dormantDays }));
     lines.push(`${whales(it.amount, thresholds)} ${head}`);
     if (note && keep.has('note')) lines.push(note);
+    if (it.repeat && keep.has('repeat')) lines.push(repeatLine(it.repeat));
     const body = [];
     if (!(fx && tx)) body.push(`From: ${who(it.from, labelOf)}`, `To: ${who(it.to, labelOf)}`); // the headline already names both exchanges
     if (it.newWhale) body.push(newWhaleLine(it.newWhale, keep.has('whaleDetail')));
     if (body.length) lines.push('', ...body);
     lines.push('', chainText(it), txUrl(it.requestKey));
     return lines.join('\n');
-  }, ['note', 'whaleDetail', 'dormantDate']);
+  }, ['note', 'repeat', 'whaleDetail', 'dormantDate']);
 }
 
 const isStable = (sym) => /USD/i.test(sym || '');
