@@ -79,7 +79,7 @@ test('watcher: posts the 999,746 move once, with the exchange label, under 280 c
   const t = posts[0].text;
   assert.match(t, /999,746 \$KDA \(~\$10,797\) withdrawn from Example Exchange/);
   assert.match(t, /^🐋🐋 /m);
-  assert.match(t, /To: unknown wallet k:a143…/);
+  assert.match(t, /\n🔸 To: unknown wallet k:a143…/);
   assert.match(t, /\nhttps:\/\/denascan\.com\/transactions\/[A-Za-z0-9_-]{43}$/); // alerts end with the DenaScan tx link
   assert.equal((t.match(/https?:/g) || []).length, 1);
   assert.ok(F.weightedLength(t) <= 280);
@@ -144,13 +144,12 @@ test('formats: tiers, dormant line, DEX and platform posts stay short', () => {
   assert.match(ps, /3 of the 5 community keys/);
   for (const t of [dormant, dex, ps]) assert.ok(F.weightedLength(t) <= 280, t);
   const daily = F.dailyPost({ day: '2026-10-20', moves: 3, largest: 456638, dex: 1, flowIn: 820000, flowOut: 1100000, platform: 87344000, platformDays: 377, notPosted: 0 });
-  assert.match(daily, /Exchanges: 820K KDA deposited · 1\.1M KDA withdrawn/);
-  assert.match(daily, /87\.3M KDA, unmoved for 377 days/);
+  assert.match(daily, /\n\n🏦 Exchanges, last 24h\nTotal: 820K KDA deposited · 1\.1M withdrawn\n\n🧊 Platform share: 87\.3M KDA, frozen 377 days$/);
+  assert.match(daily, /^📊 Kadena whale summary · Oct 20\n\n🐋 100K\+ KDA moves: 3 \(largest 456,638\)\n💱 DEX trades and pool moves 100K\+: 1\n/);
   assert.doesNotMatch(daily, /https?:/); // summaries stay link-free ($0.015)
   const weekly = F.weeklyPost({ from: '2026-10-14', to: '2026-10-20', moves: 9, largest: 999746, conc: { w1m: 43, w100k: 404, top10: 131009517 }, prev: { w1m: 42, w100k: 407 }, flowIn: 1e6, flowOut: 2.2e6 });
-  assert.match(weekly, /1M\+ KDA: 43 \(\+1\)/);
-  assert.match(weekly, /100K\+ KDA: 404 \(−3\)/);
-  assert.match(weekly, /Exchanges: 1\.2M more KDA withdrawn than deposited/);
+  assert.equal(weekly, ['🗓 Kadena whale week · Oct 14–20', '', '🐋 100K+ KDA moves: 9 (largest 999,746)', '', '👥 Holders', '1M+ KDA: 43 wallets (+1)', '100K+ KDA: 404 wallets (−3)', 'Top 10 wallets hold 131M KDA', '', '🏦 Exchanges, this week', 'Total: 1M KDA deposited · 2.2M withdrawn', 'Net: 1.2M more KDA withdrawn than deposited'].join('\n'));
+  assert.match(F.weeklyPost({ from: '2026-10-28', to: '2026-11-03', moves: 0, flowIn: 0, flowOut: 0 }), /· Oct 28–Nov 3\n/);
   // with a per-exchange breakdown the summaries name the exchanges
   const ex = [
     { display: 'Gate', in: 15000, out: 80000 },
@@ -159,12 +158,12 @@ test('formats: tiers, dormant line, DEX and platform posts stay short', () => {
     { display: 'KuCoin', in: 38, out: 0 },
   ];
   const named = F.dailyPost({ day: '2026-10-21', moves: 0, flowIn: 22038, flowOut: 80400, exchanges: ex, platform: 87344000, platformDays: 377 });
-  assert.match(named, /Exchanges:\nGate: 15K KDA deposited · 80K withdrawn\nBinance: 7K KDA deposited\nBybit \(likely\): 400 KDA withdrawn\n\+ 1 more exchange/);
+  assert.match(named, /🏦 Exchanges, last 24h\nGate: 15K KDA deposited · 80K withdrawn\nBinance: 7K KDA deposited\n\n/); // under 1,000 KDA is left out
   assert.ok(F.weightedLength(named) <= 280, named);
   const busy = F.dailyPost({ day: '2026-10-21', moves: 4, largest: 1234567, dex: 2, notPosted: 3, flowIn: 1e6, flowOut: 1e6,
     exchanges: ['Binance.US (likely)', 'Coinmetro (likely)', 'TradeOgre (likely)', 'KuCoin (likely)'].map((display) => ({ display, in: 123456, out: 654321 })), platform: 87344000, platformDays: 377 });
   assert.ok(F.weightedLength(busy) <= 280, busy);
-  assert.match(F.weeklyPost({ from: '2026-10-14', to: '2026-10-20', moves: 0, flowIn: 1, flowOut: 2, exchanges: ex }), /Busiest: Gate, Binance, Bybit \(likely\)/);
+  assert.match(F.weeklyPost({ from: '2026-10-14', to: '2026-10-20', moves: 0, flowIn: 1, flowOut: 2, exchanges: ex }), /🏦 Exchanges, this week\nGate: 15K KDA deposited · 80K withdrawn\nBinance: 7K KDA deposited\nNet: 58K more KDA withdrawn than deposited$/);
 });
 
 test('oauth header has the required fields and a stable signature', () => {
@@ -189,7 +188,7 @@ test('only confirmed exchanges are named, sweeps inside one exchange are not pos
   // pretend the receiver is the likely-CoinEx wallet
   item.to = 'k:a143f45049850d6ae3a5e0d3dd02c0ea9b9a1f6b58c8bd29a8e8aa9cdb8d6f43';
   const text = F.movePost(item, { labelOf: w.labelOf, price: 0.0108, thresholds: { big: 5e5, huge: 1e6 } });
-  assert.match(text, /moved from Gate to an exchange\n🔁 Moved between two exchanges\n\nChain 1\n/);
+  assert.match(text, /moved from Gate to an exchange\n🔁 Moved between two exchanges\n\n⛓ Chain 1\n/);
   assert.doesNotMatch(text, /CoinEx/);
   // a sweep between two wallets of the same exchange: kept on the page, never posted, not counted
   w.addItem({ type: 'move', id: 'sweep', time: item.time + 1000, chain: 1, toChain: 0, requestKey: 'sweepsweep', amount: 300000, from: B, to: A, internal: true });
@@ -273,7 +272,7 @@ test('alerts explain themselves in one plain line', () => {
   assert.match(F.movePost({ ...base, amount: 250000, from: G, to: A }, ctx), /withdrawn from Gate\n📤 Exchange withdrawal/);
   assert.match(F.movePost({ ...base, amount: 250000, from: A, to: N }, ctx), /\n📥 Sent to an exchange that no longer trades KDA/);
   const leave = F.movePost({ ...base, amount: 250000, from: C, to: A }, ctx);
-  assert.match(leave, /withdrawn from an exchange\n📤 Leaving an exchange that no longer trades KDA\n\nFrom: Other exchange\n/);
+  assert.match(leave, /withdrawn from an exchange\n📤 Leaving an exchange that no longer trades KDA\n\n🔹 From: Other exchange\n/);
   assert.doesNotMatch(leave, /CoinEx|closed|likely/);
   assert.match(F.movePost({ ...base, amount: 250000, from: N, to: C }, ctx), /moved between two exchanges/);
   assert.match(F.movePost({ ...base, amount: 2e6, from: A, to: B, newWhale: 1.2e6 }, ctx), /🆕 New whale: the receiver now holds 1\.2M KDA \(under 1M before this move\)/);
@@ -294,12 +293,11 @@ test('summaries name Gate and group every other exchange', () => {
     { name: 'Other exchanges', display: 'Other exchanges', other: true, in: 515, out: 1024 },
   ];
   const daily = F.dailyPost({ day: '2026-10-24', moves: 0, flowIn: 140672, flowOut: 1782, exchanges: ex, platform: 87344000, platformDays: 380 });
-  assert.match(daily, /Exchanges:\nGate: 140K KDA deposited · 758 withdrawn\nOther exchanges: 515 KDA deposited · 1K withdrawn\n/);
+  assert.match(daily, /🏦 Exchanges, last 24h\nGate: 140K KDA deposited\nOther exchanges: 1K KDA withdrawn\n/);
   assert.doesNotMatch(daily, /more exchange/);
   assert.ok(F.weightedLength(daily) <= 280, daily);
   const weekly = F.weeklyPost({ from: '2026-10-18', to: '2026-10-24', moves: 0, flowIn: 140672, flowOut: 1782, exchanges: ex });
-  assert.match(weekly, /Exchanges: 139K more KDA deposited than withdrawn/);
-  assert.doesNotMatch(weekly, /Busiest/); // only one exchange still trades
+  assert.match(weekly, /🏦 Exchanges, this week\nGate: 140K KDA deposited\nOther exchanges: 1K KDA withdrawn\nNet: 139K more KDA deposited than withdrawn$/);
   const L = JSON.parse(fs.readFileSync(new URL('../labels.json', import.meta.url), 'utf8')).accounts;
   assert.equal(L['k:bfcfdd740857ab6be8d6acce80f9fef6c0ad99e46c9b6e2dc24e0fe2850bede9'].name, 'OKX');
   assert.ok(!Object.values(L).some((l) => l.name === 'Binance'), 'no wallet is labelled Binance any more');
@@ -333,11 +331,11 @@ test('CoinEx is named once confirmed, and its closing is reported', async () => 
   assert.equal(Math.round(w.state.closing.CoinEx.balance), 3244928);
   assert.ok(seen[0].includes(HOT) && seen[0].includes(DEP));
   const daily = F.dailyPost({ day: '2026-10-24', moves: 0, flowIn: 0, flowOut: 0, closing: Object.values(w.state.closing), platform: 87344000, platformDays: 380 });
-  assert.match(daily, /\n⏳ CoinEx closes Dec 22: 3\.24M KDA left\n/);
+  assert.match(daily, /🐋 No moves of 100K\+ KDA in the last 24h\n\n⏳ CoinEx closes Dec 22: 3\.24M KDA still remaining on the exchange\n🧊 Platform share/);
   // a busy day: Gate, CoinEx's own flow folded into its closing line, other exchanges, all under 280
   const ex = [{ name: 'Gate', display: 'Gate', label: 'Gate', in: 140157, out: 758 }, { name: 'CoinEx (closed)', display: 'CoinEx (closed)', label: 'CoinEx', status: 'closed', in: 0, out: 24 }, { name: 'Other exchanges', display: 'Other exchanges', other: true, in: 515, out: 1000 }];
   const busy = F.dailyPost({ day: '2026-10-24', moves: 0, flowIn: 140672, flowOut: 1782, exchanges: ex, closing: Object.values(w.state.closing), platform: 87344000, platformDays: 380 });
-  assert.match(busy, /Exchanges:\nGate: 140K KDA deposited · 758 withdrawn\nOther exchanges: 515 KDA deposited · 1K withdrawn\n⏳ CoinEx closes Dec 22: 24 KDA withdrawn, 3\.24M left\n/);
+  assert.match(busy, /🏦 Exchanges, last 24h\nGate: 140K KDA deposited\nOther exchanges: 1K KDA withdrawn\n\n⏳ CoinEx closes Dec 22: 3\.24M KDA still remaining on the exchange\n/);
   assert.ok(F.weightedLength(busy) <= 280, busy);
   // after the closing date it is no longer read
   w.now = () => Date.parse('2026-12-23T00:00:00Z');
@@ -367,5 +365,48 @@ test('a repeated transfer between the same wallets says so, not a duplicate', as
   assert.equal(w.repeatOf({ type: 'move', id: 'r4', time: t0 + 7 * 3600e3, from: A, to: B, amount: 1 }).n, 2);
   assert.equal(w.repeatOf({ type: 'move', id: 'r5', time: t0 + 9 * 3600e3, from: A, to: B, amount: 1 }), null);
   assert.equal(F.repeatLine({ n: 11, span: 30e3, total: 1 }), '🔁 11th transfer to this wallet in 1 minute · 1 KDA so far');
+});
+
+test('daily summary layout (Oct 25 data)', () => {
+  const ex = [{ name: 'Gate', display: 'Gate', label: 'Gate', in: 21000, out: 209 }, { name: 'Other exchanges', display: 'Other exchanges', other: true, in: 516, out: 0 }];
+  const t = F.dailyPost({ day: '2026-10-25', moves: 0, flowIn: 21516, flowOut: 209, exchanges: ex, closing: [{ name: 'CoinEx', closesOn: '2026-12-22', balance: 3244000 }], platform: 87344000, platformDays: 381 });
+  assert.equal(t, [
+    '📊 Kadena whale summary · Oct 25', '',
+    '🐋 No moves of 100K+ KDA in the last 24h', '',
+    '🏦 Exchanges, last 24h', 'Gate: 21K KDA deposited', '',
+    '⏳ CoinEx closes Dec 22: 3.24M KDA still remaining on the exchange',
+    '🧊 Platform share: 87.3M KDA, frozen 381 days',
+  ].join('\n'));
+  // a quiet day: no exchange block at all
+  assert.doesNotMatch(F.dailyPost({ day: '2026-10-25', moves: 0, flowIn: 300, flowOut: 0, exchanges: [{ name: 'Gate', display: 'Gate', label: 'Gate', in: 300, out: 0 }], platform: 87344000, platformDays: 381 }), /🏦/);
+});
+
+test('the Friday digest stays under 280 on a full week, dropping the least important lines first', () => {
+  const ex = [{ name: 'Gate', display: 'Gate', label: 'Gate', in: 255498, out: 262552 }, { name: 'CoinEx (closed)', display: 'CoinEx (closed)', label: 'CoinEx', status: 'closed', in: 0, out: 310000 }, { name: 'Other exchanges', display: 'Other exchanges', other: true, in: 1810, out: 2990 }];
+  const t = F.weeklyPost({ from: '2026-10-24', to: '2026-10-30', moves: 6, largest: 1234567, dex: 2, conc: { w1m: 43, w100k: 404, top10: 131009517 }, prev: { w1m: 42, w100k: 407 }, flowIn: 257308, flowOut: 575542, exchanges: ex, closing: [{ name: 'CoinEx', closesOn: '2026-12-22', balance: 2930000 }], platform: 87344000, platformDays: 385 });
+  assert.ok(F.weightedLength(t) <= 280, t);
+  assert.match(t, /👥 Holders\n1M\+ KDA: 43 wallets \(\+1\)/);
+  assert.match(t, /🏦 Exchanges, this week\nGate: 255K KDA deposited · 263K withdrawn/);
+  assert.match(t, /⏳ CoinEx closes Dec 22: 2\.93M KDA (left|still remaining on the exchange)/);
+  assert.equal(F.postProblem(t), null);
+  const ps = F.platformPost({ kind: 'release', account: 'PS_C5_001', amount: 400000, chain: 5, requestKey: 'vWiX6xDWQ7EMcM0YbgKRO1tBXEDRVnNneJkfUXkQ20g', remaining: 86944000 }, { price: 0.0106 });
+  assert.match(ps, /^🚨 Platform share moved\n\n🔓 400,000 \$KDA \(~\$4,240\) of the frozen Kadena platform share was released from allocation PS_C5_001\n\n🔑 Moving it needs 3 of the 5 community keys\n🧊 Still frozen: 86\.9M KDA\n\n⛓ Chain 5\n/);
+});
+
+test('alert layout matches the summaries (Oct 26 CoinEx repeat)', () => {
+  const HOT = 'k:7cfe3761add000c3e711fdd3316d625365ab7b9ed97a8a814acabff0359d8e10', B = 'k:175d5d7fa286' + '0'.repeat(48) + '00a3';
+  const cx = { name: 'CoinEx', type: 'exchange', confidence: 'confirmed', status: 'closed', closesOn: '2026-12-22', public: true };
+  const t = F.movePost({ chain: 0, toChain: 0, requestKey: 'b5RvcxjKN70RxhUwz61NmX7e6U_FGcyti_EXrWav5-A', amount: 100000, from: HOT, to: B, repeat: { n: 2, span: 6 * 60e3, total: 200000 } },
+    { labelOf: (a) => (a === HOT ? cx : null), price: 0.00958, thresholds: { big: 5e5, huge: 1e6 } });
+  assert.equal(t, [
+    '🐋 100,000 $KDA (~$958) withdrawn from CoinEx (closed)',
+    '📤 CoinEx is closing: withdrawals end Dec 22, 2026',
+    '🔁 2nd transfer to this wallet in 6 minutes · 200,000 KDA so far', '',
+    '🔹 From: CoinEx (closed)',
+    '🔸 To: unknown wallet k:175d…00a3', '',
+    '⛓ Chain 0',
+    'https://denascan.com/transactions/b5RvcxjKN70RxhUwz61NmX7e6U_FGcyti_EXrWav5-A',
+  ].join('\n'));
+  assert.ok(F.weightedLength(t) <= 280);
 });
 

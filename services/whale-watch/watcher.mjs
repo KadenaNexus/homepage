@@ -391,7 +391,9 @@ export class Watcher {
       const concDays = Object.keys(this.state.conc).sort();
       const latest = concDays.at(-1);
       const weekAgo = concDays.filter((d) => d <= new Date(this.now() - 7 * 86400e3).toISOString().slice(0, 10)).at(-1);
-      const text = F.weeklyPost({ ...w, from: this.localDay(this.now() - 6 * 86400e3), to: dayKey, conc: latest ? this.state.conc[latest] : null, prev: weekAgo ? this.state.conc[weekAgo] : null });
+      const p = this.state.platform;
+      const text = F.weeklyPost({ ...w, from: this.localDay(this.now() - 6 * 86400e3), to: dayKey, conc: latest ? this.state.conc[latest] : null, prev: weekAgo ? this.state.conc[weekAgo] : null,
+        closing: Object.values(this.state.closing || {}), platform: p.total, platformDays: p.lastMoveAt ? Math.floor((this.now() - Date.parse(p.lastMoveAt)) / 86400e3) : null });
       this.state.lastWeekly = dayKey;
       this.state.lastDaily = dayKey; // the weekly digest replaces that day's summary
       this.checkpoint();

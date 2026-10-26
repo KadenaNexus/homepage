@@ -69,7 +69,8 @@ export function whales(amount, t) {
 }
 
 export const txUrl = (rk) => `https://denascan.com/transactions/${encodeURIComponent(rk)}`;
-const chainText = (it) => (it.toChain != null && it.toChain !== it.chain ? `Chain ${it.chain} → ${it.toChain}` : `Chain ${it.chain}`);
+// Alert detail lines lead with an icon, like the summaries: 🔹 From · 🔸 To · 👤 Trader/Wallet · ⛓ Chain
+const chainText = (it) => (it.toChain != null && it.toChain !== it.chain ? `⛓ Chain ${it.chain} → ${it.toChain}` : `⛓ Chain ${it.chain}`);
 
 // How long a wallet sat unused, in plain words: "over a year", "over 3 years", "200 days".
 export function idleText(days) {
@@ -147,7 +148,7 @@ export function movePost(it, { labelOf, price, thresholds }) {
     if (note && keep.has('note')) lines.push(note);
     if (it.repeat && keep.has('repeat')) lines.push(repeatLine(it.repeat));
     const body = [];
-    if (!(fx && tx)) body.push(`From: ${who(it.from, labelOf)}`, `To: ${who(it.to, labelOf)}`); // the headline already names both exchanges
+    if (!(fx && tx)) body.push(`🔹 From: ${who(it.from, labelOf)}`, `🔸 To: ${who(it.to, labelOf)}`); // the headline already names both exchanges
     if (it.newWhale) body.push(newWhaleLine(it.newWhale, keep.has('whaleDetail')));
     if (body.length) lines.push('', ...body);
     lines.push('', chainText(it), txUrl(it.requestKey));
@@ -192,18 +193,18 @@ export function dexPost(it, { labelOf, price, thresholds }) {
       : `${w}💱 ${amt} bought on ${it.dex} with ${fmtToken(it.other.amount)} ${sym}`;
     note = tradePriceLine({ ...it, kda }, price);
   }
-  return fit((keep) => [head, ...(note && keep.has('note') ? [note] : []), '', `${liquidity ? 'Wallet' : 'Trader'}: ${who(it.trader, labelOf)}`, '', `Chain ${it.chain}`, txUrl(it.requestKey)].join('\n'), ['note']);
+  return fit((keep) => [head, ...(note && keep.has('note') ? [note] : []), '', `👤 ${liquidity ? 'Wallet' : 'Trader'}: ${who(it.trader, labelOf)}`, '', `⛓ Chain ${it.chain}`, txUrl(it.requestKey)].join('\n'), ['note']);
 }
 
 export function platformPost(it, { price }) {
   const what = it.kind === 'release'
-    ? `${fmtKda(it.amount)} $KDA${fmtUsd(it.amount, price)} of the frozen Kadena platform share was released from allocation ${it.account}`
+    ? `🔓 ${fmtKda(it.amount)} $KDA${fmtUsd(it.amount, price)} of the frozen Kadena platform share was released from allocation ${it.account}`
     : it.kind === 'transfer'
-      ? `${fmtKda(it.amount)} $KDA${fmtUsd(it.amount, price)} moved out of platform-share account ${it.account} to ${shortAccount(it.to)}`
-      : `The frozen Kadena platform share dropped by ${fmtKda(it.amount)} $KDA${fmtUsd(it.amount, price)}`;
-  const lines = [`🚨 Platform share moved`, '', what, '', 'Moving it needs 3 of the 5 community keys.'];
-  if (it.remaining != null) lines.push(`Still frozen: ${compact(it.remaining)} KDA`);
-  lines.push('', `Chain ${it.chain}`);
+      ? `💸 ${fmtKda(it.amount)} $KDA${fmtUsd(it.amount, price)} moved out of platform-share account ${it.account} to ${shortAccount(it.to)}`
+      : `📉 The frozen Kadena platform share dropped by ${fmtKda(it.amount)} $KDA${fmtUsd(it.amount, price)}`;
+  const lines = [`🚨 Platform share moved`, '', what, '', '🔑 Moving it needs 3 of the 5 community keys'];
+  if (it.remaining != null) lines.push(`🧊 Still frozen: ${compact(it.remaining)} KDA`);
+  lines.push('', `⛓ Chain ${it.chain}`);
   if (it.requestKey) lines.push(txUrl(it.requestKey));
   return lines.join('\n');
 }
@@ -212,75 +213,95 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 export const dayLabel = (iso) => `${MONTHS[Number(iso.slice(5, 7)) - 1]} ${Number(iso.slice(8, 10))}`;
 
 // One exchange's 24h activity, e.g. "Gate: 15K KDA deposited · 80K withdrawn".
-export function exchangeLine(e) {
+// One exchange's 24h activity, e.g. "Gate: 15K KDA deposited · 80K withdrawn". Amounts
+// under min are left out (in the daily summary, under 1,000 KDA is noise).
+export function exchangeLine(e, min = 0) {
+  const show = (v) => Math.round(v) > 0 && v >= min;
   const parts = [];
-  if (Math.round(e.in) > 0) parts.push(`${compact(e.in)} KDA deposited`);
-  if (Math.round(e.out) > 0) parts.push(`${compact(e.out)} ${parts.length ? '' : 'KDA '}withdrawn`);
-  return parts.length ? `${e.display}: ${parts.join(' · ')}` : null;
+  if (show(e.in)) parts.push(`${compact(e.in)} KDA deposited`);
+  if (show(e.out)) parts.push(`${compact(e.out)} ${parts.length ? '' : 'KDA '}withdrawn`);
+  return parts.length ? `${e.label || e.display}: ${parts.join(' · ')}` : null;
 }
 
-// Exchange lines for the daily summary: named (confirmed) exchanges one per line, busiest
-// first (up to max), then everything else as one "Other exchanges" line. Without a
-// breakdown: the totals only.
-export function flowLines(flowIn, flowOut, exchanges, max = 3, skip = new Set()) {
-  if (!flowIn && !flowOut) return [];
-  const ex = (exchanges || []).filter((e) => !skip.has(e.label)); // closing exchanges get their own line
-  const named = ex.filter((e) => !e.other).map(exchangeLine).filter(Boolean);
-  const other = exchangeLine({ display: OTHER_EXCHANGES, in: ex.filter((e) => e.other).reduce((a, e) => a + e.in, 0), out: ex.filter((e) => e.other).reduce((a, e) => a + e.out, 0) });
-  if ((!named.length && !other) || max < 1) return [`Exchanges: ${compact(flowIn)} KDA deposited · ${compact(flowOut)} KDA withdrawn`];
-  const lines = ['Exchanges:', ...named.slice(0, max)];
-  const rest = named.length - max;
+// Lines of the daily summary's exchange block: named (confirmed) exchanges one per line,
+// busiest first (up to max), then everything else as one "Other exchanges" line. Without
+// a per-exchange breakdown: the totals only.
+export function flowLines(flowIn, flowOut, exchanges, max = 3, min = 0) {
+  if (!exchanges) return [exchangeLine({ display: 'Total', in: flowIn || 0, out: flowOut || 0 }, min)].filter(Boolean);
+  const named = exchanges.filter((e) => !e.other).map((e) => exchangeLine(e, min)).filter(Boolean);
+  const others = exchanges.filter((e) => e.other);
+  const other = exchangeLine({ display: OTHER_EXCHANGES, in: others.reduce((a, e) => a + e.in, 0), out: others.reduce((a, e) => a + e.out, 0) }, min);
+  const lines = named.slice(0, max);
+  const rest = named.length - lines.length;
   if (rest > 0) lines.push(`+ ${rest} more ${rest === 1 ? 'exchange' : 'exchanges'}`);
   if (other) lines.push(other);
   return lines;
 }
 
-// "⏳ CoinEx closes Dec 22: 24 KDA withdrawn, 3.24M left" (the 24h flow, then the KDA still in its wallets)
-export function closingLine(c, flow) {
-  const parts = [];
-  if (flow && Math.round(flow.out) > 0) parts.push(`${compact(flow.out)} KDA withdrawn`);
-  if (flow && Math.round(flow.in) > 0) parts.push(`${compact(flow.in)} deposited`);
-  parts.push(`${compact(c.balance)}${parts.length ? '' : ' KDA'} left`);
-  return `⏳ ${c.name} closes ${dateText(Date.parse(c.closesOn)).replace(/, \d{4}$/, '')}: ${parts.join(', ')}`;
+// "⏳ CoinEx closes Dec 22: 3.24M KDA still remaining on the exchange"
+// (short: "⏳ CoinEx closes Dec 22: 3.24M KDA left", when a post is tight)
+export function closingLine(c, short = false) {
+  return `⏳ ${c.name} closes ${dateText(Date.parse(c.closesOn)).replace(/, \d{4}$/, '')}: ${compact(c.balance)} KDA ${short ? 'left' : 'still remaining on the exchange'}`;
 }
 
+// The 21:00 summary, in short blocks separated by blank lines:
+//   📊 title · 🐋/💱 whale activity · 🏦 exchanges, last 24h · ⏳ closing exchanges and 🧊 platform share
 export function dailyPost(s) {
-  // Name as many exchanges as fit in one post (X allows 280).
-  for (let max = 3; ; max--) {
-    const lines = [`📊 Kadena whale summary · ${dayLabel(s.day)}`, ''];
-    if (s.moves) lines.push(`100K+ KDA moves: ${s.moves} (largest ${fmtKda(s.largest)})`);
-    else lines.push('No moves of 100K+ KDA in the last 24h');
-    if (s.dex) lines.push(`DEX trades and pool moves 100K+: ${s.dex}`);
-    const closing = s.closing || [];
-    lines.push(...flowLines(s.flowIn, s.flowOut, s.exchanges, max, new Set(closing.map((c) => c.name))));
-    if (s.notPosted) lines.push(`(${s.notPosted} more ${s.notPosted === 1 ? 'move' : 'moves'} not posted today)`);
-    for (const c of closing) lines.push(closingLine(c, (s.exchanges || []).find((e) => e.label === c.name)));
-    if (s.platform != null) lines.push(`Platform share: ${compact(s.platform)} KDA, unmoved for ${s.platformDays} days`);
-    const text = lines.join('\n');
-    if (max <= 0 || weightedLength(text) <= 280) return text;
+  const top = [s.moves ? `🐋 100K+ KDA moves: ${s.moves} (largest ${fmtKda(s.largest)})` : '🐋 No moves of 100K+ KDA in the last 24h'];
+  if (s.dex) top.push(`💱 DEX trades and pool moves 100K+: ${s.dex}`);
+  if (s.notPosted) top.push(`(${s.notPosted} more ${s.notPosted === 1 ? 'move' : 'moves'} not posted today)`);
+  const tail = (s.closing || []).map(closingLine);
+  if (s.platform != null) tail.push(`🧊 Platform share: ${compact(s.platform)} KDA, frozen ${s.platformDays} days`);
+  const build = (ex) => [
+    `📊 Kadena whale summary · ${dayLabel(s.day)}`, '', ...top,
+    ...(ex.length ? ['', '🏦 Exchanges, last 24h', ...ex] : []),
+    ...(tail.length ? ['', ...tail] : []),
+  ].join('\n');
+  // name as many exchanges as fit in one post (X allows 280)
+  for (let max = 3; max >= 0; max--) {
+    const text = build(flowLines(s.flowIn, s.flowOut, s.exchanges, max, 1000));
+    if (weightedLength(text) <= 280) return text;
   }
+  return build([]);
 }
 
 const delta = (now, before) => (before == null ? '' : ` (${now - before >= 0 ? '+' : '−'}${Math.abs(now - before)})`);
 
+// "Oct 18–24", or "Oct 28–Nov 3" across a month
+const rangeLabel = (a, b) => { const x = dayLabel(a), y = dayLabel(b); return x.slice(0, 3) === y.slice(0, 3) ? `${x}–${y.slice(4)}` : `${x}–${y}`; };
+
+// The Friday digest (it replaces that day's summary), in the same blocks as the daily one:
+//   🗓 title · 🐋/💱 whale activity · 👥 holders · 🏦 exchanges · ⏳/🧊 closing exchanges and platform share
+// If it would pass 280, the least important lines go first.
 export function weeklyPost(w) {
-  const lines = [`🗓 Kadena whale week · ${dayLabel(w.from)}–${dayLabel(w.to)}`, ''];
-  lines.push(w.moves ? `100K+ moves: ${w.moves} · largest ${fmtKda(w.largest)} KDA` : 'No moves of 100K+ KDA this week');
-  if (w.conc) {
-    lines.push(`Wallets holding 1M+ KDA: ${w.conc.w1m}${delta(w.conc.w1m, w.prev?.w1m)}`);
-    lines.push(`Wallets holding 100K+ KDA: ${w.conc.w100k}${delta(w.conc.w100k, w.prev?.w100k)}`);
-    lines.push(`Top 10 wallets hold ${compact(w.conc.top10)} KDA`);
-  }
-  // with a breakdown, only named (confirmed) exchanges count toward the net flow
-  const live = w.exchanges?.filter((e) => !e.other && !e.status);
-  const fIn = live ? live.reduce((a, e) => a + e.in, 0) : w.flowIn, fOut = live ? live.reduce((a, e) => a + e.out, 0) : w.flowOut;
-  if (Math.round(fIn) || Math.round(fOut)) {
+  const build = (keep, max) => {
+    const out = [`🗓 Kadena whale week · ${rangeLabel(w.from, w.to)}`, '', w.moves ? `🐋 100K+ KDA moves: ${w.moves} (largest ${fmtKda(w.largest)})` : '🐋 No moves of 100K+ KDA this week'];
+    if (w.dex && keep.has('dex')) out.push(`💱 DEX trades and pool moves 100K+: ${w.dex}`);
+    if (w.conc) {
+      out.push('', '👥 Holders', `1M+ KDA: ${w.conc.w1m} wallets${delta(w.conc.w1m, w.prev?.w1m)}`, `100K+ KDA: ${w.conc.w100k} wallets${delta(w.conc.w100k, w.prev?.w100k)}`);
+      if (keep.has('top10')) out.push(`Top 10 wallets hold ${compact(w.conc.top10)} KDA`);
+    }
+    const ex = flowLines(w.flowIn, w.flowOut, w.exchanges, max, 1000).filter((l) => keep.has('other') || !l.startsWith(OTHER_EXCHANGES));
+    // net flow of the exchanges that still trade KDA (all of them when there is no breakdown)
+    const live = w.exchanges?.filter((e) => !e.other && !e.status);
+    const fIn = live ? live.reduce((a, e) => a + e.in, 0) : w.flowIn || 0, fOut = live ? live.reduce((a, e) => a + e.out, 0) : w.flowOut || 0;
     const net = fIn - fOut;
-    lines.push(net === 0 ? 'Exchanges: deposits and withdrawals even'
-      : `Exchanges: ${compact(Math.abs(net))} more KDA ${net > 0 ? 'deposited than withdrawn' : 'withdrawn than deposited'}`);
-    if (live && live.length > 1) lines.push(`Busiest: ${live.slice(0, 3).map((e) => e.display).join(', ')}`);
+    if (keep.has('net') && Math.abs(net) >= 1000) ex.push(`Net: ${compact(Math.abs(net))} more KDA ${net > 0 ? 'deposited than withdrawn' : 'withdrawn than deposited'}`);
+    if (ex.length) out.push('', '🏦 Exchanges, this week', ...ex);
+    const tail = keep.has('closing') ? (w.closing || []).map((c) => closingLine(c, !keep.has('closingLong'))) : [];
+    if (keep.has('platform') && w.platform != null) tail.push(`🧊 Platform share: ${compact(w.platform)} KDA, frozen ${w.platformDays} days`);
+    if (tail.length) out.push('', ...tail);
+    return out.join('\n');
+  };
+  const drop = ['platform', 'top10', 'other', 'net', 'closingLong', 'dex', 'closing']; // dropped first to last
+  for (let n = 0; n <= drop.length; n++) {
+    const keep = new Set(drop.slice(n));
+    for (let max = 3; max >= 1; max--) {
+      const text = build(keep, max);
+      if (weightedLength(text) <= 280) return text;
+    }
   }
-  return lines.join('\n');
+  return build(new Set(), 1);
 }
 
 // X counts characters with some characters (emoji) weighted 2; stay well under 280.
