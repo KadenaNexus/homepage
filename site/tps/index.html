@@ -271,10 +271,11 @@ footer a:hover{color:var(--sand)}
 
       <h2>The test plan</h2>
       <div class="tw"><table><thead><tr><th>Run</th><th>Rate</th><th>Length</th><th>Transactions</th><th>Share of each block</th><th>Fees, about</th></tr></thead><tbody>
-        <tr><td>1</td><td>100 TPS</td><td>60 s</td><td>6,000</td><td>~26%</td><td>0.02 KDA</td></tr>
-        <tr><td>2</td><td>200 TPS</td><td>60 s</td><td>12,000</td><td>~51%</td><td>0.03 KDA</td></tr>
-        <tr><td>3, only if 1 and 2 go smoothly</td><td>300 TPS</td><td>60 s</td><td>18,000</td><td>~77%</td><td>0.05 KDA</td></tr>
+        <tr><td>1</td><td>100 TPS</td><td>60 s</td><td>6,000</td><td>~30%</td><td>0.02 KDA</td></tr>
+        <tr><td>2</td><td>200 TPS</td><td>60 s</td><td>12,000</td><td>~60%</td><td>0.03 KDA</td></tr>
+        <tr><td>3, only if 1 and 2 go smoothly</td><td>250 TPS</td><td>60 s</td><td>15,000</td><td>~74%</td><td>0.04 KDA</td></tr>
       </tbody></table></div>
+      <p class="note">Share of each block counts the gas limit of each test transaction (the measured 258 gas plus a 15% margin), because that is what a miner reserves when it fills a block.</p>
       <h3>Ground rules</h3>
       <ul>
         <li><b>Announced first:</b> date, time and rate posted at least 48 hours ahead, with a heads-up to the community core developers.</li>
@@ -283,7 +284,7 @@ footer a:hover{color:var(--sand)}
         <li><b>Everyone else first:</b> test transactions pay the minimum gas price. Miners take higher-paying transactions first, so normal users keep getting in.</li>
         <li><b>Our own money only:</b> dedicated test accounts send tiny amounts of KDA to each other. Nobody else's funds are touched.</li>
         <li><b>Stop rule:</b> the run is cut short if confirmations for other users slow down or any chain stalls.</li>
-        <li><b>Never near the ceiling:</b> we will not go above 300 TPS on mainnet. Higher rates belong on a test network.</li>
+        <li><b>Never near the ceiling:</b> we will not go above 250 TPS on mainnet, and the test program refuses any run that would reserve more than 80% of a block. Higher rates belong on a test network.</li>
       </ul>
 
       <h2>What about 480,000 TPS?</h2>
