@@ -262,9 +262,20 @@ footer a:hover{color:var(--sand)}
         <tr><td>Gas for a simple KDA transfer (median of 55 mainnet transfers)</td><td>258 gas</td></tr>
         <tr><td>Simple transfers per block</td><td>about 580 / 700</td></tr>
         <tr><td>Chains, block time</td><td>20 chains, one block every 30 s on each</td></tr>
+        <tr><td>Busiest moment found in Kadena's history (Jul 12, 2024)</td><td>about 17.7 TPS</td></tr>
         <tr class="hl"><td><b>Ceiling for simple transfers</b></td><td><b>about 390 TPS / 465 TPS</b></td></tr>
       </tbody></table></div>
       <p class="note">Sample: 4,797 blocks on all 20 chains, 418 transactions in 2 hours. Ceiling = transfers per block × 20 chains ÷ 30 seconds. Heavier transactions (DEX swaps, contract calls) use more gas, so the ceiling for them is lower.</p>
+
+      <h2>Kadena's busiest moments so far</h2>
+      <p>Before testing, we searched mainnet's history from 2019 to today for the busiest moments on record.</p>
+      <div class="tw"><table><thead><tr><th></th><th>When</th><th>Transactions</th><th>TPS</th></tr></thead><tbody>
+        <tr><td>Busiest 30 seconds (one block on each of the 20 chains, height 4,943,466)</td><td>Jul 12, 2024, 04:46 UTC</td><td>530</td><td><b>about 17.7</b></td></tr>
+        <tr><td>Busiest hour</td><td>May 18, 2024, from 16:13 UTC</td><td>about 32,400</td><td>about 9.0</td></tr>
+        <tr><td>Longest busy stretch: an automated on-chain block recorder</td><td>until Oct 12, 2026 (we measured Sep 15 – Oct 12)</td><td>about 465,000 a day</td><td>about 5.4, around the clock</td></tr>
+      </tbody></table></div>
+      <p class="note">How we searched: one sample of every block on all 20 chains every 12 hours across the whole history (5,098 samples, from the public Chainweb indexer), then every block in the 12 hours around the six busiest samples. The busiest block height was rechecked directly on a node. Short spikes between samples could be missed, so the record may be somewhat higher. Counts exclude the miner's reward transaction in each block.</p>
+      <p>So run 1 at 100 TPS would be about six times the busiest moment we found in Kadena's history, and run 2 about eleven times.</p>
 
       <h2 id="h-results">Results</h2>
       <div id="results"><p class="empty">No runs yet. Run 1 will be announced at least 48 hours ahead on <a href="https://t.me/KadenaNexus">Telegram</a> and <a href="https://x.com/KadenaNexus">X</a>.</p></div>
