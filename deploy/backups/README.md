@@ -14,7 +14,7 @@ One job backs up every app database on the Kadena Nexus server each night, check
 It runs at **03:15 UTC** (06:15 Riyadh), dumps as the `postgres` user (no database passwords anywhere), and never
 prints or copies the apps' `.env` files.
 
-## 1. Off-server storage (Naif, once)
+## 1. Off-server storage (Saudi.KDA, once)
 
 In the Hetzner console, order the smallest **Storage Box** (in a different location from the server if offered). Then,
 in its settings:
@@ -63,7 +63,7 @@ Run `sudo kadena-backup-databases` again; it should end with "Off-server copy do
 
 ### Optional alert when a night is missed
 
-Create a free check at healthchecks.io (period 1 day, grace 2 hours, email Naif) and put its ping URL in
+Create a free check at healthchecks.io (period 1 day, grace 2 hours, email Saudi.KDA) and put its ping URL in
 `HEALTHCHECK_URL`. A failed or skipped night then sends an email.
 
 ## Checking and restoring

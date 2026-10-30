@@ -378,7 +378,7 @@
    "role": "hot wallet",
    "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026). Checked on chain: paused from Nov 11 to Nov 28, 2025, resuming the day MEXC announced withdrawals on the community-maintained chain (announcement dated Nov 28, 2025). Marked likely on Oct 21, 2026: no deposit address or withdrawal issued by the exchange ties this wallet to it yet.",
    "status": "withdrawals only",
-   "statusSource": "MEXC has processed KDA withdrawals on the community chain since Nov 29, 2025, with no deadline given (MEXC announcement, Nov 28, 2025); trading stopped (Naif, Oct 21, 2026). Its hot wallet still pays out small withdrawals in Oct 2026."
+   "statusSource": "MEXC has processed KDA withdrawals on the community chain since Nov 29, 2025, with no deadline given (MEXC announcement, Nov 28, 2025); trading stopped (Saudi.KDA, Oct 21, 2026). Its hot wallet still pays out small withdrawals in Oct 2026."
   },
   "k:32ccd7e8b53f023821820cfe7c8dabe7facd29a0425d11d8dc022c75110c39b6": {
    "name": "Bybit",
