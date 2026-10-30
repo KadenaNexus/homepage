@@ -1,6 +1,6 @@
 # Kadena homepage and Saudi node update — 8 October 2026
 
-This directory records Naif's supplied homepage update and the changes needed
+This directory records Saudi.KDA's supplied homepage update and the changes needed
 to show actual node observations in the homepage and network monitor.
 `homepage-index.html` is the static production homepage; the older Vite app in
 `apps/web` is not the current nginx deployment.
@@ -56,7 +56,7 @@ to `/info`, `/health-check` and `/chainweb/0.0/mainnet01/cut`, with CORS and rat
 limiting; transaction submission is not exposed. HTTP and HTTPS are accepted
 before Oracle Ubuntu's host firewall REJECT rule, and persisted.
 
-The gateway is installed and locally verified. After Naif's Oracle networking
+The gateway is installed and locally verified. After Saudi.KDA's Oracle networking
 update, external HTTP returned 200 with the expected Host header. Both GoDaddy
 authoritative nameservers still return NXDOMAIN for `node.kadena.ws`; the DNS
 record must resolve before HTTPS activation. The A record currently resolves at

@@ -1,5 +1,5 @@
 // Text for posts and the page. Pure functions, unit-tested.
-// Alerts end with a DenaScan link to the transaction (Naif's choice, Oct 2026: on X's
+// Alerts end with a DenaScan link to the transaction (Saudi.KDA's choice, Oct 2026: on X's
 // pay-per-use API a post with a link costs about $0.20 instead of $0.015). Summaries stay link-free.
 
 export function shortAccount(a) {
@@ -11,7 +11,7 @@ export function shortAccount(a) {
 
 // Public names. Only exchanges tied to their wallets by the exchange itself (confirmed;
 // today that is Gate) are named. Every other exchange wallet shows as "Other exchange"
-// (Naif, Oct 24, 2026); labels.json keeps the likely name and its evidence for us.
+// (Saudi.KDA, Oct 24, 2026); labels.json keeps the likely name and its evidence for us.
 export const OTHER_EXCHANGE = 'Other exchange';
 export const OTHER_EXCHANGES = 'Other exchanges';
 // An exchange is public once any of its wallets is confirmed (the watcher marks all its labels `public`).
