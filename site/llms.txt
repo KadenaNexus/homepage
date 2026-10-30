@@ -20,6 +20,7 @@ Kadena Nexus also runs a Kadena mainnet node in Jeddah, Saudi Arabia (public API
 ## Live products
 
 - [Kadena Garden](https://mine.kadena.ws/): open-source solo mining through shared nodes. Every block a miner's rigs find pays straight to their own wallet, with Direct, Sweep or Convert payouts and a fee from 1% of hashrate. Pool address stratum+tcp://mine.kadena.ws:1917. A collaboration with Pascal (@CryptoPascal31).
+- [KadenaTrace](https://trace.kadena.ws/): free tracer for stolen crypto on 11 networks (Ethereum, TRON, Bitcoin, Solana, BNB Chain, Arbitrum, Base, Polygon, Optimism, Avalanche, Kadena). Follows the funds through swaps and bridges to exchanges, shows a live feed of hacks and exchange-outflow early warnings, and records every case and every move of the funds on Kadena in the free.kadena-trace Pact contract (Chain 1). Early warnings are also written to Kadena as they fire. Alerts on X at @KadenaTrace.
 - [Kadena P2P Marketplace](https://marketplace.kadena.ws/): buy and sell KDA person to person. The seller's KDA is held in the Pact escrow contract free.p2p-escrow-v11 (Chains 1 and 2) until the trade completes. Pay in USDT or USDC and the KDA is released automatically when the exact payment arrives; pay in kb-USDC, kb-ETH, kb-USDT, BRO or FLUX and the swap settles instantly in one transaction. Disputes go to an arbiter. Opens in Linx Wallet. No sign-up and no platform fee, only network gas.
 - [Kadena Network Monitor](https://nodes.kadena.ws/): live view of Kadena mainnet, with every block on all 20 chains, throughput, confirmation times and a map of public nodes. Free.
 - [Kadena Community Edition Adoption Index](https://adoption.kadena.ws/): one number, updated daily at 00:00 UTC, measuring whether KCE is used more or less than its summer 2026 baseline of 50. Built from active addresses, new contracts, TVL, hashrate and GitHub commits. Methodology: https://adoption.kadena.ws/methodology
@@ -31,7 +32,6 @@ Kadena Nexus also runs a Kadena mainnet node in Jeddah, Saudi Arabia (public API
 
 - ChainProof (chainproof.kadena.ws): QR-based proof of authenticity for physical goods, recorded on Kadena.
 - Kadena AgentPay AI (agentpay.kadena.ws): lets AI agents trigger payments through Pact contracts, with owner-set limits and approvals.
-- KadenaTrace (trace.kadena.ws): traces scam and fraud transactions, with findings attested on-chain.
 - Kadena Privacy (privacy.kadena.ws): zero-knowledge privacy tools in Pact, starting with Prove (show you hold at least a given amount of KDA without revealing your wallet).
 
 ## Contact and code
