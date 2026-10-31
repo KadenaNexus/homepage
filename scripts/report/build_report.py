@@ -27,7 +27,7 @@ import statistics as st
 import sys
 import urllib.request
 
-GENERATOR = "kadena-nexus-network-report 4"
+GENERATOR = "kadena-nexus-network-report 5"
 BASE = "https://kadena.ws/reports/"
 TEAL, INK, MUTED, GRID = "#1C637B", "#123A48", "#4F6B76", "#D6E0E4"
 G = "https://graphql.chaddex.com/graphql/v0"
