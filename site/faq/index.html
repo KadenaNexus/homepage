@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kadena FAQ: block time, chains, supply and more | Kadena Nexus</title>
+<title>Kadena FAQ 2026: KDA supply, mining, wallets, Binance | Kadena Nexus</title>
 <meta name="description" content="Quick answers about Kadena and KDA in 2026: block time, number of chains, max supply, mining, quantum safety, wallets, where to buy KDA, and what happened after Kadena LLC shut down.">
 <link rel="canonical" href="https://kadena.ws/faq/">
 <meta property="og:title" content="Kadena FAQ">
@@ -310,6 +310,38 @@ footer a:hover{color:var(--sand)}
     },
     {
      "@type": "Question",
+     "name": "How much does a Kadena miner earn?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "It depends on the network hashrate and the KDA price, which both change daily. An Antminer KA3 (166 TH/s) earns about 515 KDA a day (about $4.35 at $0.0084 per KDA), before electricity and pool fees. Pools, hardware and setup: How to mine Kadena."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Is KDA still on Binance?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. Binance closed KDA withdrawals on January 12, 2026. Gate.io and AnonKyc still list KDA; the full exchange status is on How to buy KDA."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Are there games and NFTs on Kadena?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Kadena Nexus Games pay KDA prizes for short puzzles, and the Kadena Community Edition lists game and NFT projects such as Wizards Arena and Kitty Kad. Kadena NFTs use the Marmalade standard. See Kadena games and NFTs."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "What is the Kadena RPC or API URL?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "For mainnet, https://api.chainweb-community.org/chainweb/0.0/mainnet01/chain/{chain}/pact/api/v1, with a chain number from 0 to 19. The network ID is mainnet01. More endpoints and a code example: Kadena RPC endpoints."
+     }
+    },
+    {
+     "@type": "Question",
      "name": "What is Pact?",
      "acceptedAnswer": {
       "@type": "Answer",
@@ -359,6 +391,7 @@ footer a:hover{color:var(--sand)}
 .timeline b{color:var(--sand)}
 .sources{font-size:.92rem}
 .updated{font-size:.9rem;margin-top:2.5rem}
+.policy p,.policy li{overflow-wrap:break-word}
 @media (max-width:560px){.kv{grid-template-columns:1fr}.kv dd{border-top:0;padding-top:0}}
 </style>
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -427,6 +460,14 @@ footer a:hover{color:var(--sand)}
       <p><a href="https://earn.kadena.ws/">Kadena Earn</a> pays KDA for community tasks such as testing apps, reporting bugs and writing guides. You can also mine KDA.</p>
       <h3>Which wallets work with Kadena?</h3>
       <p><span data-auto="wallets-and">Linx Wallet, eckoWALLET, Zelcore and Chainweaver</span> are self-custody wallets listed by the Kadena Community Edition site. Keys and accounts from before November 2025 still work. Compared side by side: <a href="/wallets/">Kadena wallets in 2026</a>.</p>
+      <h3>How much does a Kadena miner earn?</h3>
+      <p>It depends on the network hashrate and the KDA price, which both change daily. An Antminer KA3 (166 TH/s) earns <span data-auto="mining-ka3">about 515 KDA a day (about $4.35 at $0.0084 per KDA)</span>, before electricity and pool fees. Pools, hardware and setup: <a href="/mining/">How to mine Kadena</a>.</p>
+      <h3>Is KDA still on Binance?</h3>
+      <p>No. Binance closed KDA withdrawals on January 12, 2026. Gate.io and AnonKyc still list KDA; the full exchange status is on <a href="/buy-kda/">How to buy KDA</a>.</p>
+      <h3>Are there games and NFTs on Kadena?</h3>
+      <p>Yes. Kadena Nexus Games pay KDA prizes for short puzzles, and the Kadena Community Edition lists game and NFT projects such as Wizards Arena and Kitty Kad. Kadena NFTs use the Marmalade standard. See <a href="/games/">Kadena games and NFTs</a>.</p>
+      <h3>What is the Kadena RPC or API URL?</h3>
+      <p>For mainnet, https://api.chainweb-community.org/chainweb/0.0/mainnet01/chain/{chain}/pact/api/v1, with a chain number from 0 to 19. The network ID is mainnet01. More endpoints and a code example: <a href="/rpc/">Kadena RPC endpoints</a>.</p>
       <h3>What is Pact?</h3>
       <p>Pact is Kadena's smart contract language. Contracts are stored on chain as readable source code, and Pact is designed to be checked with formal verification before deployment.</p>
       <h3>How is Kadena adoption measured?</h3>

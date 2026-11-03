@@ -295,7 +295,7 @@ def gather():
     return facts
 
 
-SPAN = re.compile(r'(<(span|ul|tbody) data-auto="([a-z-]+)">)(.*?)(</\2>)', re.S)
+SPAN = re.compile(r'(<(span|ul|tbody) data-auto="([a-z0-9-]+)">)(.*?)(</\2>)', re.S)
 
 
 def spans(t):
