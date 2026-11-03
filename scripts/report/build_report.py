@@ -27,9 +27,10 @@ import statistics as st
 import sys
 import urllib.request
 
-GENERATOR = "kadena-nexus-network-report 5"
+GENERATOR = "kadena-nexus-network-report 6"
 BASE = "https://kadena.ws/reports/"
 TEAL, INK, MUTED, GRID = "#1C637B", "#123A48", "#4F6B76", "#D6E0E4"
+PALE = "#9DBFCB"  # the recorder's share in the stacked all-transactions chart
 G = "https://graphql.chaddex.com/graphql/v0"
 FIELDS = (["date_utc", "blocks", "transactions", "recorder_transactions", "other_transactions", "hashrate_phs"]
           + [f"tx_chain_{c}" for c in range(20)] + [f"recorder_chain_{c}" for c in range(20)])
@@ -129,9 +130,11 @@ def axis_ticks(vmax, n=4):
     return [step * i for i in range(int(round(top / step)) + 1)], top
 
 
-def bars(rows, key, label, unit_fmt, title_id, w=960, h=300):
+def bars(rows, key, label, unit_fmt, title_id, w=960, h=300, stack=None, note=None):
+    """Bar chart of rows[key]. With stack=(key2, label2), rows[key2] is drawn in a paler tone on top of rows[key].
+    note=(first_index, text) writes text over the bars from first_index to the end (for bars too small to see)."""
     pl, pr, pt, pb = 66, 12, 16, 38
-    ticks, top = axis_ticks(max(r[key] for r in rows))
+    ticks, top = axis_ticks(max(r[key] + (r[stack[0]] if stack else 0) for r in rows))
     iw, ih = w - pl - pr, h - pt - pb
     bw = iw / len(rows)
     out = [f'<svg viewBox="0 0 {w} {h}" role="img" aria-labelledby="{title_id}" class="chart">']
@@ -148,10 +151,18 @@ def bars(rows, key, label, unit_fmt, title_id, w=960, h=300):
         rad = min(4, wd / 2)
         d = (f"M{x:.1f},{pt+ih:.1f} V{y+rad:.1f} Q{x:.1f},{y:.1f} {x+rad:.1f},{y:.1f} "
              f"H{x+wd-rad:.1f} Q{x+wd:.1f},{y:.1f} {x+wd:.1f},{y+rad:.1f} V{pt+ih:.1f} Z")
+        top_bar, tip = "", f'{r["label"]}: {unit_fmt(v)} {label}'
+        if stack and r[stack[0]] > 0:
+            sh = r[stack[0]] / top * ih
+            top_bar = f'<rect x="{x:.1f}" y="{y-sh:.1f}" width="{wd:.1f}" height="{sh:.1f}" fill="{PALE}"/>'
+            tip = f'{r["label"]}: {unit_fmt(v + r[stack[0]])} in all, {unit_fmt(r[stack[0]])} {stack[1]}, {unit_fmt(v)} {label}'
         out.append(f'<g class="m"><rect x="{pl+i*bw:.1f}" y="{pt}" width="{bw:.1f}" height="{ih}" fill="transparent"/>'
-                   f'<path d="{d}" fill="{TEAL}"/><title>{r["label"]}: {unit_fmt(v)} {label}</title></g>')
+                   f'{top_bar}<path d="{d}" fill="{TEAL}"/><title>{tip}</title></g>')
         if r.get("tick"):
             out.append(f'<text x="{pl+i*bw+bw/2:.1f}" y="{h-12}" text-anchor="middle" class="tk">{r["tick"]}</text>')
+    if note:
+        cx = pl + (note[0] + len(rows)) / 2 * bw
+        out.append(f'<text x="{cx:.1f}" y="{pt+ih-28:.1f}" text-anchor="middle" class="tk an">{html.escape(note[1])}</text>')
     out.append(f'<line x1="{pl}" x2="{w-pr}" y1="{pt+ih}" y2="{pt+ih}" stroke="{MUTED}" stroke-width="1"/>')
     out.append("</svg>")
     return "".join(out)
@@ -279,7 +290,7 @@ def shell(site, page_title, desc, url, ld, extra_css, body):
 .policy .meta{{font-size:.9rem;margin:-1rem 0 1.5rem}}
 .policy .sum li{{margin-bottom:.5rem}}
 .chart{{width:100%;height:auto;margin:.6rem 0 .4rem;overflow:visible}}
-.chart .tk{{font:15px var(--body);fill:{MUTED}}}
+.chart .tk{{font:15px var(--body);fill:{MUTED}}}.chart .an{{font-size:17px;fill:{INK}}}
 .chart .m:hover path,.chart .m:hover circle{{fill:{INK}}}
 .policy .note{{font-size:.92rem}}
 .policy details{{margin:.6rem 0 1rem;border:1px solid var(--line);border-radius:12px;padding:.6rem .9rem}}
@@ -387,26 +398,31 @@ def build_month(all_days, year, month, site, snap, published=None):
         f"Chain {top_chain} carried {chain_c[top_chain]/tot_c*100:.0f}% of {mname}'s transactions{' outside the recorder' if rec_in_month else ''}, the largest share of any chain.",
     ] if s]
 
-    # charts: the previous month's days (for context) and this month's
-    ctx = prv + cur
+    # charts: this month's days only, so the whole month fills the chart
+    ctx = cur
     drows = [{**d, "label": d["dt"].strftime("%b %-d"),
               "tick": d["dt"].strftime("%b %-d") if d["dt"].day in (1, 8, 15, 22) or d is ctx[-1] else ""} for d in ctx]
     crows = [{"label": f"Chain {c}", "tick": str(c), "tx": chain_c[c]} for c in range(20)]
     rng = f"{mname[:3]} 1–{last.day}"
     tx_name = "transactions excluding recorder calls" if rec_in_month else "transactions"
+    after = [d for d in cur if rec_in_month and d["dt"] > rec_last]
+    all_note = (f"From {fdate(after[0]['dt'])} the recorder was gone and the bars drop to about {fmt(round(avg(after, 'other'), -2))} a day, "
+                "too small to see at this scale. The chart of transactions excluding the recorder, below, shows them." if after else "Most of this total was one automated service, explained next.")
+    all_mark = ((cur.index(after[0]), f"{after[0]['dt']:%b} {after[0]['dt'].day}–{last.day}: about {fmt(round(avg(after, 'other'), -2))} a day")
+                if after else None)
     if rec_in_month:
         tx_block = f'''
       <h2 id="t-all">All transactions per day</h2>
-      <p>Non-coinbase transactions included in canonical blocks on all 20 chains, per UTC day. Hover a bar for the exact value.</p>
-      {bars(drows, "transactions", "transactions", fmt, "t-all")}
-      <p class="note">Most of this total was one automated service, explained next.</p>
+      <p>Non-coinbase transactions included in canonical blocks on all 20 chains, per UTC day, {rng}. The pale part of each bar is the automated recorder explained next; the dark part is everything else. Tap or hover a bar for the exact values.</p>
+      {bars(drows, "other", "other transactions", fmt, "t-all", stack=("recorder_transactions", "recorder calls"), note=all_mark)}
+      <p class="note">{all_note}</p>
 {rec_section}
       <h2 id="t-tx">Transactions excluding the recorder</h2>
-      <p>Everything except calls to <code>free.block-history</code>: transfers, swaps, contract calls and the rest, per UTC day.</p>'''
+      <p>Everything except calls to <code>free.block-history</code>: transfers, swaps, contract calls and the rest, per UTC day, {rng}.</p>'''
     else:
-        tx_block = '''
+        tx_block = f'''
       <h2 id="t-tx">Transactions per day</h2>
-      <p>Non-coinbase transactions included in canonical blocks on all 20 chains, per UTC day. Hover a bar for the exact value.</p>'''
+      <p>Non-coinbase transactions included in canonical blocks on all 20 chains, per UTC day, {rng}. Tap or hover a bar for the exact value.</p>'''
     tx_block += f'''
       {bars(drows, "other", tx_name, fmt, "t-tx")}
       <p class="note">Busiest day in {mname}: {fdate(busiest["dt"])} ({fmt(busiest["other"])}). Quietest: {fdate(quietest["dt"])} ({fmt(quietest["other"])}).</p>
