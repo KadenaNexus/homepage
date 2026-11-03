@@ -12,6 +12,12 @@ explanations around them stay hand-written. Sources:
   - Kadena Network Monitor 24h transactions and Adoption Index score
   - KDA in circulation and the frozen platform share from site/tokenomics/
     tokenomics.json (built just before by scripts/tokenomics/build_tokenomics.py)
+  - Mining (/mining/): network hashrate and each mining account's share of the
+    last hour of blocks, counted on chain by Kadena Garden (mine.kadena.ws/api/meter);
+    the block reward from its confirmed blocks; the KDA price from Gate.io
+  - Wallet, game and NFT lists (/wallets/, /games/) from kda-chain.org
+
+Lists are replaced inside <ul data-auto="NAME"> and <tbody data-auto="NAME">.
 
 Safety: every source has a timeout and a sanity check. If a source fails or
 looks wrong, that marker keeps its current text. The FAQPage JSON-LD answers
@@ -32,7 +38,9 @@ import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = os.path.join(ROOT, "site")
-PAGES = {"index.html": "https://kadena.ws/", "faq/index.html": "https://kadena.ws/faq/", "buy-kda/index.html": "https://kadena.ws/buy-kda/"}
+PAGES = {"index.html": "https://kadena.ws/", "faq/index.html": "https://kadena.ws/faq/", "buy-kda/index.html": "https://kadena.ws/buy-kda/",
+         "mining/index.html": "https://kadena.ws/mining/", "wallets/index.html": "https://kadena.ws/wallets/",
+         "games/index.html": "https://kadena.ws/games/", "rpc/index.html": "https://kadena.ws/rpc/"}
 UA = "KadenaNexus-facts-updater (+https://kadena.ws/faq/)"
 TIMEOUT = 25
 OFFLINE = os.environ.get("FACTS_OFFLINE") == "1"
@@ -143,6 +151,108 @@ def gate_status():
     return f"{join(off, 'and')} {'are' if len(off) > 1 else 'is'} paused right now"
 
 
+def cards(url, wanted=None):
+    """Project or wallet cards on a kda-chain.org page: dicts with name, text, url, tags, cats."""
+    t = fetch(url)
+    out = []
+    for card in re.split(r'class="(?:wallet-card|project-card)', t)[1:]:
+        n = re.search(r"<h3[^>]*>\s*([^<]{1,40}?)\s*</h3>", card)
+        d = re.search(r"</h3>\s*<p[^>]*>\s*(.*?)\s*</p>", card, re.S)
+        cat = re.search(r'data-category="([^"]*)"', card)
+        cats = cat.group(1).split() if cat else []
+        if not n or (wanted and not set(wanted) & set(cats)):
+            continue
+        links = []
+        for tag in re.findall(r"<a\s[^>]*>", card):
+            h = re.search(r'href="(https://[^"\s]+)"', tag)
+            lab = re.search(r'aria-label="([^"]*)"', tag)
+            if h:
+                links.append((h.group(1), lab.group(1) if lab else ""))
+        site = next((u for u, lab in links if "website" in lab.lower() or not lab), None) or (links[0][0] if links else None)
+        tags = [re.sub(r"\s+", " ", x).strip() for x in re.findall(r'uppercase font-bold[^>]*>([^<]+)<', card)]
+        text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", "", d.group(1)))).strip() if d else ""
+        out.append({"name": html.unescape(n.group(1)).strip(), "text": text, "url": site, "tags": tags, "cats": cats})
+    return out
+
+
+def wallet_list():
+    w = cards("https://kda-chain.org/wallets.html")
+    if not 1 <= len(w) <= 12:
+        raise ValueError(f"wallets: implausible count {len(w)}")
+    items = []
+    for x in w:
+        tags = [{"dev mode": "Developer"}.get(s.lower(), s) for s in x["tags"] if s.lower() not in ("non-custodial",)]
+        link = f'<a href="{esc(x["url"])}">{esc(x["name"])}</a>' if x["url"] else esc(x["name"])
+        items.append(f'\n        <li><strong>{link}</strong>{" (" + esc(", ".join(tags)) + ")" if tags else ""}: {esc(x["text"])}</li>')
+    return "".join(items) + "\n      "
+
+
+def game_list():
+    g = cards("https://kda-chain.org/ecosystem.html", wanted=("game", "nft"))
+    if not 1 <= len(g) <= 30:
+        raise ValueError(f"games: implausible count {len(g)}")
+    items = []
+    for x in g:
+        kind = join([k for k in ("game", "NFT") if k.lower() in x["cats"]], "and")
+        link = f'<a href="{esc(x["url"])}">{esc(x["name"])}</a>' if x["url"] else esc(x["name"])
+        items.append(f'\n        <li><strong>{link}</strong> ({esc(kind)}): {esc(x["text"])}</li>')
+    return "".join(items) + "\n      "
+
+
+def mining():
+    """Network hashrate and block shares, counted on chain by Kadena Garden from the last hour of blocks."""
+    m = json.loads(fetch("https://mine.kadena.ws/api/meter?days=1"))
+    s = m.get("recent") or m.get("latest")
+    net = float(s["network_hashrate"])
+    if not 1e15 < net < 1e18:
+        raise ValueError(f"hashrate {net}")
+    rewards = [float(b["reward_kda"]) for b in json.loads(fetch("https://mine.kadena.ws/api/blocks?limit=100"))
+               if b.get("status") == "confirmed" and b.get("reward_kda")]
+    reward = rewards[0] if rewards else None
+    if reward is not None and not 0.1 < reward < 5:
+        raise ValueError(f"reward {reward}")
+    price = None
+    try:
+        p = float(json.loads(fetch("https://api.gateio.ws/api/v4/spot/tickers?currency_pair=KDA_USDT"))[0]["last"])
+        price = p if 0 < p < 100 else None
+    except Exception as e:  # noqa: BLE001
+        warn(f"price: {e}")
+    rows, garden, other = [], 0.0, 0.0
+    for r in s.get("top") or []:
+        sh, label = float(r["share"]), r.get("label")
+        if label and "garden" in label.lower():
+            garden += sh
+        elif label:
+            rows.append((label, sh))
+        elif sh >= 0.01:
+            a = r["account"]
+            rows.append((f"Not identified ({a[:6]}…{a[-4:]})", sh))
+        else:
+            other += sh
+    if garden:
+        rows.append(("Kadena Garden (solo miners)", garden))
+    named = sum(sh for _, sh in rows)
+    rest = max(0.0, 1 - named)
+    if rest >= 0.0005:
+        rows.append(("Other miners", rest))
+    if not rows or rows[0][1] <= 0:
+        raise ValueError("no pool shares")
+    body = "".join(f"\n          <tr><td>{esc(n)}</td><td>{sh * 100:.1f}%</td></tr>" for n, sh in rows) + "\n        "
+    at = dt.datetime.fromisoformat(str(s.get("at") or s.get("day")).replace("Z", "+00:00"))
+    blocks = int(s.get("sampled_blocks") or 0)
+    top = sorted(rows, key=lambda r: -r[1])[:2]
+    out = {"mining-hashrate": f"{net / 1e15:.1f} PH/s", "mining-pools": body,
+           "mining-top": esc(join([f"{n} ({sh * 100:.0f}%)" for n, sh in top], "and")),
+           "mining-sample": esc(f"{blocks:,} blocks" + (f" up to {at:%H:%M} UTC on {long_date(at.date())}" if at.tzinfo else ""))}
+    if reward:
+        day = reward * 20 * 2880
+        ka3 = 166e12 / net * day
+        out["mining-reward"] = f"{reward:.4f} KDA"
+        out["mining-daily"] = f"about {day:,.0f} KDA"
+        out["mining-ka3"] = f"about {ka3:,.0f} KDA a day" + (f" (about ${ka3 * price:,.2f} at ${price:.4f} per KDA)" if price else "")
+    return out
+
+
 def tokenomics():
     """Circulating supply and frozen platform share, as counted by
     scripts/tokenomics/build_tokenomics.py earlier in the same build."""
@@ -179,18 +289,21 @@ def gather():
     put(network_today, lambda s: {"network-today": esc(s)})
     put(gate_status, lambda s: {"gate-status": esc(s)})
     put(tokenomics, lambda s: {"supply": f"about {s[0] / 1e6:.0f} million KDA", "frozen": f"{s[1]:,.0f} KDA"})
+    put(wallet_list, lambda s: {"wallet-list": s})
+    put(game_list, lambda s: {"game-list": s})
+    put(mining, lambda s: s)
     return facts
 
 
-SPAN = re.compile(r'(<span data-auto="([a-z-]+)">)(.*?)(</span>)', re.S)
+SPAN = re.compile(r'(<(span|ul|tbody) data-auto="([a-z0-9-]+)">)(.*?)(</\2>)', re.S)
 
 
 def spans(t):
-    return {m.group(2): m.group(3) for m in SPAN.finditer(t)}
+    return {m.group(3): m.group(4) for m in SPAN.finditer(t)}
 
 
 def apply(t, facts):
-    return SPAN.sub(lambda m: m.group(1) + facts.get(m.group(2), m.group(3)) + m.group(4), t)
+    return SPAN.sub(lambda m: m.group(1) + facts.get(m.group(3), m.group(4)) + m.group(5), t)
 
 
 def strip(s):
