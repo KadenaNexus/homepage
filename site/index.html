@@ -310,9 +310,9 @@ footer a:hover{color:var(--sand)}
         </div>
         <div class="cards">
         <a class="reading" id="reading" href="https://adoption.kadena.ws/">
-          <span class="num" id="r-num">50</span>
-          <span class="what"><span class="dot" aria-hidden="true"></span>Adoption Index today</span>
-          <span class="when" id="r-when">Baseline = 50. See today's reading</span>
+          <span class="num" id="r-num">–</span>
+          <span class="what"><span class="dot" aria-hidden="true"></span><span id="r-what">Adoption Index</span></span>
+          <span class="when" id="r-when">Baseline = 50. See the latest reading</span>
         </a>
         <a class="ncard" id="sanode" data-state="live" href="https://nodes.kadena.ws/#nodes">
           <span class="ncard-head">
@@ -579,12 +579,13 @@ footer a:hover{color:var(--sand)}
     const r = await fetch('https://adoption.kadena.ws/api/index', {cache:'no-store'});
     if (!r.ok) throw 0;
     const d = await r.json();
-    if (d.state !== 'ready' || typeof d.score !== 'number') throw 0;
+    if (!['ready', 'stale'].includes(d.state) || typeof d.score !== 'number' || !d.day) throw 0;
     const base = (d.baseline && d.baseline.level) || 50;
     const pct = Math.round((d.score - base) / base * 100);
     const pos = pct === 0 ? 'At baseline' : (pct > 0 ? pct + '% above baseline' : Math.abs(pct) + '% below baseline');
     const day = new Date(d.day + 'T00:00:00Z').toLocaleDateString('en-US', {day:'numeric', month:'short', year:'numeric', timeZone:'UTC'});
     document.getElementById('r-num').textContent = Math.round(d.score);
+    document.getElementById('r-what').textContent = d.state === 'ready' ? 'Adoption Index today' : 'Adoption Index, last verified';
     document.getElementById('r-when').textContent = pos + ', reading for ' + day;
   } catch (_) { /* keep the static fallback text */ }
 })();
