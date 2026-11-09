@@ -1,5 +1,10 @@
 [
   {
+    "date": "2026-11-09",
+    "text": "Launched Kadeway at buy.kadena.ws: buy and sell KDA with USDC from Ethereum in one guided flow, in beta",
+    "links": {"Kadeway": "https://buy.kadena.ws/"}
+  },
+  {
     "date": "2026-10-26",
     "text": "Kadena Garden is live at mine.kadena.ws: open-source solo mining through shared nodes, built with Pascal (@CryptoPascal31)",
     "links": {"mine.kadena.ws": "https://mine.kadena.ws/"}

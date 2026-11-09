@@ -7,7 +7,7 @@ Reference implementations: [nodes.kadena.ws](https://github.com/KadenaNexus/netw
 ## The rules
 
 1. **Left side, in this order:** the Kadena Nexus mark (32 px wide), the product name, a thin vertical divider, then the text link **Part of Kadena Nexus** pointing to `https://kadena.ws/`.
-2. **Product name** is always the full name: Kadena Network Monitor, Kadena P2P Marketplace, Kadena Earn, Kadena Adoption Index, Quantum-Safe Kadena, Kadena Devs, Kadena Garden, ChainProof, Kadena AgentPay AI, KadenaTrace, Kadena Privacy. Display font (Bricolage Grotesque) 700, 1.1 rem.
+2. **Product name** is always the full name: Kadena Network Monitor, Kadena P2P Marketplace, Kadena Earn, Kadena Adoption Index, Quantum-Safe Kadena, Kadena Devs, Kadena Garden, Kadeway, ChainProof, Kadena AgentPay AI, KadenaTrace, Kadena Privacy. Display font (Bricolage Grotesque) 700, 1.1 rem.
 3. **"Part of Kadena Nexus"**: body font (Instrument Sans), 0.85 rem, muted color (`--mist`), no underline, 1 rem left padding with a 1 px left border in the line color. Exactly this wording; never "Part of the Kadena Nexus Ecosystem" or similar.
 4. **Right side:** the site's own navigation and actions (theme toggle, wallet, sign-in). Free per site.
 5. **Mobile (under 900 px):** the "Part of Kadena Nexus" link may hide to save space, but then the footer must carry it (rule 6).
