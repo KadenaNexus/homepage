@@ -251,7 +251,7 @@ footer a:hover{color:var(--sand)}
      "name": "Can I keep KDA in MetaMask?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. MetaMask is an Ethereum wallet and cannot hold native KDA. Use a Kadena wallet such as Linx, eckoWALLET, Zelcore or Chainweaver. MetaMask is still useful for the USDC bridge route to Kadena described in How to buy KDA."
+      "text": "Not native KDA: MetaMask is an Ethereum wallet. It can hold kb-KDA, KDA bridged to Ethereum by the Kinesis bridge (contract 0x7786F1eb2eC198A04d8f5e3Fc36fAB14da370076), backed one for one by KDA locked on Kadena. For native KDA, use a Kadena wallet such as Linx, eckoWALLET, Zelcore or Chainweaver."
      }
     },
     {
@@ -316,6 +316,14 @@ pre{background:var(--panel);border:1px solid var(--line);border-radius:12px;padd
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;overflow-wrap:anywhere}
 .policy p,.policy li{overflow-wrap:break-word}
 .note{border-left:3px solid var(--pink);padding:.2rem 0 .2rem 1rem;margin:0 0 1rem}
+.token-box{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:1rem 1.1rem;margin:0 0 1rem}
+.token-box .addr{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:.5rem 0 .8rem}
+.token-box code{font-size:.95rem;color:var(--sand)}
+.token-box button{font:inherit;font-size:.95rem;padding:.55rem 1rem;border-radius:999px;border:1px solid var(--line);background:transparent;color:inherit;cursor:pointer}
+.token-box button.primary{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:600}
+.token-box button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.token-box .row{display:flex;flex-wrap:wrap;gap:.6rem}
+.token-box .msg{font-size:.92rem;margin:.7rem 0 0;min-height:1.2em}
 @media (max-width:560px){.kv{grid-template-columns:1fr}.kv dd{border-top:0;padding-top:0}}
 </style>
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -367,6 +375,21 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;ove
         <dt>Signing in to Kadena apps from a phone</dt><dd>Linx Wallet or eckoWALLET, through WalletConnect</dd>
       </dl>
 
+      <h2 id="kda-on-ethereum">KDA in MetaMask and Trust Wallet</h2>
+      <p>MetaMask and Trust Wallet cannot hold native KDA, but they can hold <strong>kb-KDA</strong>: KDA bridged to Ethereum by the <a href="https://kinesis.kda-chain.org/bridge">Kinesis bridge</a>. Each kb-KDA is backed one for one by KDA locked on Kadena chain 2, and it can be bridged back to native KDA.</p>
+      <div class="token-box" aria-label="kb-KDA token details">
+        <div><strong>kb-KDA on Ethereum</strong> · 12 decimals</div>
+        <div class="addr"><code id="kbkda-addr">0x7786F1eb2eC198A04d8f5e3Fc36fAB14da370076</code></div>
+        <div class="row">
+          <button type="button" class="primary" id="kbkda-metamask">Add to MetaMask</button>
+          <button type="button" id="kbkda-copy">Copy address</button>
+          <a href="https://etherscan.io/token/0x7786F1eb2eC198A04d8f5e3Fc36fAB14da370076" rel="noopener">View on Etherscan</a>
+        </div>
+        <p class="msg" id="kbkda-msg" role="status"></p>
+      </div>
+      <p><strong>Trust Wallet:</strong> tap the settings icon on the home screen, choose <em>Add custom token</em>, pick the <em>Ethereum</em> network, paste the address above, and save. MetaMask on a phone works the same way: <em>Import tokens</em>, then paste the address.</p>
+      <p class="note">kb-KDA is a bridged token, not native KDA. It depends on the Kinesis bridge, whose contracts are controlled by an admin key, and there is very little kb-KDA trading on Ethereum today. Always check the full contract address: copies with the same name can be created by anyone.</p>
+
       <h2>Kadena accounts: the k: address</h2>
       <p>A Kadena account usually looks like <code>k:</code> followed by your 64-character public key. Unlike most blockchains, Kadena runs 20 chains side by side, and your account has the same name on every one of them. Your wallet shows a balance per chain, and KDA can be moved from one chain to another inside the wallet.</p>
       <p>When you receive KDA, the sender chooses the chain. When you send it, check which chain the other side expects: an exchange or app may only watch one chain. The Kadena P2P Marketplace, for example, works on chain 1.</p>
@@ -386,7 +409,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;ove
       <h3>What is the best Kadena wallet?</h3>
       <p>It depends on how you use KDA. Linx Wallet is the simplest on a phone, eckoWALLET is the most widely used and works as a browser extension with NFT support, Zelcore suits people holding many coins, and Chainweaver is for developers. All four are self-custody wallets listed by the Kadena Community Edition.</p>
       <h3>Can I keep KDA in MetaMask?</h3>
-      <p>No. MetaMask is an Ethereum wallet and cannot hold native KDA. Use a Kadena wallet such as Linx, eckoWALLET, Zelcore or Chainweaver. MetaMask is still useful for the USDC bridge route to Kadena described in <a href="/buy-kda/">How to buy KDA</a>.</p>
+      <p>Not native KDA: MetaMask is an Ethereum wallet. It can hold <a href="#kda-on-ethereum">kb-KDA</a>, KDA bridged to Ethereum by the Kinesis bridge (contract <code>0x7786F1eb2eC198A04d8f5e3Fc36fAB14da370076</code>), which is backed one for one by KDA locked on Kadena. For native KDA, use a Kadena wallet such as Linx, eckoWALLET, Zelcore or Chainweaver.</p>
       <h3>Why does my wallet show KDA on different chains?</h3>
       <p>Kadena runs 20 chains in parallel and your account exists on all of them with the same name. KDA sent to you lands on the chain the sender chose. Your wallet adds them up and can move KDA between chains.</p>
       <h3>Do old Kadena wallets still work after Kadena LLC shut down?</h3>
@@ -440,6 +463,22 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;ove
   const btn = document.querySelector('.menu'), nav = document.getElementById('nav');
   btn.addEventListener('click', () => { const open = nav.classList.toggle('open'); btn.setAttribute('aria-expanded', open); btn.textContent = open ? 'Close' : 'Menu'; });
   document.getElementById('yr').textContent = new Date().getFullYear();
+  // kb-KDA (Kinesis bridged KDA on Ethereum): copy, and one-click add to MetaMask (EIP-747 wallet_watchAsset).
+  const addr = document.getElementById('kbkda-addr').textContent.trim(), msg = document.getElementById('kbkda-msg');
+  const say = (t) => { msg.textContent = t; };
+  document.getElementById('kbkda-copy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(addr); say('Address copied.'); } catch { say('Copy did not work: select the address and copy it by hand.'); }
+  });
+  document.getElementById('kbkda-metamask').addEventListener('click', async () => {
+    const eth = window.ethereum;
+    if (!eth) { say('No browser wallet found. On a phone, open this page inside the MetaMask or Trust Wallet browser, or add the token by hand as described below.'); return; }
+    try {
+      const chain = await eth.request({ method: 'eth_chainId' });
+      if (chain !== '0x1') await eth.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x1' }] });
+      const ok = await eth.request({ method: 'wallet_watchAsset', params: { type: 'ERC20', options: { address: addr, symbol: 'kb-KDA', decimals: 12 } } });
+      say(ok ? 'kb-KDA added to your wallet.' : 'Not added.');
+    } catch (e) { say(e && e.code === 4001 ? 'Cancelled in the wallet.' : 'The wallet could not add it: add it by hand with the address above.'); }
+  });
 })();
 </script>
 </body>
