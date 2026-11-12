@@ -388,7 +388,23 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;ove
         <p class="msg" id="kbkda-msg" role="status"></p>
       </div>
       <p><strong>Trust Wallet:</strong> tap the settings icon on the home screen, choose <em>Add custom token</em>, pick the <em>Ethereum</em> network, paste the address above, and save. MetaMask on a phone works the same way: <em>Import tokens</em>, then paste the address.</p>
-      <p class="note">kb-KDA is a bridged token, not native KDA. It depends on the Kinesis bridge, whose contracts are controlled by an admin key, and there is very little kb-KDA trading on Ethereum today. Always check the full contract address: copies with the same name can be created by anyone.</p>
+      <h3 id="get-kb-kda">Two ways to get kb-KDA</h3>
+      <ul>
+        <li><strong>Bridge it, one for one.</strong> Send KDA from a Kadena wallet on chain 2 through the <a href="https://kinesis.kda-chain.org/bridge">Kinesis bridge</a> to your Ethereum address. The bridge charges a fixed relayer fee of about 32 KDA, and kb-KDA arrives in about six minutes. Bridging back costs only Ethereum gas. This is the best route for larger amounts.</li>
+        <li><strong>Swap small amounts in your wallet.</strong> Trust Wallet and MetaMask swaps route through the <a href="https://app.uniswap.org/explore/pools/ethereum/0x28dd617d6528a1fae26bf4293d7e9cbf2641ee86">kb-KDA / USDC pool on Uniswap</a>. The pool is still small, so keep swaps to a few dollars and compare the quote with the KDA price on CoinGecko before you confirm.</li>
+      </ul>
+
+      <h3 id="kb-kda-liquidity">Help deepen the kb-KDA pool</h3>
+      <p>The bigger the pool, the larger the swaps it can handle without moving the price. Anyone holding kb-KDA and USDC on Ethereum can add to it:</p>
+      <ol>
+        <li>Open <a href="https://app.uniswap.org/positions">app.uniswap.org/positions</a>, connect your wallet and choose <em>Create position</em>.</li>
+        <li>Pick kb-KDA (paste the address above) and USDC. Switch the version to <em>v3</em> and choose the <em>0.3%</em> fee tier. That is the existing pool; a v4 or other fee tier would start a separate, empty pool.</li>
+        <li>Check the current price matches the KDA price on CoinGecko, then set a price range around it. A wide range such as half to double the current price is simplest.</li>
+        <li>Enter the USDC amount. Uniswap fills in the matching kb-KDA.</li>
+        <li>Approve both tokens, then add. You can see, add to or withdraw your position at any time under <em>Pool</em>.</li>
+      </ol>
+      <p class="note">Adding liquidity is plain spot exchange: you earn a share of the 0.3% fee on each trade, which varies with trading and is not a fixed return. When the price moves, your position shifts between kb-KDA and USDC, so you can end up with more of the token that fell. Add only what you are comfortable with, and skip lending or "earn" add-ons.</p>
+      <p class="note">kb-KDA is a bridged token, not native KDA. It depends on the Kinesis bridge, whose contracts are controlled by an admin key, and kb-KDA trading on Ethereum is still small. Always check the full contract address: copies with the same name can be created by anyone.</p>
 
       <h2>Kadena accounts: the k: address</h2>
       <p>A Kadena account usually looks like <code>k:</code> followed by your 64-character public key. Unlike most blockchains, Kadena runs 20 chains side by side, and your account has the same name on every one of them. Your wallet shows a balance per chain, and KDA can be moved from one chain to another inside the wallet.</p>
