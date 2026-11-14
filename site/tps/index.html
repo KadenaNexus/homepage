@@ -272,20 +272,10 @@ footer a:hover{color:var(--sand)}
     <div class="wrap">
       <div class="topbar"><p class="crumb"><a href="/">Kadena Nexus</a> / TPS stress test</p><p class="upd" id="status"><span class="dot" aria-hidden="true"></span><span id="status-text">Stress test in progress</span></p></div>
       <h1 id="r-title">Kadena mainnet stress test</h1>
-      <p class="lede">How many transactions per second can Kadena actually handle today? We measured the ceiling from the network's own rules and live blocks, and we test it on mainnet in short three-minute runs, stepping up from 5 TPS to 250 TPS. Every number here can be checked on chain.</p>
+      <p class="lede">How many transactions per second can Kadena actually handle today? We test it on mainnet in short three-minute runs from our own test accounts at the minimum fee, stepping up from 5 to 250 TPS. Every number here can be checked on chain.</p>
 
-      <h2>At a glance</h2>
-      <div class="tw"><table><thead><tr><th></th><th>Value</th></tr></thead><tbody>
-        <tr><td>Traffic today (2-hour sample, Oct 29, 2026)</td><td>0.06 TPS</td></tr>
-        <tr><td>How full blocks are today</td><td>0.07%</td></tr>
-        <tr><td>Block size limit (node default / network maximum)</td><td>150,000 / 180,000 gas</td></tr>
-        <tr><td>Gas for a simple KDA transfer (median of 55 mainnet transfers)</td><td>258 gas</td></tr>
-        <tr><td>Simple transfers per block</td><td>about 580 / 700</td></tr>
-        <tr><td>Chains, block time</td><td>20 chains, one block every 30 s on each</td></tr>
-        <tr><td>Busiest moment found in Kadena's history (Jul 12, 2024)</td><td>about 17.7 TPS</td></tr>
-        <tr class="hl"><td><b>Ceiling for simple transfers</b></td><td><b>about 390 TPS / 465 TPS</b></td></tr>
-      </tbody></table></div>
-      <p class="note">Sample: 4,797 blocks on all 20 chains, 418 transactions in 2 hours. Ceiling = transfers per block × 20 chains ÷ 30 seconds. Heavier transactions (DEX swaps, contract calls) use more gas, so the ceiling for them is lower.</p>
+      <h2>Results so far</h2>
+      <div id="headline"><p>Best run so far: <b>50 TPS for three minutes</b> (run 3, Nov 14, 2026). 9,000 of 9,000 transfers succeeded, confirmed in a median of 32 s, with block times unchanged.</p></div>
 
       <h2>Kadena's busiest moments so far</h2>
       <p>Before testing, we searched mainnet's history from 2019 to today for the busiest moments on record.</p>
@@ -295,9 +285,22 @@ footer a:hover{color:var(--sand)}
         <tr><td>Longest busy stretch: an automated on-chain block recorder</td><td>until Oct 12, 2026 (we measured Sep 15 – Oct 12)</td><td>about 465,000 a day</td><td>about 5.4, around the clock</td></tr>
       </tbody></table></div>
       <p class="note">How we searched: one sample of every block on all 20 chains every 12 hours across the whole history (5,098 samples, from the public Chainweb indexer), then every block in the 12 hours around the six busiest samples. The busiest block height was rechecked directly on a node. Short spikes between samples could be missed, so the record may be somewhat higher. Counts exclude the miner's reward transaction in each block.</p>
-      <p>Run 1 at 5 TPS is close to that busiest moment. Run 3 at 50 TPS would be about three times it, run 4 at 100 TPS about six times, and run 5 at 200 TPS about eleven times.</p>
+      <p>Run 1 (5 TPS) was close to that busiest moment. Run 3 held 50 TPS for three minutes, about three times the busiest 30 seconds we found.</p>
 
-      <h2 id="h-results">Results</h2>
+      <h2>Other proof-of-work chains</h2>
+      <p>Kadena is a proof-of-work chain, so these are the closest comparisons: the highest mainnet throughput each has announced or recorded. They are not measured the same way. Kaspa's is a peak during a user-driven push; Bitcoin, Litecoin and Dogecoin are their busiest day divided by 86,400 seconds; Bitcoin Cash is a 24-hour community stress test. Kadena's figure is our own test from one account, held for three minutes.</p>
+      <div class="tw"><table><thead><tr><th>Chain</th><th>Highest mainnet throughput</th><th>How it was measured</th><th>When</th><th>Announcement / source</th></tr></thead><tbody>
+        <tr><td>Kaspa</td><td><b>5,584 TPS</b></td><td>Peak on live mainnet; 4.62 million transactions over 2,100 s, about 2,200 TPS on average</td><td>Oct 2, 2025</td><td><a href="https://x.com/kaspaunchained">@kaspaunchained on X</a>; <a href="https://ourcryptotalk.com/news/kaspa-blockchain-record-5584-tps">Our Crypto Talk</a></td></tr>
+        <tr><td>BSV</td><td>about 13,600 TPS sustained</td><td>Mainnet figure stated by the BSV Association; its 1 million TPS (Teranode) was on a test network</td><td>2026</td><td><a href="https://hub.bsvblockchain.org/wiki/mining-and-consensus/mining/capacity-metrics">BSV capacity metrics</a></td></tr>
+        <tr><td>Bitcoin Cash</td><td>about 24 TPS over 24 hours</td><td>Community stress test; 2.2 million transactions in a day, one block with 97,318</td><td>Sep 1–4, 2018</td><td><a href="https://news.bitcoin.com/bitcoin-cash-stress-test-goes-beyond-24-hours-setting-new-records">Bitcoin.com News</a></td></tr>
+        <tr><td>Dogecoin</td><td>about 14 TPS</td><td>Busiest day: 1.2 million transactions (DRC-20 token minting)</td><td>May 2023</td><td><a href="https://investing.com/news/cryptocurrency-news/ordinals-sends-ltc-and-doge-network-activity-surging-for-3-straight-weeks-3087419">Investing.com</a></td></tr>
+        <tr><td>Bitcoin</td><td>about 10.7 TPS</td><td>Busiest day: 927,010 transactions (Runes launch)</td><td>Apr 23, 2024</td><td><a href="https://news.bitcoin.com/bitcoin-transactions-per-day-rebound-in-2026-reaching-third-busiest-day-ever/">Bitcoin.com News</a></td></tr>
+        <tr><td>Litecoin</td><td>about 6.8 TPS</td><td>Busiest day: 584,836 transactions (Ordinals)</td><td>May 10, 2023</td><td><a href="https://decrypt.co/140683/meme-tokens-nfts-took-over-bitcoin-now-happening-dogecoin-litecoin">Decrypt</a></td></tr>
+        <tr class="hl"><td><b>Kadena (this test)</b></td><td id="pow-kadena"><b>50 TPS</b></td><td>Our test from one account at the minimum fee, held for three minutes</td><td>Nov 14, 2026</td><td>This page</td></tr>
+      </tbody></table></div>
+      <p class="note">A busiest-day figure averages over 24 hours, so short peaks on those chains were higher. Our runs are short bursts from one account, so they show capacity, not everyday demand.</p>
+
+      <h2 id="h-results">Results, run by run</h2>
       <div id="results"><p class="empty">No runs yet.</p></div>
 
       <h3>How the network behaved</h3>
@@ -327,53 +330,25 @@ footer a:hover{color:var(--sand)}
         <li>An earlier attempt at run 1 the same day was recorded but not counted: our test program set the gas limit too low, so its 300 transfers reached blocks but failed. The program was fixed before the rerun.</li>
       </ul>
 
-      <h2>The test plan</h2>
-      <div class="tw"><table><thead><tr><th>Run</th><th>Rate</th><th>Length</th><th>Transactions</th><th>Share of each block</th><th>Fees, about</th></tr></thead><tbody>
-        <tr><td>1</td><td>5 TPS</td><td>3 min</td><td>900</td><td>~1.5%</td><td>0.002 KDA</td></tr>
-        <tr><td>2</td><td>10 TPS</td><td>3 min</td><td>1,800</td><td>~3%</td><td>0.004 KDA</td></tr>
-        <tr><td>3</td><td>50 TPS</td><td>3 min</td><td>9,000</td><td>~15%</td><td>0.02 KDA</td></tr>
-        <tr><td>4</td><td>100 TPS</td><td>3 min</td><td>18,000</td><td>~30%</td><td>0.04 KDA</td></tr>
-        <tr><td>5</td><td>200 TPS</td><td>3 min</td><td>36,000</td><td>~60%</td><td>0.08 KDA</td></tr>
-        <tr><td>6</td><td>250 TPS</td><td>3 min</td><td>45,000</td><td>~74%</td><td>0.11 KDA</td></tr>
-      </tbody></table></div>
-      <p class="note">Each run goes ahead only if the one before it went smoothly. Share of each block counts the gas limit of each test transaction (the measured 258 gas plus a 15% margin), because that is what a miner reserves when it fills a block.</p>
-      <h3>Ground rules</h3>
-      <ul>
-        <li><b>Short:</b> three minutes per run, then it stops by itself. Three minutes matches the window the <a href="https://nodes.kadena.ws">Network Monitor</a> averages throughput over, so the full rate shows there during a run.</li>
-        <li><b>Spread evenly</b> over all 20 chains, so no single chain is crowded.</li>
-        <li><b>Everyone else first:</b> test transactions pay the minimum gas price. Miners take higher-paying transactions first, so normal users keep getting in.</li>
-        <li><b>Our own money only:</b> dedicated test accounts send tiny amounts of KDA to each other. Nobody else's funds are touched.</li>
-        <li><b>Stop rule:</b> the run is cut short if confirmations for other users slow down or any chain stalls.</li>
-        <li><b>Never near the ceiling:</b> we will not go above 250 TPS on mainnet, and the test program refuses any run that would reserve more than 80% of a block. Higher rates belong on a test network.</li>
-      </ul>
-
-      <h2>What about 480,000 TPS?</h2>
-      <p>In August 2020, when Kadena went from 10 to 20 chains, Kadena LLC announced the network could reach 480,000 transactions per second. Coverage at the time did not say how the figure was produced, and it has never been shown on mainnet. Under today's rules it would need about 720,000 transfers per block on every chain, roughly a thousand times what a block can hold.</p>
-      <p>The design can scale in principle. Chainweb has three levers:</p>
-      <ul>
-        <li><b>More chains.</b> Each chain adds its own blocks. Going from 20 to 40 chains would double the ceiling.</li>
-        <li><b>Bigger blocks.</b> A higher gas limit fits more transactions in each block.</li>
-        <li><b>Faster blocks.</b> A shorter block time means more blocks per minute.</li>
-      </ul>
-      <p>Each lever is a network upgrade: the community developers would write it, and miners would have to adopt it. Each also asks more of every node: more storage, bandwidth and computing power, which makes running a node harder. None is scheduled today. Kadena's traffic is far below its ceiling, so capacity is not the bottleneck right now; usage is.</p>
-
       <h2>Check it yourself</h2>
       <ul>
-        <li>Network maximum block size: <code>_versionMaxBlockGasLimit</code> = 180,000 in <a href="https://github.com/kda-community/chainweb-node/blob/master/src/Chainweb/Version/Mainnet.hs">src/Chainweb/Version/Mainnet.hs</a>, kda-community/chainweb-node.</li>
-        <li>Node default: <code>_configBlockGasLimit</code> = 150,000 in <a href="https://github.com/kda-community/chainweb-node/blob/master/src/Chainweb/Chainweb/Configuration.hs">src/Chainweb/Chainweb/Configuration.hs</a>. Miners can raise it up to the network maximum.</li>
         <li>Gas per transfer: the <code>gas</code> field of any simple <code>coin.transfer</code> result, on any explorer.</li>
         <li>Test transactions: every run lists its test accounts with a link to <a href="https://denascan.com">Denascan</a>, and each run from Nov 14, 2026 publishes every request key with its chain, block height and result, so anyone can look up each transaction (also on <a href="https://explorer.chainweb-community.org/mainnet">the community explorer</a>).</li>
       </ul>
 
       <h2>Sources</h2>
       <ul class="sources">
-        <li><a href="https://decrypt.co/39126/jp-morgan-kadena-blockchain-transactions">JP Morgan blockchain spinoff hits 480,000 transactions per second</a>, Decrypt, Aug 2020</li>
-        <li><a href="https://www.enterprisetimes.co.uk/2020/08/21/kadena-scales-hybrid-blockchain-480k-tps-on-20-chains53105/">Kadena scales hybrid blockchain 480k TPS on 20 chains</a>, Enterprise Times, Aug 21, 2020</li>
+        <li><a href="https://ourcryptotalk.com/news/kaspa-blockchain-record-5584-tps">Kaspa hits 5,584 TPS</a>, Our Crypto Talk, Oct 2, 2025; <a href="https://kaspahub.github.io/post/kaspa-max-tps/">What is Kaspa's max TPS?</a>, Kaspa Hub</li>
+        <li><a href="https://hub.bsvblockchain.org/wiki/mining-and-consensus/mining/capacity-metrics">Capacity metrics</a>, BSV Association</li>
+        <li><a href="https://news.bitcoin.com/bitcoin-cash-stress-test-goes-beyond-24-hours-setting-new-records">Bitcoin Cash stress test goes beyond 24 hours</a>, Bitcoin.com News, Sep 2018</li>
+        <li><a href="https://investing.com/news/cryptocurrency-news/ordinals-sends-ltc-and-doge-network-activity-surging-for-3-straight-weeks-3087419">Ordinals sends LTC and DOGE network activity surging</a>, Investing.com, May 2023</li>
+        <li><a href="https://news.bitcoin.com/bitcoin-transactions-per-day-rebound-in-2026-reaching-third-busiest-day-ever/">Bitcoin transactions per day rebound in 2026</a>, Bitcoin.com News</li>
+        <li><a href="https://decrypt.co/140683/meme-tokens-nfts-took-over-bitcoin-now-happening-dogecoin-litecoin">Meme tokens and NFTs took over Bitcoin; now it's happening on Dogecoin and Litecoin</a>, Decrypt, May 2023</li>
       </ul>
 
       <h2>More</h2>
       <p>Live network health: <a href="https://nodes.kadena.ws/">Network Monitor</a>. Large KDA moves: <a href="/whales/">Whale Watch</a>. Network activity month by month: <a href="/reports/">Kadena network reports</a>.</p>
-      <p class="updated">Kadena Nexus is an independent community project and is not affiliated with Kadena LLC. It works alongside the kda-community developers and the community DAO. Figures are Kadena Nexus readings of public chain data and the node source code, Oct 29, 2026.</p>
+      <p class="updated">Kadena Nexus is an independent community project and is not affiliated with Kadena LLC. It works alongside the kda-community developers and the community DAO. Figures are Kadena Nexus readings of public chain data and the node source code, Nov 14, 2026. Other chains' figures are as reported by the sources listed.</p>
     </div>
   </article>
 </main>
@@ -431,6 +406,14 @@ footer a:hover{color:var(--sand)}
     else if (st.text) txt.textContent = st.text;
     const runs = Array.isArray(d.runs) ? d.runs : [];
     if (!runs.length) return;
+    const ok = runs.filter((r) => r.succeeded === r.sent && r.sent > 0);
+    if (ok.length) {
+      const best = ok.reduce((x, y) => (y.achieved_tps > x.achieved_tps ? y : x));
+      const len = best.seconds >= 120 ? n(best.seconds / 60) + ' minutes' : n(best.seconds) + ' seconds';
+      const total = runs.reduce((t, r) => t + (r.succeeded || 0), 0), fees = runs.reduce((t, r) => t + (r.fees_kda || 0), 0);
+      document.getElementById('headline').innerHTML = '<p>Best run so far: <b>' + n(best.achieved_tps) + ' TPS for ' + len + '</b> (run ' + esc(best.run) + ', ' + esc(when(best.started_at)) + '). ' + n(best.succeeded) + ' of ' + n(best.sent) + ' transfers succeeded, confirmed in a median of ' + n(best.median_confirm_s, 0) + ' s. Across all ' + n(runs.length) + ' runs: ' + n(total) + ' test transfers succeeded on mainnet, for ' + n(fees, 3) + ' KDA in fees.</p>';
+      document.getElementById('pow-kadena').innerHTML = '<b>' + n(best.achieved_tps) + ' TPS</b>';
+    }
     const rows = runs.map((r) => '<tr><td>' + esc(r.run) + '</td><td>' + esc(when(r.started_at)) + '</td><td>' + n(r.target_tps) + '</td><td>' + n(r.seconds) + ' s</td><td>' + n(r.sent) + '</td><td>' + n(r.included) + '</td><td>' + n(r.succeeded) + '</td><td><b>' + n(r.achieved_tps, 1) + '</b></td><td>' + n(r.median_confirm_s, 0) + ' s</td><td>' + n(r.max_block_fill_pct, 0) + '%</td><td>' + n(r.fees_kda, 4) + '</td></tr>').join('');
     const notes = runs.filter((r) => r.notes).map((r) => '<li><b>Run ' + esc(r.run) + ':</b> ' + esc(r.notes) + '</li>').join('');
     // Every test account links to the explorer; runs since Nov 14, 2026 also publish every request key.
