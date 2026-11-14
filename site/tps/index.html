@@ -5,10 +5,10 @@
 <script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kadena TPS Stress Test: Real Mainnet Capacity | Kadena Nexus</title>
-<meta name="description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short, announced one-minute runs at 100 and 200 TPS.">
+<meta name="description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short, announced one-minute runs stepping up from 5 to 250 TPS.">
 <link rel="canonical" href="https://kadena.ws/tps/">
 <meta property="og:title" content="Kadena mainnet stress test: how many TPS can it really do?">
-<meta property="og:description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short, announced one-minute runs at 100 and 200 TPS.">
+<meta property="og:description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short, announced one-minute runs stepping up from 5 to 250 TPS.">
 <meta property="og:url" content="https://kadena.ws/tps/">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://kadena.ws/og/og-nodes.jpg">
@@ -210,7 +210,7 @@ footer a:hover{color:var(--sand)}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
  {"@type":"Organization","@id":"https://kadena.ws/#org","name":"Kadena Nexus","url":"https://kadena.ws/","logo":"https://kadena.ws/logo-kadena-nexus.png","sameAs":["https://x.com/KadenaNexus","https://t.me/KadenaNexus","https://github.com/KadenaNexus"]},
- {"@type":"Article","headline":"Kadena mainnet stress test","url":"https://kadena.ws/tps/","inLanguage":"en","description":"How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short, announced one-minute runs at 100 and 200 TPS.","datePublished":"2026-10-29","dateModified":"2026-10-29","author":{"@id":"https://kadena.ws/#org"},"publisher":{"@id":"https://kadena.ws/#org"},"image":"https://kadena.ws/og/og-nodes.jpg","about":["Kadena","KDA","TPS","Chainweb","Kadena Community Edition"]},
+ {"@type":"Article","headline":"Kadena mainnet stress test","url":"https://kadena.ws/tps/","inLanguage":"en","description":"How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short, announced one-minute runs stepping up from 5 to 250 TPS.","datePublished":"2026-10-29","dateModified":"2026-11-14","author":{"@id":"https://kadena.ws/#org"},"publisher":{"@id":"https://kadena.ws/#org"},"image":"https://kadena.ws/og/og-nodes.jpg","about":["Kadena","KDA","TPS","Chainweb","Kadena Community Edition"]},
  {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Kadena Nexus","item":"https://kadena.ws/"},{"@type":"ListItem","position":2,"name":"TPS stress test","item":"https://kadena.ws/tps/"}]}
 ]}
 </script>
@@ -270,9 +270,9 @@ footer a:hover{color:var(--sand)}
 <main id="main">
   <article class="policy" aria-labelledby="r-title">
     <div class="wrap">
-      <div class="topbar"><p class="crumb"><a href="/">Kadena Nexus</a> / TPS stress test</p><p class="upd" id="status"><span class="dot" aria-hidden="true"></span><span id="status-text">Run 1 (100 TPS): date to be announced</span></p></div>
+      <div class="topbar"><p class="crumb"><a href="/">Kadena Nexus</a> / TPS stress test</p><p class="upd" id="status"><span class="dot" aria-hidden="true"></span><span id="status-text">Run 1 (5 TPS): date to be announced</span></p></div>
       <h1 id="r-title">Kadena mainnet stress test</h1>
-      <p class="lede">How many transactions per second can Kadena actually handle today? We measured the ceiling from the network's own rules and live blocks, and we test it on mainnet in short, announced one-minute runs: 100 TPS first, then 200. Every number here can be checked on chain.</p>
+      <p class="lede">How many transactions per second can Kadena actually handle today? We measured the ceiling from the network's own rules and live blocks, and we test it on mainnet in short, announced one-minute runs, stepping up from 5 TPS to 250 TPS. Every number here can be checked on chain.</p>
 
       <h2>At a glance</h2>
       <div class="tw"><table><thead><tr><th></th><th>Value</th></tr></thead><tbody>
@@ -295,18 +295,21 @@ footer a:hover{color:var(--sand)}
         <tr><td>Longest busy stretch: an automated on-chain block recorder</td><td>until Oct 12, 2026 (we measured Sep 15 – Oct 12)</td><td>about 465,000 a day</td><td>about 5.4, around the clock</td></tr>
       </tbody></table></div>
       <p class="note">How we searched: one sample of every block on all 20 chains every 12 hours across the whole history (5,098 samples, from the public Chainweb indexer), then every block in the 12 hours around the six busiest samples. The busiest block height was rechecked directly on a node. Short spikes between samples could be missed, so the record may be somewhat higher. Counts exclude the miner's reward transaction in each block.</p>
-      <p>So run 1 at 100 TPS would be about six times the busiest moment we found in Kadena's history, and run 2 about eleven times.</p>
+      <p>Run 1 at 5 TPS is close to that busiest moment. Run 3 at 50 TPS would be about three times it, run 4 at 100 TPS about six times, and run 5 at 200 TPS about eleven times.</p>
 
       <h2 id="h-results">Results</h2>
       <div id="results"><p class="empty">No runs yet. Run 1 will be announced at least 48 hours ahead on <a href="https://t.me/KadenaNexus">Telegram</a> and <a href="https://x.com/KadenaNexus">X</a>.</p></div>
 
       <h2>The test plan</h2>
       <div class="tw"><table><thead><tr><th>Run</th><th>Rate</th><th>Length</th><th>Transactions</th><th>Share of each block</th><th>Fees, about</th></tr></thead><tbody>
-        <tr><td>1</td><td>100 TPS</td><td>60 s</td><td>6,000</td><td>~30%</td><td>0.02 KDA</td></tr>
-        <tr><td>2</td><td>200 TPS</td><td>60 s</td><td>12,000</td><td>~60%</td><td>0.03 KDA</td></tr>
-        <tr><td>3, only if 1 and 2 go smoothly</td><td>250 TPS</td><td>60 s</td><td>15,000</td><td>~74%</td><td>0.04 KDA</td></tr>
+        <tr><td>1</td><td>5 TPS</td><td>60 s</td><td>300</td><td>~1.5%</td><td>0.001 KDA</td></tr>
+        <tr><td>2</td><td>10 TPS</td><td>60 s</td><td>600</td><td>~3%</td><td>0.002 KDA</td></tr>
+        <tr><td>3</td><td>50 TPS</td><td>60 s</td><td>3,000</td><td>~15%</td><td>0.01 KDA</td></tr>
+        <tr><td>4</td><td>100 TPS</td><td>60 s</td><td>6,000</td><td>~30%</td><td>0.02 KDA</td></tr>
+        <tr><td>5</td><td>200 TPS</td><td>60 s</td><td>12,000</td><td>~60%</td><td>0.03 KDA</td></tr>
+        <tr><td>6</td><td>250 TPS</td><td>60 s</td><td>15,000</td><td>~74%</td><td>0.04 KDA</td></tr>
       </tbody></table></div>
-      <p class="note">Share of each block counts the gas limit of each test transaction (the measured 258 gas plus a 15% margin), because that is what a miner reserves when it fills a block.</p>
+      <p class="note">Each run goes ahead only if the one before it went smoothly. Share of each block counts the gas limit of each test transaction (the measured 258 gas plus a 15% margin), because that is what a miner reserves when it fills a block.</p>
       <h3>Ground rules</h3>
       <ul>
         <li><b>Announced first:</b> date, time and rate posted at least 48 hours ahead, with a heads-up to the community core developers.</li>
