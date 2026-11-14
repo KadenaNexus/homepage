@@ -5,10 +5,10 @@
 <script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kadena TPS Stress Test: Real Mainnet Capacity | Kadena Nexus</title>
-<meta name="description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short three-minute runs stepping up from 5 to 250 TPS.">
+<meta name="description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short three-minute runs stepping up from 5 to 1,000 TPS; the busiest height reached 408 TPS.">
 <link rel="canonical" href="https://kadena.ws/tps/">
 <meta property="og:title" content="Kadena mainnet stress test: how many TPS can it really do?">
-<meta property="og:description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short three-minute runs stepping up from 5 to 250 TPS.">
+<meta property="og:description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short three-minute runs stepping up from 5 to 1,000 TPS; the busiest height reached 408 TPS.">
 <meta property="og:url" content="https://kadena.ws/tps/">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://kadena.ws/og/og-nodes.jpg">
@@ -225,7 +225,7 @@ details summary{cursor:pointer;font-weight:600}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
  {"@type":"Organization","@id":"https://kadena.ws/#org","name":"Kadena Nexus","url":"https://kadena.ws/","logo":"https://kadena.ws/logo-kadena-nexus.png","sameAs":["https://x.com/KadenaNexus","https://t.me/KadenaNexus","https://github.com/KadenaNexus"]},
- {"@type":"Article","headline":"Kadena mainnet stress test","url":"https://kadena.ws/tps/","inLanguage":"en","description":"How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short three-minute runs stepping up from 5 to 250 TPS.","datePublished":"2026-10-29","dateModified":"2026-11-14","author":{"@id":"https://kadena.ws/#org"},"publisher":{"@id":"https://kadena.ws/#org"},"image":"https://kadena.ws/og/og-nodes.jpg","about":["Kadena","KDA","TPS","Chainweb","Kadena Community Edition"]},
+ {"@type":"Article","headline":"Kadena mainnet stress test","url":"https://kadena.ws/tps/","inLanguage":"en","description":"How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short three-minute runs stepping up from 5 to 1,000 TPS; the busiest height reached 408 TPS.","datePublished":"2026-10-29","dateModified":"2026-11-14","author":{"@id":"https://kadena.ws/#org"},"publisher":{"@id":"https://kadena.ws/#org"},"image":"https://kadena.ws/og/og-nodes.jpg","about":["Kadena","KDA","TPS","Chainweb","Kadena Community Edition"]},
  {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Kadena Nexus","item":"https://kadena.ws/"},{"@type":"ListItem","position":2,"name":"TPS stress test","item":"https://kadena.ws/tps/"}]}
 ]}
 </script>
@@ -287,9 +287,10 @@ details summary{cursor:pointer;font-weight:600}
     <div class="wrap">
       <div class="topbar"><p class="crumb"><a href="/">Kadena Nexus</a> / TPS stress test</p><p class="upd" id="status"><span class="dot" aria-hidden="true"></span><span id="status-text">Stress test in progress</span></p></div>
       <h1 id="r-title">Kadena mainnet stress test</h1>
-      <p class="lede">How many transactions per second can Kadena actually handle today? We test it on mainnet in short three-minute runs from our own test accounts at the minimum fee, stepping up from 5 to 6,000 TPS. Every number here can be checked on chain.</p>
+      <p class="lede">How many transactions per second can Kadena actually handle today? We test it on mainnet in short three-minute runs from our own test accounts at the minimum fee, stepping up from 5 to 1,000 TPS. Every number here can be checked on chain.</p>
+      <p class="lede"><b>What we found:</b> at today's settings each Kadena block holds at most 612 of our transfers, so its 20 chains top out at about 408 TPS, and Run 8 reached exactly that. Sending faster only builds a queue: Kadena accepted 1,000 transfers a second for three minutes and processed every one of them within 14 minutes, with no downtime, then returned to normal.</p>
 
-      <div class="win" id="headline"><img src="/icons/tps/kda-k.png" alt="" width="42" height="48"><div><p class="win-k">Best result so far</p><p class="win-v"><b>200 TPS</b> target, sent for 3 minutes</p><p class="win-s">Peak observed 408 TPS (12,240 tx at one height, run 8) · 36,000 of 36,000 planned transfers succeeded · median confirmation 42 s</p></div></div>
+      <div class="win" id="headline"><img src="/icons/tps/kda-k.png" alt="" width="42" height="48"><div><p class="win-k">Best result</p><p class="win-v"><b>408 TPS</b> processed at the busiest height</p><p class="win-s">226.2 TPS over 100 blocks · 1,000 TPS sent for 3 minutes · 179,700 of 179,700 accepted transfers processed, all succeeded · run 8, 14 Nov 2026</p></div></div>
 
       <h2 id="h-results">Test runs</h2>
       <div class="tw"><table class="runs"><thead><tr><th>Run</th><th>Target, sent for</th><th>Included ÷ sending time</th><th>Succeeded of planned</th><th>Confirmation median / p90 / slowest</th><th>Busiest height (÷ 30 s)</th><th>Peak over 100 blocks</th><th>Block time before → during</th><th>Orphaned blocks before → during</th><th>Fees (KDA)</th></tr></thead><tbody id="runs-body">
@@ -307,7 +308,7 @@ details summary{cursor:pointer;font-weight:600}
         <tr data-cap="4" data-tps="6.8"><td>Litecoin</td><td>about 6.8 TPS</td><td>Busiest day: 584,836 transactions (Ordinals)</td><td>May 10, 2023</td><td><a href="https://decrypt.co/140683/meme-tokens-nfts-took-over-bitcoin-now-happening-dogecoin-litecoin">Decrypt</a></td></tr>
         <tr data-cap="5" data-tps="5584"><td>Kaspa</td><td><b>5,584 TPS</b></td><td>Peak during a user-driven push; 4.62 million transactions over 2,100 s, about 2,200 TPS on average</td><td>Oct 2, 2025</td><td><a href="https://x.com/kaspaunchained">@kaspaunchained on X</a>; <a href="https://ourcryptotalk.com/news/kaspa-blockchain-record-5584-tps">Our Crypto Talk</a></td></tr>
         <tr data-cap="6" data-tps="1760"><td>BSV</td><td>about 1,760 TPS</td><td>Busiest day: 152 million transactions in 24 hours</td><td>May 2–3, 2025</td><td><a href="https://coingeek.com/152-million-transactions-in-a-day-another-new-record-for-bsv/">CoinGeek</a></td></tr>
-        <tr class="hl" id="pow-kadena-row" data-cap="7" data-tps="200"><td><b>Kadena (this test)</b></td><td id="pow-kadena"><b>200 TPS</b> sustained; busiest height 408 TPS (12,240 tx ÷ 30 s, run 8)</td><td>Our test from one account at the minimum fee, sent for three minutes</td><td>Nov 14, 2026</td><td>This page</td></tr>
+        <tr class="hl" id="pow-kadena-row" data-cap="7" data-tps="408"><td><b>Kadena (this test)</b></td><td id="pow-kadena"><b>408 TPS</b> busiest height (12,240 tx ÷ 30 s); 226.2 TPS over 100 blocks (run 8)</td><td>Our test from one account at the minimum fee: 1,000 TPS sent for three minutes, every accepted transfer processed</td><td>Nov 14, 2026</td><td>This page</td></tr>
       </tbody></table></div>
       <p class="note">A busiest-day figure averages over 24 hours, so short peaks on those chains were higher. Our runs are short bursts from one account, so they show capacity, not everyday demand.</p>
 
@@ -452,7 +453,7 @@ details summary{cursor:pointer;font-weight:600}
       7: { h: 348.1, hx: 10442, p100: 158.3, bt: '26.1 → 39.1 s', orph: '0.7% → 4.0%', c: [75.9, 131.6], ach: '≈172 TPS', achNote: 'sending took ≈17 min, not 3', saturated: true },
       8: { h: 408.0, hx: 12240, p100: 226.2, bt: '24.7 → 39.3 s', orph: '0.8% → 1.9%', c: [112.3, 385.4], ach: '≈214 TPS', achNote: 'sent at 1,000/s; all landed within 14 min', saturated: true },
     };
-    const PLAN = [250, 1000, 6000];   // still to run
+    const PLAN = [];   // testing finished: Kadena's block limit was reached in run 8
     const len = (sec) => sec >= 120 ? n(sec / 60) + ' min' : n(sec) + ' s';
     const done = [...runs].sort((x, y) => x.run - y.run);
     const doneTps = new Set(done.map((r) => r.target_tps));
@@ -462,16 +463,14 @@ details summary{cursor:pointer;font-weight:600}
       return '<tr><td>' + esc(r.run) + '</td><td>' + n(r.target_tps) + ' TPS, ' + len(r.seconds) + '</td><td>' + ach + '</td><td>' + n(r.succeeded) + ' / ' + n(planned) + (planned > r.sent ? '<br><small>' + n(planned - r.sent) + (r.recovered_from_blocks ? ' not on chain' : ' refused at sending') + '</small>' : '') + '</td><td>' + n(r.median_confirm_s, 0) + ' / ' + n(r.p90_confirm_s != null ? r.p90_confirm_s : (a.c || [])[0], 0) + ' / ' + n(r.max_confirm_s != null ? r.max_confirm_s : (a.c || [])[1], 0) + ' s</td><td>' + (a.h != null ? n(a.hx) + ' tx = ' + n(a.h, 1) + ' TPS' : 'pending') + '</td><td>' + (a.p100 != null ? n(a.p100, 1) + ' TPS' : 'pending') + '</td><td>' + (a.bt || 'pending') + '</td><td>' + (a.orph || 'pending') + '</td><td>' + n(r.fees_kda, 4) + '</td></tr>';
     }).join('') + PLAN.filter((t) => !doneTps.has(t)).map((t) => '<tr class="planned"><td>–</td><td>' + n(t) + ' TPS</td><td colspan="8">Not run yet</td></tr>').join('');
     document.getElementById('runs-body').innerHTML = rowsHtml;
-    // Best clean result: every transfer included and the network stayed within the warning levels.
-    const ok = runs.filter((r) => r.succeeded === r.sent && r.sent > 0 && !(A[r.run] || {}).saturated);
-    const peakH = Object.entries(A).reduce((m, [k, a]) => (a.h > m.h ? Object.assign({ run: k }, a) : m), { h: 0 });
-    const planned = (r) => r.target_tps * r.seconds;
-    if (ok.length) {
-      const best = ok.reduce((x, y) => (y.achieved_tps > x.achieved_tps ? y : x));
-      document.querySelector('#headline .win-v').innerHTML = '<b>' + n(best.target_tps) + ' TPS</b> target, sent for ' + (best.seconds >= 120 ? n(best.seconds / 60) + ' minutes' : n(best.seconds) + ' seconds');
-      document.querySelector('#headline .win-s').textContent = (peakH.h ? 'Peak observed ' + n(peakH.h, 1) + ' TPS (' + n(peakH.hx) + ' tx at one height, run ' + peakH.run + ') · ' : '') + n(best.succeeded) + ' of ' + n(planned(best)) + ' planned transfers succeeded' + (planned(best) > best.sent ? ' (' + n(planned(best) - best.sent) + ' refused at sending)' : '') + ' · ' + n(best.achieved_tps, 1) + ' TPS included ÷ sending time · median confirmation ' + n(best.median_confirm_s, 0) + ' s · run ' + best.run + ', ' + when(best.started_at);
-      const kr = document.getElementById('pow-kadena-row'); if (kr) { kr.dataset.tps = best.achieved_tps; window.__powSort && window.__powSort(); }
-      document.getElementById('pow-kadena').innerHTML = '<b>' + n(best.achieved_tps, 1) + ' TPS</b> sustained' + (peakH.h ? '; busiest height ' + n(peakH.h, 1) + ' TPS (' + n(peakH.hx) + ' tx ÷ 30 s, run ' + peakH.run + ')' : '');
+    // Headline: the run with the busiest height (the most Kadena processed at once), from the per-run analysis.
+    const peakH = Object.entries(A).reduce((m, [k, a]) => (a.h > m.h ? Object.assign({ run: Number(k) }, a) : m), { h: 0 });
+    const top = runs.find((r) => r.run === peakH.run);
+    if (top) {
+      document.querySelector('#headline .win-v').innerHTML = '<b>' + n(peakH.h, 0) + ' TPS</b> processed at the busiest height';
+      document.querySelector('#headline .win-s').textContent = n(peakH.p100, 1) + ' TPS over 100 blocks · ' + n(top.target_tps) + ' TPS sent for ' + (top.seconds >= 120 ? n(top.seconds / 60) + ' minutes' : n(top.seconds) + ' seconds') + ' · ' + n(top.succeeded) + ' of ' + n(top.included) + ' accepted transfers processed, all succeeded · run ' + top.run + ', ' + when(top.started_at);
+      const kr = document.getElementById('pow-kadena-row'); if (kr) { kr.dataset.tps = peakH.h; window.__powSort && window.__powSort(); }
+      document.getElementById('pow-kadena').innerHTML = '<b>' + n(peakH.h, 0) + ' TPS</b> busiest height (' + n(peakH.hx) + ' tx ÷ 30 s); ' + n(peakH.p100, 1) + ' TPS over 100 blocks (run ' + peakH.run + ')';
     }
     const acct = (x) => '<a href="https://denascan.com/account/' + encodeURIComponent(x) + '">' + esc(x.slice(0, 10)) + '…</a>';
     const last = runs[runs.length - 1];
