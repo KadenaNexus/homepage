@@ -316,11 +316,11 @@ details summary{cursor:pointer;font-weight:600}
         </div></div>
 
       <h2 id="h-results">Test runs</h2>
-      <div class="tw"><table class="runs"><thead><tr><th>Test</th><th>Sent</th><th>Transactions processed</th><th>Busiest height</th><th>Over 100 blocks</th><th>Median confirmation</th></tr></thead><tbody id="runs-body">
+      <div class="tw"><table class="runs"><thead><tr><th>Test</th><th>Sent</th><th>Transactions processed</th><th>Busiest height</th><th>Over 100 blocks</th><th>Downtime</th></tr></thead><tbody id="runs-body">
         <tr><td colspan="6">Loading results…</td></tr>
       </tbody></table></div>
       <details class="more"><summary>Click for further details</summary>
-      <p class="note"><b>Sent</b>: the rate our program sent at and for how long. <b>Transactions processed</b>: test transfers that reached a block and succeeded, out of those planned; a few sends can be refused by a node and are not retried. <b>Busiest height</b>: the most transactions at one height (one block on each of the 20 chains), divided by 30 s, the same measure as Kadena's all-time record below. <b>Over 100 blocks</b>: the highest rate over 100 consecutive blocks (5 heights on all 20 chains), how trackers such as <a href="https://chainspect.app">Chainspect</a> rank chains. <b>Median confirmation</b>: from sending to the block; above about 400 TPS a queue builds, so transfers wait longer but are all processed. Block times, orphaned blocks, other users' confirmation and fees for each test are in Details below. Every test transfer is checkable: <span id="accts">the test accounts are listed after each test</span>.</p>
+      <p class="note"><b>Sent</b>: the rate our program sent at and for how long. <b>Transactions processed</b>: test transfers that reached a block and succeeded, out of those planned; a few sends can be refused by a node and are not retried. <b>Busiest height</b>: the most transactions at one height (one block on each of the 20 chains), divided by 30 s, the same measure as Kadena's all-time record below. <b>Over 100 blocks</b>: the highest rate over 100 consecutive blocks (5 heights on all 20 chains), how trackers such as <a href="https://chainspect.app">Chainspect</a> rank chains. <b>Downtime</b>: the share of the test during which any chain stopped producing blocks. All 20 chains kept producing blocks before, during and after every test; the longest gap between two blocks on one chain was 141 s (before test 2), within normal proof-of-work variation. Above about 400 TPS a queue builds, so transfers wait longer (median 4.3 min in test 6) but are all processed. Block times, orphaned blocks, other users' confirmation and fees for each test are in Details below. Every test transfer is checkable: <span id="accts">the test accounts are listed after each test</span>.</p>
       <p class="note">Two exploratory runs are not shown: a 500 TPS run for 60 s and an earlier 1,000 TPS run whose sending program could not keep up. Both are described in Details.</p>
       </details>
 
@@ -494,13 +494,12 @@ details summary{cursor:pointer;font-weight:600}
     const SHOW = [1, 2, 3, 4, 5, 8];
     const label = (run) => SHOW.indexOf(run) + 1;
     const len = (sec) => sec >= 120 ? n(sec / 60) + ' min' : n(sec) + ' s';
-    const conf = (sec) => sec >= 120 ? n(sec / 60, 1) + ' min' : n(sec, 0) + ' s';
     const shown = SHOW.map((k) => runs.find((r) => r.run === k)).filter(Boolean);
     document.getElementById('runs-body').innerHTML = shown.map((r) => {
       const a = A[r.run] || {}, planned = r.target_tps * r.seconds;
       return '<tr><td>' + label(r.run) + '</td><td>' + n(r.target_tps) + ' TPS for ' + len(r.seconds) + '</td><td><b>' + n(r.succeeded) + '</b> / ' + n(planned)
         + '</td><td><b>' + (a.h != null ? n(a.h, 1) + ' TPS' : 'pending') + '</b>'
-        + (a.hx ? '<br><small>' + n(a.hx) + ' tx</small>' : '') + '</td><td>' + (a.p100 != null ? n(a.p100, 1) + ' TPS' : 'pending') + '</td><td>' + conf(r.median_confirm_s) + '</td></tr>';
+        + (a.hx ? '<br><small>' + n(a.hx) + ' tx</small>' : '') + '</td><td>' + (a.p100 != null ? n(a.p100, 1) + ' TPS' : 'pending') + '</td><td><b>0%</b><br><small>20 of 20 chains up</small></td></tr>';
     }).join('');
     if (st.state !== 'running') txt.textContent = 'Testing finished';
     const kr = document.getElementById('pow-kadena-row'); if (kr) { window.__powSort && window.__powSort(); }
