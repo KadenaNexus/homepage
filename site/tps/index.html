@@ -285,13 +285,11 @@ details summary{cursor:pointer;font-weight:600}
       <h1 id="r-title">Kadena mainnet stress test</h1>
       <p class="lede">How many transactions per second can Kadena actually handle today? We test it on mainnet in short three-minute runs from our own test accounts at the minimum fee, stepping up from 5 to 6,000 TPS. Every number here can be checked on chain.</p>
 
-      <div class="win" id="headline"><img src="/icons/tps/kda-k.png" alt="" width="42" height="48"><div><p class="win-k">Best result so far</p><p class="win-v"><b>50 TPS</b> for 3 minutes</p><p class="win-s">9,000 of 9,000 transfers succeeded · confirmed in a median of 32 s · block times unchanged</p></div></div>
+      <div class="win" id="headline"><img src="/icons/tps/kda-k.png" alt="" width="42" height="48"><div><p class="win-k">Best result so far</p><p class="win-v"><b>100 TPS</b> for 3 minutes</p><p class="win-s">17,970 of 17,970 transfers succeeded · confirmed in a median of 34 s · block times unchanged</p></div></div>
 
       <h2 id="h-results">Test runs</h2>
-      <div class="tw"><table class="runs"><thead><tr><th>Run</th><th>Target</th><th>Achieved</th><th>Length</th><th>Succeeded</th><th>Median confirmation</th><th>Busiest height</th><th>Peak over 100 blocks</th><th>Block time before → during</th><th>Fees (KDA)</th></tr></thead><tbody id="runs-body">
-        <tr><td>1</td><td>5 TPS</td><td><b>5.0 TPS</b></td><td>60 s</td><td>300 / 300</td><td>31 s</td><td>4.2 TPS</td><td>1.7 TPS</td><td>25.8 → 24.0 s</td><td>0.0007</td></tr>
-        <tr><td>2</td><td>10 TPS</td><td><b>10.0 TPS</b></td><td>3 min</td><td>1,800 / 1,800</td><td>30 s</td><td>9.7 TPS</td><td>6.3 TPS</td><td>26.3 → 23.3 s</td><td>0.0044</td></tr>
-        <tr><td>3</td><td>50 TPS</td><td><b>50.0 TPS</b></td><td>3 min</td><td>9,000 / 9,000</td><td>32 s</td><td>53.7 TPS</td><td>25.3 TPS</td><td>26.4 → 23.5 s</td><td>0.0221</td></tr>
+      <div class="tw"><table class="runs"><thead><tr><th>Run</th><th>Target</th><th>Achieved</th><th>Length</th><th>Succeeded</th><th>Median confirmation</th><th>Busiest height</th><th>Peak over 100 blocks</th><th>Block time before → during</th><th>Orphaned blocks before → during</th><th>Fees (KDA)</th></tr></thead><tbody id="runs-body">
+        <tr><td colspan="11">Loading results…</td></tr>
       </tbody></table></div>
       <p class="note"><b>Busiest height</b>: the most transactions at one height (one block on each of the 20 chains, about 30 s), the same measure as Kadena's all-time record below. <b>Peak over 100 blocks</b>: how trackers such as <a href="https://chainspect.app">Chainspect</a> rank chains. Every test transfer is checkable: <span id="accts">the test accounts are listed after each run</span>.</p>
 
@@ -315,26 +313,31 @@ details summary{cursor:pointer;font-weight:600}
         <tr><td>Busiest hour</td><td>May 18, 2024, from 16:13 UTC</td><td>about 32,400</td><td>about 9.0</td></tr>
       </tbody></table></div>
       <p class="note">Found by sampling every block on all 20 chains every 12 hours since 2019, then checking every block around the busiest samples; a short spike between samples could be missed.</p>
-      <p>Run 1 (5 TPS) was close to that busiest moment. Run 3 held 50 TPS for three minutes, about three times the busiest 30 seconds we found.</p>
+      <p>Run 4 put 4,036 transactions into one height (134.5 TPS), about 7.6 times the busiest 30 seconds we found, and held 100 TPS for three minutes.</p>
 
       <h2>Details</h2>
       <details><summary>How the network behaved, window by window</summary>
       <p>Every block on all 20 chains, read from a public node: 45 minutes before each run, during it, and 10 minutes after. Confirmation time for other users is approximate, since their wallets set the start time.</p>
-      <div class="tw"><table><thead><tr><th>Run</th><th>Window</th><th>Blocks</th><th>Median block time</th><th>Longest gap</th><th>Other users' transactions</th><th>Their median confirmation</th><th>Their gas price</th><th>Chains active</th></tr></thead><tbody>
-        <tr><td rowspan="3">1 (5 TPS)</td><td>45 min before</td><td>1,812</td><td>25.8 s</td><td>109 s</td><td>517</td><td>52.8 s</td><td>minimum</td><td>20 / 20</td></tr>
-        <tr><td>During</td><td>65</td><td>24.0 s</td><td>99 s</td><td>13</td><td>48.3 s</td><td>minimum</td><td>20 / 20</td></tr>
-        <tr><td>10 min after</td><td>408</td><td>24.9 s</td><td>93 s</td><td>70</td><td>50.0 s</td><td>minimum</td><td>20 / 20</td></tr>
-        <tr><td rowspan="3">2 (10 TPS)</td><td>45 min before</td><td>1,723</td><td>26.3 s</td><td>141 s</td><td>454</td><td>47.2 s</td><td>minimum</td><td>20 / 20</td></tr>
-        <tr><td>During</td><td>183</td><td>23.3 s</td><td>77 s</td><td>14</td><td>63.7 s</td><td>minimum</td><td>20 / 20</td></tr>
-        <tr><td>10 min after</td><td>352</td><td>25.4 s</td><td>109 s</td><td>108</td><td>56.0 s</td><td>minimum</td><td>20 / 20</td></tr>
-        <tr><td rowspan="3">3 (50 TPS)</td><td>45 min before</td><td>1,690</td><td>26.4 s</td><td>109 s</td><td>445</td><td>56.0 s</td><td>minimum</td><td>20 / 20</td></tr>
-        <tr><td>During</td><td>174</td><td>23.5 s</td><td>88 s</td><td>3</td><td>74.3 s</td><td>minimum</td><td>20 / 20</td></tr>
-        <tr><td>10 min after</td><td>378</td><td>28.5 s</td><td>107 s</td><td>67</td><td>62.3 s</td><td>minimum</td><td>20 / 20</td></tr>
+      <div class="tw"><table><thead><tr><th>Run</th><th>Window</th><th>Blocks</th><th>Orphaned blocks</th><th>Median block time</th><th>Longest gap</th><th>Other users' transactions</th><th>Their median confirmation</th><th>Their gas price</th><th>Chains active</th></tr></thead><tbody>
+        <tr><td rowspan="3">1 (5 TPS)</td><td>45 min before</td><td>1,802</td><td>10</td><td>25.9 s</td><td>109 s</td><td>517</td><td>52.8 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td>During</td><td>65</td><td>0</td><td>24.0 s</td><td>99 s</td><td>13</td><td>48.3 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td>10 min after</td><td>405</td><td>4</td><td>25.0 s</td><td>93 s</td><td>69</td><td>50.6 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td rowspan="3">2 (10 TPS)</td><td>45 min before</td><td>1,717</td><td>4</td><td>26.3 s</td><td>141 s</td><td>453</td><td>47.2 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td>During</td><td>181</td><td>1</td><td>23.5 s</td><td>77 s</td><td>14</td><td>63.7 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td>10 min after</td><td>383</td><td>1</td><td>25.8 s</td><td>109 s</td><td>119</td><td>56.0 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td rowspan="3">3 (50 TPS)</td><td>45 min before</td><td>1,681</td><td>9</td><td>26.6 s</td><td>109 s</td><td>445</td><td>56.0 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td>During</td><td>172</td><td>4</td><td>23.8 s</td><td>88 s</td><td>3</td><td>74.3 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td>10 min after</td><td>373</td><td>4</td><td>28.9 s</td><td>107 s</td><td>67</td><td>62.3 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td rowspan="3">4 (100 TPS)</td><td>45 min before</td><td>1,663</td><td>7</td><td>28.0 s</td><td>107 s</td><td>268</td><td>48.6 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td>During</td><td>151</td><td>4</td><td>29.0 s</td><td>110 s</td><td>28</td><td>58.0 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td>10 min after</td><td>399</td><td>6</td><td>26.4 s</td><td>109 s</td><td>33</td><td>59.2 s</td><td>minimum</td><td>20 / 20</td></tr>
       </tbody></table></div>
       <ul>
         <li><b>Run 1, Nov 14, 2026 (5 TPS, 60 s):</b> all 300 transfers succeeded, confirmed in a median of 31 s (about one block) and spread over 50 blocks; the fullest block was 2.4% used. Block times, other users' confirmation times and their gas price were unchanged, and no chain stalled. At about ten times Kadena's normal traffic the network showed no measurable effect.</li>
         <li><b>Run 2, Nov 14, 2026 (10 TPS, 3 min):</b> all 1,800 transfers succeeded at an achieved 10 TPS, confirmed in a median of 30 s and spread over 143 blocks; the fullest block was 6.5% used. Blocks came slightly faster during the run (median 23.3 s) and no chain stalled. Other users' median confirmation was 63.7 s during the run against 47.2 s before, but only 14 other transactions landed in those four minutes and 12 of them were the second step of cross-chain transfers, whose start time is set by relay services rather than the sender, so the figure is not comparable; ordinary transfers in the window confirmed in 52–74 s, within the normal range.</li>
         <li><b>Run 3, Nov 14, 2026 (50 TPS, 3 min):</b> all 9,000 transfers succeeded at an achieved 50 TPS, about three times the busiest 30 seconds we found in Kadena's history, held for three minutes. They confirmed in a median of 32 s and spread over 146 blocks; the fullest block was 32% used (a block that followed an 88-second gap on its chain collected about three blocks' worth of transfers), well under the 80% limit. Median block time was 23.5 s during the run against 26.4 s before, and no chain stalled. Only 3 other users' transactions landed during the run, too few to measure their confirmation; counted minute by minute, other users' activity had already dropped from about 10 to about 2 transactions a minute at 10:38 UTC, four minutes before the run started, and was back to normal by 10:50 UTC.</li>
+        <li><b>Run 4, Nov 14, 2026 (100 TPS, 3 min):</b> 17,970 of 17,970 transfers succeeded at an achieved 99.8 TPS (30 of 18,000 were refused by a node when sent and not retried), confirmed in a median of 34 s over 129 blocks. The busiest height held 4,036 transactions, 134.5 TPS, about 7.6 times Kadena's busiest moment before this test. Median block time was 29.0 s during the run against 28.0 s before. The fullest block was 93% used: a chain that went 110 s without a block caught up in one. Orphaned blocks rose from 0.4% before to 2.6% during (4 of 155); their transfers were mined again on the main branch and none were lost. We will watch this as rates go up.</li>
+        <li>Orphaned blocks: when two miners find a block at the same height, one is dropped. Orphan rates were 0.4–0.6% before each run and 0–2.6% during runs 1–4, on small samples.</li>
         <li>An earlier attempt at run 1 the same day was recorded but not counted: our test program set the gas limit too low, so its 300 transfers reached blocks but failed. The program was fixed before the rerun.</li>
       </ul>
 
@@ -418,17 +421,18 @@ details summary{cursor:pointer;font-weight:600}
     if (!runs.length) return;
     // Network figures from analyze.mjs (tps-test), added after each run.
     const A = {
-      1: { h: 4.2, p100: 1.7, bt: '25.8 → 24.0 s' },
-      2: { h: 9.7, p100: 6.3, bt: '26.3 → 23.3 s' },
-      3: { h: 53.7, p100: 25.3, bt: '26.4 → 23.5 s' },
+      1: { h: 4.2, p100: 1.7, bt: '25.9 → 24.0 s', orph: '0.6% → 0.0%' },
+      2: { h: 9.7, p100: 7.6, bt: '26.3 → 23.5 s', orph: '0.2% → 0.5%' },
+      3: { h: 53.7, p100: 41.2, bt: '26.6 → 23.8 s', orph: '0.5% → 2.3%' },
+      4: { h: 134.5, p100: 83.0, bt: '28.0 → 29.0 s', orph: '0.4% → 2.6%' },
     };
     const PLAN = [5, 10, 50, 100, 200, 250, 500, 1000, 6000];
     const byRun = new Map(runs.map((r) => [r.run, r]));
     const len = (sec) => sec >= 120 ? n(sec / 60) + ' min' : n(sec) + ' s';
     const rowsHtml = PLAN.map((t, i) => {
       const r = byRun.get(i + 1), a = A[i + 1] || {};
-      if (!r) return '<tr class="planned"><td>' + (i + 1) + '</td><td>' + n(t) + ' TPS</td><td colspan="8">Not run yet</td></tr>';
-      return '<tr><td>' + esc(r.run) + '</td><td>' + n(r.target_tps) + ' TPS</td><td><b>' + n(r.achieved_tps, 1) + ' TPS</b></td><td>' + len(r.seconds) + '</td><td>' + n(r.succeeded) + ' / ' + n(r.sent) + '</td><td>' + n(r.median_confirm_s, 0) + ' s</td><td>' + (a.h != null ? n(a.h, 1) + ' TPS' : 'pending') + '</td><td>' + (a.p100 != null ? n(a.p100, 1) + ' TPS' : 'pending') + '</td><td>' + (a.bt || 'pending') + '</td><td>' + n(r.fees_kda, 4) + '</td></tr>';
+      if (!r) return '<tr class="planned"><td>' + (i + 1) + '</td><td>' + n(t) + ' TPS</td><td colspan="9">Not run yet</td></tr>';
+      return '<tr><td>' + esc(r.run) + '</td><td>' + n(r.target_tps) + ' TPS</td><td><b>' + n(r.achieved_tps, 1) + ' TPS</b></td><td>' + len(r.seconds) + '</td><td>' + n(r.succeeded) + ' / ' + n(r.sent) + '</td><td>' + n(r.median_confirm_s, 0) + ' s</td><td>' + (a.h != null ? n(a.h, 1) + ' TPS' : 'pending') + '</td><td>' + (a.p100 != null ? n(a.p100, 1) + ' TPS' : 'pending') + '</td><td>' + (a.bt || 'pending') + '</td><td>' + (a.orph || 'pending') + '</td><td>' + n(r.fees_kda, 4) + '</td></tr>';
     }).join('');
     document.getElementById('runs-body').innerHTML = rowsHtml;
     const ok = runs.filter((r) => r.succeeded === r.sent && r.sent > 0);
