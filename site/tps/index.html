@@ -4,18 +4,21 @@
 <meta charset="utf-8">
 <script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kadena TPS Stress Test: Real Mainnet Capacity | Kadena Nexus</title>
-<meta name="description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short three-minute runs stepping up from 5 to 1,000 TPS; the busiest height reached 408 TPS.">
+<title>Kadena Hits 408 TPS: 1,000 TX/s Mainnet Stress Test | Kadena Nexus</title>
+<meta name="description" content="Kadena mainnet took 1,000 transactions per second for 3 minutes and processed all 179,700: 408 TPS at the busiest height, 226 TPS over 100 blocks, zero downtime, 38× Bitcoin's busiest day.">
 <link rel="canonical" href="https://kadena.ws/tps/">
-<meta property="og:title" content="Kadena mainnet stress test: how many TPS can it really do?">
-<meta property="og:description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short three-minute runs stepping up from 5 to 1,000 TPS; the busiest height reached 408 TPS.">
+<meta property="og:title" content="Kadena mainnet: 1,000 transactions per second in, 408 TPS processed, zero downtime">
+<meta name="twitter:title" content="Kadena mainnet: 1,000 transactions per second in, 408 TPS processed, zero downtime">
+<meta name="twitter:description" content="Kadena mainnet took 1,000 transactions per second for 3 minutes and processed all 179,700: 408 TPS at the busiest height, 226 TPS over 100 blocks, zero downtime, 38× Bitcoin's busiest day.">
+<meta property="og:description" content="Kadena mainnet took 1,000 transactions per second for 3 minutes and processed all 179,700: 408 TPS at the busiest height, 226 TPS over 100 blocks, zero downtime, 38× Bitcoin's busiest day.">
 <meta property="og:url" content="https://kadena.ws/tps/">
 <meta property="og:type" content="article">
-<meta property="og:image" content="https://kadena.ws/og/og-nodes.jpg">
+<meta property="og:image" content="https://kadena.ws/og/og-tps.jpg">
+<meta property="og:image:alt" content="Kadena mainnet stress test: 1,000 tx/s in, 408 TPS processed">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://kadena.ws/og/og-nodes.jpg">
+<meta name="twitter:image" content="https://kadena.ws/og/og-tps.jpg">
 <meta name="twitter:site" content="@KadenaNexus">
 <meta name="theme-color" content="#1C637B">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -247,7 +250,8 @@ details summary{cursor:pointer;font-weight:600}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
  {"@type":"Organization","@id":"https://kadena.ws/#org","name":"Kadena Nexus","url":"https://kadena.ws/","logo":"https://kadena.ws/logo-kadena-nexus.png","sameAs":["https://x.com/KadenaNexus","https://t.me/KadenaNexus","https://github.com/KadenaNexus"]},
- {"@type":"Article","headline":"Kadena mainnet stress test","url":"https://kadena.ws/tps/","inLanguage":"en","description":"How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short three-minute runs stepping up from 5 to 1,000 TPS; the busiest height reached 408 TPS.","datePublished":"2026-10-29","dateModified":"2026-11-14","author":{"@id":"https://kadena.ws/#org"},"publisher":{"@id":"https://kadena.ws/#org"},"image":"https://kadena.ws/og/og-nodes.jpg","about":["Kadena","KDA","TPS","Chainweb","Kadena Community Edition"]},
+ {"@type":"Article","headline":"Kadena hits 408 TPS: 1,000 transactions per second mainnet stress test","url":"https://kadena.ws/tps/","inLanguage":"en","description":"Kadena mainnet took 1,000 transactions per second for 3 minutes and processed all 179,700: 408 TPS at the busiest height, 226 TPS over 100 blocks, zero downtime, 38× Bitcoin's busiest day.","datePublished":"2026-10-29","dateModified":"2026-11-14","author":{"@id":"https://kadena.ws/#org"},"publisher":{"@id":"https://kadena.ws/#org"},"image":"https://kadena.ws/og/og-tps.jpg","about":["Kadena","KDA","TPS","Chainweb","Kadena Community Edition"]},
+ {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How many transactions per second can Kadena process?", "acceptedAnswer": {"@type": "Answer", "text": "In a mainnet stress test on November 14, 2026, Kadena processed 408 transactions per second at its busiest height, with all 20 chains producing full blocks at once, and 226 TPS over 100 blocks. That is the limit at today's default block gas; bigger blocks, more chains or faster blocks would raise it."}}, {"@type": "Question", "name": "Did Kadena handle 1,000 transactions per second?", "acceptedAnswer": {"@type": "Answer", "text": "Kadena mainnet accepted 1,000 transactions per second for three minutes and processed every one of the 179,700 accepted transactions, all successfully, with zero downtime."}}, {"@type": "Question", "name": "How does Kadena's TPS compare with Bitcoin?", "acceptedAnswer": {"@type": "Answer", "text": "Kadena's 408 TPS is about 38 times Bitcoin's busiest day (about 10.7 TPS), 60 times Litecoin's, 29 times Dogecoin's and 17 times Bitcoin Cash's."}}]},
  {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Kadena Nexus","item":"https://kadena.ws/"},{"@type":"ListItem","position":2,"name":"TPS stress test","item":"https://kadena.ws/tps/"}]}
 ]}
 </script>
@@ -307,9 +311,9 @@ details summary{cursor:pointer;font-weight:600}
 <main id="main">
   <article class="policy" aria-labelledby="r-title">
     <div class="wrap">
-      <div class="topbar"><p class="crumb"><a href="/">Kadena Nexus</a> / TPS stress test</p><p class="upd" id="status"><span class="dot" aria-hidden="true"></span><span id="status-text">Stress test in progress</span></p></div>
-      <h1 id="r-title">Kadena mainnet stress test</h1>
-      <p class="lede">How many transactions per second can Kadena actually handle today? We test it on mainnet in short three-minute runs from our own test accounts at the minimum fee, stepping up from 5 to 1,000 TPS. Every number here can be checked on chain.</p>
+      <div class="topbar"><p class="crumb"><a href="/">Kadena Nexus</a> / TPS stress test</p><p class="upd" id="status"><span class="dot" aria-hidden="true"></span><span id="status-text">Testing finished</span></p></div>
+      <h1 id="r-title">Kadena mainnet stress test: 1,000 transactions per second, 408 TPS processed</h1>
+      <p class="lede">How many transactions per second can Kadena actually handle today? We tested it on mainnet in short three-minute runs from our own test accounts at the minimum fee, stepping up from 5 to 1,000 TPS. Every number here can be checked on chain.</p>
       <p class="lede"><b>What we found:</b> at today's settings each Kadena block holds at most 612 of our transfers, so its 20 chains top out at about 408 TPS, and test 6 reached exactly that. Kadena accepted 1,000 transfers a second for three minutes and processed every one of them, with no downtime.</p>
 
       <div class="win" id="headline"><img src="/icons/tps/kda-k.png" alt="" width="42" height="48"><div><p class="win-k">Best result</p><p class="win-s">Test 6, Nov 14, 2026, real mainnet, minimum fee</p></div>
