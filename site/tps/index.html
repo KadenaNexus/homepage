@@ -285,13 +285,13 @@ details summary{cursor:pointer;font-weight:600}
       <h1 id="r-title">Kadena mainnet stress test</h1>
       <p class="lede">How many transactions per second can Kadena actually handle today? We test it on mainnet in short three-minute runs from our own test accounts at the minimum fee, stepping up from 5 to 6,000 TPS. Every number here can be checked on chain.</p>
 
-      <div class="win" id="headline"><img src="/icons/tps/kda-k.png" alt="" width="42" height="48"><div><p class="win-k">Best result so far</p><p class="win-v"><b>100 TPS</b> for 3 minutes</p><p class="win-s">17,970 of 17,970 transfers succeeded · confirmed in a median of 34 s · block times unchanged</p></div></div>
+      <div class="win" id="headline"><img src="/icons/tps/kda-k.png" alt="" width="42" height="48"><div><p class="win-k">Best result so far</p><p class="win-v"><b>100 TPS</b> target, sent for 3 minutes</p><p class="win-s">17,970 of 18,000 planned transfers succeeded (30 refused at sending) · 99.8 TPS included ÷ sending time · median confirmation 34 s</p></div></div>
 
       <h2 id="h-results">Test runs</h2>
-      <div class="tw"><table class="runs"><thead><tr><th>Run</th><th>Target</th><th>Achieved</th><th>Length</th><th>Succeeded</th><th>Confirmation median / p90 / slowest</th><th>Busiest height</th><th>Peak over 100 blocks</th><th>Block time before → during</th><th>Orphaned blocks before → during</th><th>Fees (KDA)</th></tr></thead><tbody id="runs-body">
-        <tr><td colspan="11">Loading results…</td></tr>
+      <div class="tw"><table class="runs"><thead><tr><th>Run</th><th>Target, sent for</th><th>Included ÷ sending time</th><th>Succeeded of planned</th><th>Confirmation median / p90 / slowest</th><th>Busiest height (÷ 30 s)</th><th>Peak over 100 blocks</th><th>Block time before → during</th><th>Orphaned blocks before → during</th><th>Fees (KDA)</th></tr></thead><tbody id="runs-body">
+        <tr><td colspan="10">Loading results…</td></tr>
       </tbody></table></div>
-      <p class="note"><b>Confirmation</b>: from sending to the block; the median, the slowest 10% (p90) and the slowest transfer. If transfers queue behind full blocks, p90 and the slowest grow first. <b>Busiest height</b>: the most transactions at one height (one block on each of the 20 chains, about 30 s), the same measure as Kadena's all-time record below. <b>Peak over 100 blocks</b>: how trackers such as <a href="https://chainspect.app">Chainspect</a> rank chains. Every test transfer is checkable: <span id="accts">the test accounts are listed after each run</span>.</p>
+      <p class="note"><b>Included ÷ sending time</b>: transfers that reached blocks, including any that landed after sending stopped, divided by the sending time. <b>Succeeded of planned</b>: planned is the target rate × the sending time; a few sends can be refused by a node and are not retried. <b>Confirmation</b>: from sending to the block, for our test transfers; other users' confirmation is under Details, with how many were observed; the median, the slowest 10% (p90) and the slowest transfer. If transfers queue behind full blocks, p90 and the slowest grow first. <b>Busiest height</b>: the most transactions at one height, divided by 30 s (blocks at one height have different timestamps across the 20 chains, so this is a normalized figure) (one block on each of the 20 chains, about 30 s), the same measure as Kadena's all-time record below. <b>Peak over 100 blocks</b>: how trackers such as <a href="https://chainspect.app">Chainspect</a> rank chains. Every test transfer is checkable: <span id="accts">the test accounts are listed after each run</span>.</p>
 
       <h2>Other proof-of-work chains</h2>
       <p>The highest mainnet throughput each proof-of-work chain has announced or recorded. They are not measured the same way, as the table says.</p>
@@ -302,7 +302,7 @@ details summary{cursor:pointer;font-weight:600}
         <tr><td>Dogecoin</td><td>about 14 TPS</td><td>Busiest day: 1.2 million transactions (DRC-20 token minting)</td><td>May 2023</td><td><a href="https://investing.com/news/cryptocurrency-news/ordinals-sends-ltc-and-doge-network-activity-surging-for-3-straight-weeks-3087419">Investing.com</a></td></tr>
         <tr><td>Bitcoin</td><td>about 10.7 TPS</td><td>Busiest day: 927,010 transactions (Runes launch)</td><td>Apr 23, 2024</td><td><a href="https://news.bitcoin.com/bitcoin-transactions-per-day-rebound-in-2026-reaching-third-busiest-day-ever/">Bitcoin.com News</a></td></tr>
         <tr><td>Litecoin</td><td>about 6.8 TPS</td><td>Busiest day: 584,836 transactions (Ordinals)</td><td>May 10, 2023</td><td><a href="https://decrypt.co/140683/meme-tokens-nfts-took-over-bitcoin-now-happening-dogecoin-litecoin">Decrypt</a></td></tr>
-        <tr class="hl"><td><b>Kadena (this test)</b></td><td id="pow-kadena"><b>50 TPS</b></td><td>Our test from one account at the minimum fee, held for three minutes</td><td>Nov 14, 2026</td><td>This page</td></tr>
+        <tr class="hl"><td><b>Kadena (this test)</b></td><td id="pow-kadena"><b>99.8 TPS</b> sustained; busiest height 134.5 TPS (4,036 tx ÷ 30 s)</td><td>Our test from one account at the minimum fee, sent for three minutes</td><td>Nov 14, 2026</td><td>This page</td></tr>
       </tbody></table></div>
       <p class="note">A busiest-day figure averages over 24 hours, so short peaks on those chains were higher. Our runs are short bursts from one account, so they show capacity, not everyday demand.</p>
 
@@ -421,26 +421,27 @@ details summary{cursor:pointer;font-weight:600}
     if (!runs.length) return;
     // Network figures from analyze.mjs (tps-test), added after each run.
     const A = {
-      1: { h: 4.2, p100: 1.7, bt: '25.9 → 24.0 s', orph: '0.6% → 0.0%', c: [63.7, 105.7] },
-      2: { h: 9.7, p100: 7.6, bt: '26.3 → 23.5 s', orph: '0.2% → 0.5%', c: [54.1, 98.5] },
-      3: { h: 53.7, p100: 41.2, bt: '26.6 → 23.8 s', orph: '0.5% → 2.3%', c: [58.2, 124.2] },
-      4: { h: 134.5, p100: 83.0, bt: '28.0 → 29.0 s', orph: '0.4% → 2.6%', c: [61.5, 126.3] },
+      1: { h: 4.2, hx: 125, p100: 1.7, bt: '25.9 → 24.0 s', orph: '0.6% → 0.0%', c: [63.7, 105.7] },
+      2: { h: 9.7, hx: 291, p100: 7.6, bt: '26.3 → 23.5 s', orph: '0.2% → 0.5%', c: [54.1, 98.5] },
+      3: { h: 53.7, hx: 1611, p100: 41.2, bt: '26.6 → 23.8 s', orph: '0.5% → 2.3%', c: [58.2, 124.2] },
+      4: { h: 134.5, hx: 4036, p100: 83.0, bt: '28.0 → 29.0 s', orph: '0.4% → 2.6%', c: [61.5, 126.3] },
     };
     const PLAN = [5, 10, 50, 100, 200, 250, 500, 1000, 6000];
     const byRun = new Map(runs.map((r) => [r.run, r]));
     const len = (sec) => sec >= 120 ? n(sec / 60) + ' min' : n(sec) + ' s';
     const rowsHtml = PLAN.map((t, i) => {
       const r = byRun.get(i + 1), a = A[i + 1] || {};
-      if (!r) return '<tr class="planned"><td>' + (i + 1) + '</td><td>' + n(t) + ' TPS</td><td colspan="9">Not run yet</td></tr>';
-      return '<tr><td>' + esc(r.run) + '</td><td>' + n(r.target_tps) + ' TPS</td><td><b>' + n(r.achieved_tps, 1) + ' TPS</b></td><td>' + len(r.seconds) + '</td><td>' + n(r.succeeded) + ' / ' + n(r.sent) + '</td><td>' + n(r.median_confirm_s, 0) + ' / ' + n(r.p90_confirm_s != null ? r.p90_confirm_s : (a.c || [])[0], 0) + ' / ' + n(r.max_confirm_s != null ? r.max_confirm_s : (a.c || [])[1], 0) + ' s</td><td>' + (a.h != null ? n(a.h, 1) + ' TPS' : 'pending') + '</td><td>' + (a.p100 != null ? n(a.p100, 1) + ' TPS' : 'pending') + '</td><td>' + (a.bt || 'pending') + '</td><td>' + (a.orph || 'pending') + '</td><td>' + n(r.fees_kda, 4) + '</td></tr>';
+      if (!r) return '<tr class="planned"><td>' + (i + 1) + '</td><td>' + n(t) + ' TPS</td><td colspan="8">Not run yet</td></tr>';
+      return '<tr><td>' + esc(r.run) + '</td><td>' + n(r.target_tps) + ' TPS, ' + len(r.seconds) + '</td><td><b>' + n(r.achieved_tps, 1) + ' TPS</b></td><td>' + n(r.succeeded) + ' / ' + n(r.target_tps * r.seconds) + (r.target_tps * r.seconds > r.sent ? '<br><small>' + n(r.target_tps * r.seconds - r.sent) + ' refused at sending</small>' : '') + '</td><td>' + n(r.median_confirm_s, 0) + ' / ' + n(r.p90_confirm_s != null ? r.p90_confirm_s : (a.c || [])[0], 0) + ' / ' + n(r.max_confirm_s != null ? r.max_confirm_s : (a.c || [])[1], 0) + ' s</td><td>' + (a.h != null ? n(a.hx) + ' tx = ' + n(a.h, 1) + ' TPS' : 'pending') + '</td><td>' + (a.p100 != null ? n(a.p100, 1) + ' TPS' : 'pending') + '</td><td>' + (a.bt || 'pending') + '</td><td>' + (a.orph || 'pending') + '</td><td>' + n(r.fees_kda, 4) + '</td></tr>';
     }).join('');
     document.getElementById('runs-body').innerHTML = rowsHtml;
     const ok = runs.filter((r) => r.succeeded === r.sent && r.sent > 0);
+    const planned = (r) => r.target_tps * r.seconds;
     if (ok.length) {
       const best = ok.reduce((x, y) => (y.achieved_tps > x.achieved_tps ? y : x));
-      document.querySelector('#headline .win-v').innerHTML = '<b>' + n(best.achieved_tps) + ' TPS</b> for ' + (best.seconds >= 120 ? n(best.seconds / 60) + ' minutes' : n(best.seconds) + ' seconds');
-      document.querySelector('#headline .win-s').textContent = n(best.succeeded) + ' of ' + n(best.sent) + ' transfers succeeded · confirmed in a median of ' + n(best.median_confirm_s, 0) + ' s · run ' + best.run + ', ' + when(best.started_at);
-      document.getElementById('pow-kadena').innerHTML = '<b>' + n(best.achieved_tps) + ' TPS</b>';
+      document.querySelector('#headline .win-v').innerHTML = '<b>' + n(best.target_tps) + ' TPS</b> target, sent for ' + (best.seconds >= 120 ? n(best.seconds / 60) + ' minutes' : n(best.seconds) + ' seconds');
+      document.querySelector('#headline .win-s').textContent = n(best.succeeded) + ' of ' + n(planned(best)) + ' planned transfers succeeded' + (planned(best) > best.sent ? ' (' + n(planned(best) - best.sent) + ' refused at sending)' : '') + ' · ' + n(best.achieved_tps, 1) + ' TPS included ÷ sending time · median confirmation ' + n(best.median_confirm_s, 0) + ' s · run ' + best.run + ', ' + when(best.started_at);
+      const hb = A[best.run]; document.getElementById('pow-kadena').innerHTML = '<b>' + n(best.achieved_tps, 1) + ' TPS</b> sustained' + (hb && hb.h ? '; busiest height ' + n(hb.h, 1) + ' TPS (' + n(hb.hx) + ' tx ÷ 30 s)' : '');
     }
     const acct = (x) => '<a href="https://denascan.com/account/' + encodeURIComponent(x) + '">' + esc(x.slice(0, 10)) + '…</a>';
     const last = runs[runs.length - 1];
