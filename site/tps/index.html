@@ -288,10 +288,10 @@ details summary{cursor:pointer;font-weight:600}
       <div class="win" id="headline"><img src="/icons/tps/kda-k.png" alt="" width="42" height="48"><div><p class="win-k">Best result so far</p><p class="win-v"><b>100 TPS</b> for 3 minutes</p><p class="win-s">17,970 of 17,970 transfers succeeded · confirmed in a median of 34 s · block times unchanged</p></div></div>
 
       <h2 id="h-results">Test runs</h2>
-      <div class="tw"><table class="runs"><thead><tr><th>Run</th><th>Target</th><th>Achieved</th><th>Length</th><th>Succeeded</th><th>Median confirmation</th><th>Busiest height</th><th>Peak over 100 blocks</th><th>Block time before → during</th><th>Orphaned blocks before → during</th><th>Fees (KDA)</th></tr></thead><tbody id="runs-body">
+      <div class="tw"><table class="runs"><thead><tr><th>Run</th><th>Target</th><th>Achieved</th><th>Length</th><th>Succeeded</th><th>Confirmation median / p90 / slowest</th><th>Busiest height</th><th>Peak over 100 blocks</th><th>Block time before → during</th><th>Orphaned blocks before → during</th><th>Fees (KDA)</th></tr></thead><tbody id="runs-body">
         <tr><td colspan="11">Loading results…</td></tr>
       </tbody></table></div>
-      <p class="note"><b>Busiest height</b>: the most transactions at one height (one block on each of the 20 chains, about 30 s), the same measure as Kadena's all-time record below. <b>Peak over 100 blocks</b>: how trackers such as <a href="https://chainspect.app">Chainspect</a> rank chains. Every test transfer is checkable: <span id="accts">the test accounts are listed after each run</span>.</p>
+      <p class="note"><b>Confirmation</b>: from sending to the block; the median, the slowest 10% (p90) and the slowest transfer. If transfers queue behind full blocks, p90 and the slowest grow first. <b>Busiest height</b>: the most transactions at one height (one block on each of the 20 chains, about 30 s), the same measure as Kadena's all-time record below. <b>Peak over 100 blocks</b>: how trackers such as <a href="https://chainspect.app">Chainspect</a> rank chains. Every test transfer is checkable: <span id="accts">the test accounts are listed after each run</span>.</p>
 
       <h2>Other proof-of-work chains</h2>
       <p>The highest mainnet throughput each proof-of-work chain has announced or recorded. They are not measured the same way, as the table says.</p>
@@ -421,10 +421,10 @@ details summary{cursor:pointer;font-weight:600}
     if (!runs.length) return;
     // Network figures from analyze.mjs (tps-test), added after each run.
     const A = {
-      1: { h: 4.2, p100: 1.7, bt: '25.9 → 24.0 s', orph: '0.6% → 0.0%' },
-      2: { h: 9.7, p100: 7.6, bt: '26.3 → 23.5 s', orph: '0.2% → 0.5%' },
-      3: { h: 53.7, p100: 41.2, bt: '26.6 → 23.8 s', orph: '0.5% → 2.3%' },
-      4: { h: 134.5, p100: 83.0, bt: '28.0 → 29.0 s', orph: '0.4% → 2.6%' },
+      1: { h: 4.2, p100: 1.7, bt: '25.9 → 24.0 s', orph: '0.6% → 0.0%', c: [63.7, 105.7] },
+      2: { h: 9.7, p100: 7.6, bt: '26.3 → 23.5 s', orph: '0.2% → 0.5%', c: [54.1, 98.5] },
+      3: { h: 53.7, p100: 41.2, bt: '26.6 → 23.8 s', orph: '0.5% → 2.3%', c: [58.2, 124.2] },
+      4: { h: 134.5, p100: 83.0, bt: '28.0 → 29.0 s', orph: '0.4% → 2.6%', c: [61.5, 126.3] },
     };
     const PLAN = [5, 10, 50, 100, 200, 250, 500, 1000, 6000];
     const byRun = new Map(runs.map((r) => [r.run, r]));
@@ -432,7 +432,7 @@ details summary{cursor:pointer;font-weight:600}
     const rowsHtml = PLAN.map((t, i) => {
       const r = byRun.get(i + 1), a = A[i + 1] || {};
       if (!r) return '<tr class="planned"><td>' + (i + 1) + '</td><td>' + n(t) + ' TPS</td><td colspan="9">Not run yet</td></tr>';
-      return '<tr><td>' + esc(r.run) + '</td><td>' + n(r.target_tps) + ' TPS</td><td><b>' + n(r.achieved_tps, 1) + ' TPS</b></td><td>' + len(r.seconds) + '</td><td>' + n(r.succeeded) + ' / ' + n(r.sent) + '</td><td>' + n(r.median_confirm_s, 0) + ' s</td><td>' + (a.h != null ? n(a.h, 1) + ' TPS' : 'pending') + '</td><td>' + (a.p100 != null ? n(a.p100, 1) + ' TPS' : 'pending') + '</td><td>' + (a.bt || 'pending') + '</td><td>' + (a.orph || 'pending') + '</td><td>' + n(r.fees_kda, 4) + '</td></tr>';
+      return '<tr><td>' + esc(r.run) + '</td><td>' + n(r.target_tps) + ' TPS</td><td><b>' + n(r.achieved_tps, 1) + ' TPS</b></td><td>' + len(r.seconds) + '</td><td>' + n(r.succeeded) + ' / ' + n(r.sent) + '</td><td>' + n(r.median_confirm_s, 0) + ' / ' + n(r.p90_confirm_s != null ? r.p90_confirm_s : (a.c || [])[0], 0) + ' / ' + n(r.max_confirm_s != null ? r.max_confirm_s : (a.c || [])[1], 0) + ' s</td><td>' + (a.h != null ? n(a.h, 1) + ' TPS' : 'pending') + '</td><td>' + (a.p100 != null ? n(a.p100, 1) + ' TPS' : 'pending') + '</td><td>' + (a.bt || 'pending') + '</td><td>' + (a.orph || 'pending') + '</td><td>' + n(r.fees_kda, 4) + '</td></tr>';
     }).join('');
     document.getElementById('runs-body').innerHTML = rowsHtml;
     const ok = runs.filter((r) => r.succeeded === r.sent && r.sent > 0);
