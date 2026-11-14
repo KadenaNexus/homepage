@@ -202,8 +202,15 @@ footer a:hover{color:var(--sand)}
 .card{background:#fff;border:1px solid #9BE07F;border-radius:12px;padding:.7rem .85rem}
 .card b{display:block;font-size:1.45rem;line-height:1.2;color:#2F7A12}
 .card span{display:block;font-size:.88rem;color:#2C4A20;margin-top:.15rem}
-.pow-cards{margin:.25rem 0 .75rem}
-.pow-cards .card{background:#EEFBE8}
+.pow-cards{margin:.5rem 0 .9rem;gap:.75rem}
+.pow-cards .card{border:0;border-radius:16px;padding:1rem 1.1rem;color:#fff;box-shadow:0 6px 18px rgba(18,58,72,.12)}
+.pow-cards .card b{color:#fff;font-size:2.4rem;letter-spacing:-.02em}
+.pow-cards .card i{display:block;font-style:normal;font-size:1rem;font-weight:600;margin-top:.1rem}
+.pow-cards .card span{color:rgba(255,255,255,.88);font-size:.85rem;margin-top:.35rem}
+.pc-btc{background:linear-gradient(135deg,#F7931A,#C46A00)}
+.pc-ltc{background:linear-gradient(135deg,#4D7CC4,#2B4F86)}
+.pc-doge{background:linear-gradient(135deg,#C9A93A,#8F7417)}
+.pc-bch{background:linear-gradient(135deg,#12C48F,#08875F)}
 details.more{margin:.5rem 0 1.5rem}
 details.more summary{cursor:pointer;color:var(--teal);font-weight:600}
 .sortbar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.25rem 0 .75rem}
@@ -318,12 +325,12 @@ details summary{cursor:pointer;font-weight:600}
       </details>
 
       <h2>Compared with other proof-of-work chains</h2>
-      <p>Kadena's busiest height in test 6 (408 TPS) against each chain's highest recorded mainnet throughput.</p>
+      <p>Kadena's 408 TPS, as a multiple of each chain's highest recorded mainnet throughput.</p>
       <div class="cards pow-cards">
-        <div class="card"><b>60×</b><span>Litecoin (about 6.8 TPS)</span></div>
-        <div class="card"><b>38×</b><span>Bitcoin (about 10.7 TPS)</span></div>
-        <div class="card"><b>29×</b><span>Dogecoin (about 14 TPS)</span></div>
-        <div class="card"><b>17×</b><span>Bitcoin Cash (about 24 TPS)</span></div>
+        <div class="card pc-btc"><b>38×</b><i>Bitcoin</i><span>busiest day about 10.7 TPS</span></div>
+        <div class="card pc-ltc"><b>60×</b><i>Litecoin</i><span>busiest day about 6.8 TPS</span></div>
+        <div class="card pc-doge"><b>29×</b><i>Dogecoin</i><span>busiest day about 14 TPS</span></div>
+        <div class="card pc-bch"><b>17×</b><i>Bitcoin Cash</i><span>stress-test day about 24 TPS</span></div>
       </div>
       <p class="note">Their figures are mostly busiest-day averages, so their short peaks were higher. Two proof-of-work chains built for throughput have recorded more than Kadena: Kaspa (5,584 TPS) and BSV (about 1,760 TPS); all seven are in the table below.</p>
       <details class="more"><summary>See all proof-of-work chains, with sources</summary>
