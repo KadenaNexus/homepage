@@ -211,6 +211,12 @@ footer a:hover{color:var(--sand)}
 .pc-ltc{background:linear-gradient(135deg,#4D7CC4,#2B4F86)}
 .pc-doge{background:linear-gradient(135deg,#C9A93A,#8F7417)}
 .pc-bch{background:linear-gradient(135deg,#12C48F,#08875F)}
+.scale-cards{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.scale-cards .card b{font-size:1.9rem}
+.scale-cards .card em{display:block;font-style:normal;font-size:.95rem;font-weight:600;margin-top:.5rem;color:#fff}
+.sc-gas{background:linear-gradient(135deg,#1F7A8C,#123A48)}
+.sc-chains{background:linear-gradient(135deg,#E07A2E,#A9481B)}
+.sc-time{background:linear-gradient(135deg,#7A5AC8,#4B3390)}
 details.more{margin:.5rem 0 1.5rem}
 details.more summary{cursor:pointer;color:var(--teal);font-weight:600}
 .sortbar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.25rem 0 .75rem}
@@ -304,7 +310,7 @@ details summary{cursor:pointer;font-weight:600}
       <div class="topbar"><p class="crumb"><a href="/">Kadena Nexus</a> / TPS stress test</p><p class="upd" id="status"><span class="dot" aria-hidden="true"></span><span id="status-text">Stress test in progress</span></p></div>
       <h1 id="r-title">Kadena mainnet stress test</h1>
       <p class="lede">How many transactions per second can Kadena actually handle today? We test it on mainnet in short three-minute runs from our own test accounts at the minimum fee, stepping up from 5 to 1,000 TPS. Every number here can be checked on chain.</p>
-      <p class="lede"><b>What we found:</b> at today's settings each Kadena block holds at most 612 of our transfers, so its 20 chains top out at about 408 TPS, and test 6 reached exactly that. Sending faster only builds a queue: Kadena accepted 1,000 transfers a second for three minutes and processed every one of them within 14 minutes, with no downtime, then returned to normal.</p>
+      <p class="lede"><b>What we found:</b> at today's settings each Kadena block holds at most 612 of our transfers, so its 20 chains top out at about 408 TPS, and test 6 reached exactly that. Kadena accepted 1,000 transfers a second for three minutes and processed every one of them within 14 minutes, with no downtime, then returned to normal.</p>
 
       <div class="win" id="headline"><img src="/icons/tps/kda-k.png" alt="" width="42" height="48"><div><p class="win-k">Best result</p><p class="win-s">Test 6, Nov 14, 2026, real mainnet, minimum fee</p></div>
         <div class="cards">
@@ -347,6 +353,15 @@ details summary{cursor:pointer;font-weight:600}
       </tbody></table></div>
       <p class="note">A busiest-day figure averages over 24 hours, so short peaks on those chains were higher. Our runs are short bursts from one account, so they show capacity, not everyday demand.</p>
       </details>
+
+      <h2>How Kadena can process more</h2>
+      <p>Today's limit is block space: 612 of our transfers per block, on 20 chains, every 30 seconds. Chainweb was designed so each of these three can be raised, and they multiply together.</p>
+      <div class="cards pow-cards scale-cards">
+        <div class="card sc-gas"><b>Bigger blocks</b><i>Raise the block gas limit</i><span>Nodes use 150,000 gas per block by default; the network allows 180,000. At the maximum: about 490 TPS on today's 20 chains.</span></div>
+        <div class="card sc-chains"><b>More chains</b><i>Add chains to Chainweb</i><span>Capacity grows with the number of chains: Kadena went from 10 to 20 chains in 2020. At 100 chains: about 2,000 TPS.</span></div>
+        <div class="card sc-time"><b>Faster blocks</b><i>Shorten the block time</i><span>Halving the block time from 30 s to 15 s doubles throughput: about 816 TPS on today's 20 chains.</span></div>
+      </div>
+      <p class="note">Together, for example 100 chains, 15-second blocks and the maximum block gas, that is about 4,900 TPS; more chains take it further, toward tens of thousands. Each change is a network upgrade that miners and node operators would adopt, with trade-offs to test first (faster blocks raise orphan rates, more chains add work for every node), so these are design possibilities, not measured results.</p>
 
       <h2>Kadena's busiest moments before this test</h2>
       <p>Before testing, we searched mainnet's history from 2019 to today for the busiest moments on record.</p>
