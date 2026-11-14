@@ -5,10 +5,10 @@
 <script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kadena TPS Stress Test: Real Mainnet Capacity | Kadena Nexus</title>
-<meta name="description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short, announced three-minute runs stepping up from 5 to 250 TPS.">
+<meta name="description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short three-minute runs stepping up from 5 to 250 TPS.">
 <link rel="canonical" href="https://kadena.ws/tps/">
 <meta property="og:title" content="Kadena mainnet stress test: how many TPS can it really do?">
-<meta property="og:description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short, announced three-minute runs stepping up from 5 to 250 TPS.">
+<meta property="og:description" content="How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short three-minute runs stepping up from 5 to 250 TPS.">
 <meta property="og:url" content="https://kadena.ws/tps/">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://kadena.ws/og/og-nodes.jpg">
@@ -210,7 +210,7 @@ footer a:hover{color:var(--sand)}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
  {"@type":"Organization","@id":"https://kadena.ws/#org","name":"Kadena Nexus","url":"https://kadena.ws/","logo":"https://kadena.ws/logo-kadena-nexus.png","sameAs":["https://x.com/KadenaNexus","https://t.me/KadenaNexus","https://github.com/KadenaNexus"]},
- {"@type":"Article","headline":"Kadena mainnet stress test","url":"https://kadena.ws/tps/","inLanguage":"en","description":"How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short, announced three-minute runs stepping up from 5 to 250 TPS.","datePublished":"2026-10-29","dateModified":"2026-11-14","author":{"@id":"https://kadena.ws/#org"},"publisher":{"@id":"https://kadena.ws/#org"},"image":"https://kadena.ws/og/og-nodes.jpg","about":["Kadena","KDA","TPS","Chainweb","Kadena Community Edition"]},
+ {"@type":"Article","headline":"Kadena mainnet stress test","url":"https://kadena.ws/tps/","inLanguage":"en","description":"How many transactions per second Kadena mainnet can handle today, measured from the network rules and live blocks, and tested in short three-minute runs stepping up from 5 to 250 TPS.","datePublished":"2026-10-29","dateModified":"2026-11-14","author":{"@id":"https://kadena.ws/#org"},"publisher":{"@id":"https://kadena.ws/#org"},"image":"https://kadena.ws/og/og-nodes.jpg","about":["Kadena","KDA","TPS","Chainweb","Kadena Community Edition"]},
  {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Kadena Nexus","item":"https://kadena.ws/"},{"@type":"ListItem","position":2,"name":"TPS stress test","item":"https://kadena.ws/tps/"}]}
 ]}
 </script>
@@ -270,9 +270,9 @@ footer a:hover{color:var(--sand)}
 <main id="main">
   <article class="policy" aria-labelledby="r-title">
     <div class="wrap">
-      <div class="topbar"><p class="crumb"><a href="/">Kadena Nexus</a> / TPS stress test</p><p class="upd" id="status"><span class="dot" aria-hidden="true"></span><span id="status-text">Run 1 (5 TPS): date to be announced</span></p></div>
+      <div class="topbar"><p class="crumb"><a href="/">Kadena Nexus</a> / TPS stress test</p><p class="upd" id="status"><span class="dot" aria-hidden="true"></span><span id="status-text">Stress test in progress</span></p></div>
       <h1 id="r-title">Kadena mainnet stress test</h1>
-      <p class="lede">How many transactions per second can Kadena actually handle today? We measured the ceiling from the network's own rules and live blocks, and we test it on mainnet in short, announced three-minute runs, stepping up from 5 TPS to 250 TPS. Every number here can be checked on chain.</p>
+      <p class="lede">How many transactions per second can Kadena actually handle today? We measured the ceiling from the network's own rules and live blocks, and we test it on mainnet in short three-minute runs, stepping up from 5 TPS to 250 TPS. Every number here can be checked on chain.</p>
 
       <h2>At a glance</h2>
       <div class="tw"><table><thead><tr><th></th><th>Value</th></tr></thead><tbody>
@@ -298,7 +298,18 @@ footer a:hover{color:var(--sand)}
       <p>Run 1 at 5 TPS is close to that busiest moment. Run 3 at 50 TPS would be about three times it, run 4 at 100 TPS about six times, and run 5 at 200 TPS about eleven times.</p>
 
       <h2 id="h-results">Results</h2>
-      <div id="results"><p class="empty">No runs yet. Run 1 will be announced at least 48 hours ahead on <a href="https://t.me/KadenaNexus">Telegram</a> and <a href="https://x.com/KadenaNexus">X</a>.</p></div>
+      <div id="results"><p class="empty">No runs yet.</p></div>
+
+      <h3>How the network behaved</h3>
+      <p>After each run we read every block header on all 20 chains straight from a node and compare block times before the run with the run itself and the three minutes after it.</p>
+      <div class="tw"><table><thead><tr><th>Run</th><th>Window</th><th>Blocks</th><th>Median block time</th><th>Mean block time</th><th>Chains active</th></tr></thead><tbody>
+        <tr><td rowspan="2">1 (5 TPS)</td><td>45 min before</td><td>1,846</td><td>25.9 s</td><td>28.5 s</td><td>20 / 20</td></tr>
+        <tr><td>Run + 3 min after</td><td>138</td><td>25.6 s</td><td>32.0 s</td><td>20 / 20</td></tr>
+      </tbody></table></div>
+      <ul>
+        <li><b>Run 1, Nov 14, 2026 (5 TPS, 60 s):</b> all 300 transfers succeeded, confirmed in a median of 31 s (about one block) and spread over 50 blocks; the fullest block was 2.4% used. Median block time was unchanged. The slightly higher mean comes from two long gaps (chain 14, 141 s; chain 13, 101 s) that both began before the run started, so they are ordinary mining variation. No chain stalled. At about ten times Kadena's normal traffic, the network showed no measurable effect.</li>
+        <li>An earlier attempt at run 1 the same day was recorded but not counted: our test program set the gas limit too low, so its 300 transfers reached blocks but failed. The program was fixed before the rerun.</li>
+      </ul>
 
       <h2>The test plan</h2>
       <div class="tw"><table><thead><tr><th>Run</th><th>Rate</th><th>Length</th><th>Transactions</th><th>Share of each block</th><th>Fees, about</th></tr></thead><tbody>
@@ -312,7 +323,6 @@ footer a:hover{color:var(--sand)}
       <p class="note">Each run goes ahead only if the one before it went smoothly. Share of each block counts the gas limit of each test transaction (the measured 258 gas plus a 15% margin), because that is what a miner reserves when it fills a block.</p>
       <h3>Ground rules</h3>
       <ul>
-        <li><b>Announced first:</b> date, time and rate posted at least 48 hours ahead, with a heads-up to the community core developers.</li>
         <li><b>Short:</b> three minutes per run, then it stops by itself. Three minutes matches the window the <a href="https://nodes.kadena.ws">Network Monitor</a> averages throughput over, so the full rate shows there during a run.</li>
         <li><b>Spread evenly</b> over all 20 chains, so no single chain is crowded.</li>
         <li><b>Everyone else first:</b> test transactions pay the minimum gas price. Miners take higher-paying transactions first, so normal users keep getting in.</li>
@@ -401,15 +411,14 @@ footer a:hover{color:var(--sand)}
     if (!d) return;
     const st = d.status || {}, pill = document.getElementById('status'), txt = document.getElementById('status-text');
     if (st.state === 'running') { pill.classList.add('live'); txt.textContent = 'Run ' + st.run + ' (' + n(st.tps) + ' TPS) is running now'; }
-    else if (st.state === 'announced' && st.at) txt.textContent = 'Next: run ' + st.run + ' (' + n(st.tps) + ' TPS) on ' + when(st.at);
     else if (st.state === 'done') txt.textContent = 'All planned runs finished';
     else if (st.text) txt.textContent = st.text;
     const runs = Array.isArray(d.runs) ? d.runs : [];
     if (!runs.length) return;
-    const rows = runs.map((r) => '<tr><td>' + esc(r.run) + '</td><td>' + esc(when(r.started_at)) + '</td><td>' + n(r.target_tps) + '</td><td>' + n(r.sent) + '</td><td>' + n(r.included) + '</td><td><b>' + n(r.achieved_tps, 1) + '</b></td><td>' + n(r.median_confirm_s, 0) + ' s</td><td>' + n(r.max_block_fill_pct, 0) + '%</td><td>' + n(r.fees_kda, 4) + '</td></tr>').join('');
+    const rows = runs.map((r) => '<tr><td>' + esc(r.run) + '</td><td>' + esc(when(r.started_at)) + '</td><td>' + n(r.target_tps) + '</td><td>' + n(r.seconds) + ' s</td><td>' + n(r.sent) + '</td><td>' + n(r.included) + '</td><td>' + n(r.succeeded) + '</td><td><b>' + n(r.achieved_tps, 1) + '</b></td><td>' + n(r.median_confirm_s, 0) + ' s</td><td>' + n(r.max_block_fill_pct, 0) + '%</td><td>' + n(r.fees_kda, 4) + '</td></tr>').join('');
     const notes = runs.filter((r) => r.notes).map((r) => '<li><b>Run ' + esc(r.run) + ':</b> ' + esc(r.notes) + '</li>').join('');
     const accts = runs.filter((r) => Array.isArray(r.accounts) && r.accounts.length).map((r) => '<li>Run ' + esc(r.run) + ': ' + r.accounts.map((a) => '<code>' + esc(a) + '</code>').join(', ') + '</li>').join('');
-    document.getElementById('results').innerHTML = '<div class="tw"><table class="runs"><thead><tr><th>Run</th><th>Started</th><th>Target TPS</th><th>Sent</th><th>In blocks</th><th>Achieved TPS</th><th>Median confirmation</th><th>Fullest block</th><th>Fees (KDA)</th></tr></thead><tbody>' + rows + '</tbody></table></div>' + (notes ? '<ul>' + notes + '</ul>' : '') + (accts ? '<details><summary>Test accounts</summary><ul>' + accts + '</ul></details>' : '');
+    document.getElementById('results').innerHTML = '<div class="tw"><table class="runs"><thead><tr><th>Run</th><th>Started</th><th>Target TPS</th><th>Length</th><th>Sent</th><th>In blocks</th><th>Succeeded</th><th>Achieved TPS</th><th>Median confirmation</th><th>Fullest block</th><th>Fees (KDA)</th></tr></thead><tbody>' + rows + '</tbody></table></div>' + (notes ? '<ul>' + notes + '</ul>' : '') + (accts ? '<details><summary>Test accounts</summary><ul>' + accts + '</ul></details>' : '');
   }).catch(() => {});
 })();
 </script>
