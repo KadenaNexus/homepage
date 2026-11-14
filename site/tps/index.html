@@ -480,7 +480,7 @@ details summary{cursor:pointer;font-weight:600}
     document.getElementById('runs-body').innerHTML = shown.map((r) => {
       const a = A[r.run] || {}, planned = r.target_tps * r.seconds;
       return '<tr><td>' + label(r.run) + '</td><td>' + n(r.target_tps) + ' TPS for ' + len(r.seconds) + '</td><td><b>' + n(r.succeeded) + '</b> / ' + n(planned)
-        + (planned > r.sent ? '<br><small>' + n(planned - r.sent) + ' refused at sending</small>' : '') + '</td><td><b>' + (a.h != null ? n(a.h, 1) + ' TPS' : 'pending') + '</b>'
+        + '</td><td><b>' + (a.h != null ? n(a.h, 1) + ' TPS' : 'pending') + '</b>'
         + (a.hx ? '<br><small>' + n(a.hx) + ' tx</small>' : '') + '</td><td>' + (a.p100 != null ? n(a.p100, 1) + ' TPS' : 'pending') + '</td><td>' + conf(r.median_confirm_s) + '</td></tr>';
     }).join('');
     if (st.state !== 'running') txt.textContent = 'Testing finished';
