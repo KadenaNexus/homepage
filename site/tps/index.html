@@ -197,6 +197,10 @@ footer a:hover{color:var(--sand)}
 .win-v{font-size:1.6rem;line-height:1.25;color:#14400A}
 .win-v b{color:#2F7A12}
 .win-s{font-size:.95rem;color:#2C4A20}
+.sortbar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.25rem 0 .75rem}
+.sortbar span{font-size:.9rem;color:#5B6B70}
+.sortbar button{font:inherit;font-size:.9rem;padding:.35rem .85rem;border-radius:999px;border:1px solid var(--line,#D5DEE0);background:#fff;color:var(--teal);cursor:pointer}
+.sortbar button[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
 tr.planned td{color:#8A9AA0}
 tr.planned td[colspan]{text-align:left}
 details summary{cursor:pointer;font-weight:600}
@@ -294,15 +298,16 @@ details summary{cursor:pointer;font-weight:600}
       <p class="note"><b>Included ÷ sending time</b>: transfers that reached blocks, including any that landed after sending stopped, divided by the sending time. <b>Succeeded of planned</b>: planned is the target rate × the sending time; a few sends can be refused by a node and are not retried. <b>Confirmation</b>: from sending to the block, for our test transfers; other users' confirmation is under Details, with how many were observed; the median, the slowest 10% (p90) and the slowest transfer. If transfers queue behind full blocks, p90 and the slowest grow first. <b>Busiest height</b>: the most transactions at one height, divided by 30 s (blocks at one height have different timestamps across the 20 chains, so this is a normalized figure) (one block on each of the 20 chains, about 30 s), the same measure as Kadena's all-time record below. <b>Peak over 100 blocks</b>: how trackers such as <a href="https://chainspect.app">Chainspect</a> rank chains. Every test transfer is checkable: <span id="accts">the test accounts are listed after each run</span>.</p>
 
       <h2>Other proof-of-work chains</h2>
-      <p>The highest throughput each proof-of-work chain has recorded on its mainnet (test networks are left out), in order of market capitalization. They are not measured the same way, as the table says.</p>
-      <div class="tw"><table><thead><tr><th>Chain</th><th>Highest mainnet throughput</th><th>How it was measured</th><th>When</th><th>Announcement / source</th></tr></thead><tbody>
-        <tr><td>Bitcoin</td><td>about 10.7 TPS</td><td>Busiest day: 927,010 transactions (Runes launch)</td><td>Apr 23, 2024</td><td><a href="https://news.bitcoin.com/bitcoin-transactions-per-day-rebound-in-2026-reaching-third-busiest-day-ever/">Bitcoin.com News</a></td></tr>
-        <tr><td>Dogecoin</td><td>about 14 TPS</td><td>Busiest day: 1.2 million transactions (DRC-20 token minting)</td><td>May 2023</td><td><a href="https://investing.com/news/cryptocurrency-news/ordinals-sends-ltc-and-doge-network-activity-surging-for-3-straight-weeks-3087419">Investing.com</a></td></tr>
-        <tr><td>Bitcoin Cash</td><td>about 24 TPS over 24 hours</td><td>Community stress test: 2.2 million transactions in a day, one block with 97,318</td><td>Sep 1–4, 2018</td><td><a href="https://news.bitcoin.com/bitcoin-cash-stress-test-goes-beyond-24-hours-setting-new-records">Bitcoin.com News</a></td></tr>
-        <tr><td>Litecoin</td><td>about 6.8 TPS</td><td>Busiest day: 584,836 transactions (Ordinals)</td><td>May 10, 2023</td><td><a href="https://decrypt.co/140683/meme-tokens-nfts-took-over-bitcoin-now-happening-dogecoin-litecoin">Decrypt</a></td></tr>
-        <tr><td>Kaspa</td><td><b>5,584 TPS</b></td><td>Peak during a user-driven push; 4.62 million transactions over 2,100 s, about 2,200 TPS on average</td><td>Oct 2, 2025</td><td><a href="https://x.com/kaspaunchained">@kaspaunchained on X</a>; <a href="https://ourcryptotalk.com/news/kaspa-blockchain-record-5584-tps">Our Crypto Talk</a></td></tr>
-        <tr><td>BSV</td><td>about 1,760 TPS</td><td>Busiest day: 152 million transactions in 24 hours</td><td>May 2–3, 2025</td><td><a href="https://coingeek.com/152-million-transactions-in-a-day-another-new-record-for-bsv/">CoinGeek</a></td></tr>
-        <tr class="hl"><td><b>Kadena (this test)</b></td><td id="pow-kadena"><b>99.8 TPS</b> sustained; busiest height 134.5 TPS (4,036 tx ÷ 30 s)</td><td>Our test from one account at the minimum fee, sent for three minutes</td><td>Nov 14, 2026</td><td>This page</td></tr>
+      <p>The highest throughput each proof-of-work chain has recorded on its mainnet (test networks are left out), sorted by market capitalization or by throughput. They are not measured the same way, as the table says.</p>
+      <div class="sortbar" role="group" aria-label="Sort the table"><span>Sort by</span><button type="button" data-sort="cap" aria-pressed="true">Market cap</button><button type="button" data-sort="tps" aria-pressed="false">Highest TPS</button></div>
+      <div class="tw"><table id="pow-table"><thead><tr><th>Chain</th><th>Highest mainnet throughput</th><th>How it was measured</th><th>When</th><th>Announcement / source</th></tr></thead><tbody>
+        <tr data-cap="1" data-tps="10.7"><td>Bitcoin</td><td>about 10.7 TPS</td><td>Busiest day: 927,010 transactions (Runes launch)</td><td>Apr 23, 2024</td><td><a href="https://news.bitcoin.com/bitcoin-transactions-per-day-rebound-in-2026-reaching-third-busiest-day-ever/">Bitcoin.com News</a></td></tr>
+        <tr data-cap="2" data-tps="14"><td>Dogecoin</td><td>about 14 TPS</td><td>Busiest day: 1.2 million transactions (DRC-20 token minting)</td><td>May 2023</td><td><a href="https://investing.com/news/cryptocurrency-news/ordinals-sends-ltc-and-doge-network-activity-surging-for-3-straight-weeks-3087419">Investing.com</a></td></tr>
+        <tr data-cap="3" data-tps="24"><td>Bitcoin Cash</td><td>about 24 TPS over 24 hours</td><td>Community stress test: 2.2 million transactions in a day, one block with 97,318</td><td>Sep 1–4, 2018</td><td><a href="https://news.bitcoin.com/bitcoin-cash-stress-test-goes-beyond-24-hours-setting-new-records">Bitcoin.com News</a></td></tr>
+        <tr data-cap="4" data-tps="6.8"><td>Litecoin</td><td>about 6.8 TPS</td><td>Busiest day: 584,836 transactions (Ordinals)</td><td>May 10, 2023</td><td><a href="https://decrypt.co/140683/meme-tokens-nfts-took-over-bitcoin-now-happening-dogecoin-litecoin">Decrypt</a></td></tr>
+        <tr data-cap="5" data-tps="5584"><td>Kaspa</td><td><b>5,584 TPS</b></td><td>Peak during a user-driven push; 4.62 million transactions over 2,100 s, about 2,200 TPS on average</td><td>Oct 2, 2025</td><td><a href="https://x.com/kaspaunchained">@kaspaunchained on X</a>; <a href="https://ourcryptotalk.com/news/kaspa-blockchain-record-5584-tps">Our Crypto Talk</a></td></tr>
+        <tr data-cap="6" data-tps="1760"><td>BSV</td><td>about 1,760 TPS</td><td>Busiest day: 152 million transactions in 24 hours</td><td>May 2–3, 2025</td><td><a href="https://coingeek.com/152-million-transactions-in-a-day-another-new-record-for-bsv/">CoinGeek</a></td></tr>
+        <tr class="hl" id="pow-kadena-row" data-cap="7" data-tps="99.8"><td><b>Kadena (this test)</b></td><td id="pow-kadena"><b>99.8 TPS</b> sustained; busiest height 134.5 TPS (4,036 tx ÷ 30 s)</td><td>Our test from one account at the minimum fee, sent for three minutes</td><td>Nov 14, 2026</td><td>This page</td></tr>
       </tbody></table></div>
       <p class="note">A busiest-day figure averages over 24 hours, so short peaks on those chains were higher. Our runs are short bursts from one account, so they show capacity, not everyday demand.</p>
 
@@ -442,6 +447,7 @@ details summary{cursor:pointer;font-weight:600}
       const best = ok.reduce((x, y) => (y.achieved_tps > x.achieved_tps ? y : x));
       document.querySelector('#headline .win-v').innerHTML = '<b>' + n(best.target_tps) + ' TPS</b> target, sent for ' + (best.seconds >= 120 ? n(best.seconds / 60) + ' minutes' : n(best.seconds) + ' seconds');
       document.querySelector('#headline .win-s').textContent = n(best.succeeded) + ' of ' + n(planned(best)) + ' planned transfers succeeded' + (planned(best) > best.sent ? ' (' + n(planned(best) - best.sent) + ' refused at sending)' : '') + ' · ' + n(best.achieved_tps, 1) + ' TPS included ÷ sending time · median confirmation ' + n(best.median_confirm_s, 0) + ' s · run ' + best.run + ', ' + when(best.started_at);
+      const kr = document.getElementById('pow-kadena-row'); if (kr) { kr.dataset.tps = best.achieved_tps; window.__powSort && window.__powSort(); }
       const hb = A[best.run]; document.getElementById('pow-kadena').innerHTML = '<b>' + n(best.achieved_tps, 1) + ' TPS</b> sustained' + (hb && hb.h ? '; busiest height ' + n(hb.h, 1) + ' TPS (' + n(hb.hx) + ' tx ÷ 30 s)' : '');
     }
     const acct = (x) => '<a href="https://denascan.com/account/' + encodeURIComponent(x) + '">' + esc(x.slice(0, 10)) + '…</a>';
@@ -449,6 +455,21 @@ details summary{cursor:pointer;font-weight:600}
     const keyLinks = runs.filter((r) => r.requests_file).map((r) => '<a href="data/' + encodeURIComponent(r.requests_file) + '">run ' + esc(r.run) + '</a>').join(', ');
     if (last && last.accounts) document.getElementById('accts').innerHTML = 'sender ' + acct(last.accounts[0]) + ' and receiver ' + acct(last.accounts[1]) + ' on Denascan' + (keyLinks ? '; every request key: ' + keyLinks : '');
   }).catch(() => {});
+})();
+</script>
+<script>
+(() => {
+  // Sort the proof-of-work table by market cap (default) or by highest TPS.
+  const body = document.querySelector('#pow-table tbody'), btns = document.querySelectorAll('.sortbar button');
+  if (!body) return;
+  const sort = (key) => {
+    const rows = [...body.querySelectorAll('tr')];
+    rows.sort((a, b) => key === 'tps' ? Number(b.dataset.tps) - Number(a.dataset.tps) : Number(a.dataset.cap) - Number(b.dataset.cap));
+    rows.forEach((r) => body.appendChild(r));
+    btns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.sort === key)));
+  };
+  btns.forEach((b) => b.addEventListener('click', () => sort(b.dataset.sort)));
+  window.__powSort = () => sort(document.querySelector('.sortbar button[aria-pressed="true"]').dataset.sort);
 })();
 </script>
 </body>
