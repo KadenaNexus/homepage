@@ -301,13 +301,19 @@ footer a:hover{color:var(--sand)}
       <div id="results"><p class="empty">No runs yet.</p></div>
 
       <h3>How the network behaved</h3>
-      <p>After each run we read every block header on all 20 chains straight from a node and compare block times before the run with the run itself and the three minutes after it.</p>
-      <div class="tw"><table><thead><tr><th>Run</th><th>Window</th><th>Blocks</th><th>Median block time</th><th>Mean block time</th><th>Chains active</th></tr></thead><tbody>
-        <tr><td rowspan="2">1 (5 TPS)</td><td>45 min before</td><td>1,846</td><td>25.9 s</td><td>28.5 s</td><td>20 / 20</td></tr>
-        <tr><td>Run + 3 min after</td><td>138</td><td>25.6 s</td><td>32.0 s</td><td>20 / 20</td></tr>
+      <p>After each run we read every block on all 20 chains straight from a public node, from 45 minutes before the run to 10 minutes after it, and compare three windows: before, during (the run plus one block time for its last transfers to land) and after. Block-time gaps count only if they began and ended inside the window, so a gap that started before a run is not blamed on it. Confirmation time for other users is the time from the creation time their wallet wrote to the block that included them, so it is approximate.</p>
+      <div class="tw"><table><thead><tr><th>Run</th><th>Window</th><th>Blocks</th><th>Median block time</th><th>Longest gap</th><th>Other users' transactions</th><th>Their median confirmation</th><th>Their gas price</th><th>Chains active</th></tr></thead><tbody>
+        <tr><td rowspan="3">1 (5 TPS)</td><td>45 min before</td><td>1,812</td><td>25.8 s</td><td>109 s</td><td>517</td><td>52.8 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td>During</td><td>65</td><td>24.0 s</td><td>99 s</td><td>13</td><td>48.3 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td>10 min after</td><td>408</td><td>24.9 s</td><td>93 s</td><td>70</td><td>50.0 s</td><td>minimum</td><td>20 / 20</td></tr>
+      </tbody></table></div>
+      <h3>Peak over 100 blocks</h3>
+      <p>Trackers such as <a href="https://chainspect.app">Chainspect</a> rank chains by the highest rate sustained over 100 consecutive blocks. On Kadena we use the same count: five consecutive heights on all 20 chains, which is 100 blocks and about three minutes, counting every transaction except the miner's reward. A burst shorter than that window is spread over it, which is why runs now last three minutes.</p>
+      <div class="tw"><table><thead><tr><th>Run</th><th>Peak over 100 blocks</th><th>Of which test transfers</th><th>Normal traffic peak before the run</th></tr></thead><tbody>
+        <tr><td>1 (5 TPS, 60 s)</td><td>1.68 TPS (307 transactions in 183 s)</td><td>288</td><td>0.59 TPS</td></tr>
       </tbody></table></div>
       <ul>
-        <li><b>Run 1, Nov 14, 2026 (5 TPS, 60 s):</b> all 300 transfers succeeded, confirmed in a median of 31 s (about one block) and spread over 50 blocks; the fullest block was 2.4% used. Median block time was unchanged. The slightly higher mean comes from two long gaps (chain 14, 141 s; chain 13, 101 s) that both began before the run started, so they are ordinary mining variation. No chain stalled. At about ten times Kadena's normal traffic, the network showed no measurable effect.</li>
+        <li><b>Run 1, Nov 14, 2026 (5 TPS, 60 s):</b> all 300 transfers succeeded, confirmed in a median of 31 s (about one block) and spread over 50 blocks; the fullest block was 2.4% used. Block times, other users' confirmation times and their gas price were unchanged, and no chain stalled. At about ten times Kadena's normal traffic the network showed no measurable effect.</li>
         <li>An earlier attempt at run 1 the same day was recorded but not counted: our test program set the gas limit too low, so its 300 transfers reached blocks but failed. The program was fixed before the rerun.</li>
       </ul>
 
@@ -346,7 +352,7 @@ footer a:hover{color:var(--sand)}
         <li>Network maximum block size: <code>_versionMaxBlockGasLimit</code> = 180,000 in <a href="https://github.com/kda-community/chainweb-node/blob/master/src/Chainweb/Version/Mainnet.hs">src/Chainweb/Version/Mainnet.hs</a>, kda-community/chainweb-node.</li>
         <li>Node default: <code>_configBlockGasLimit</code> = 150,000 in <a href="https://github.com/kda-community/chainweb-node/blob/master/src/Chainweb/Chainweb/Configuration.hs">src/Chainweb/Chainweb/Configuration.hs</a>. Miners can raise it up to the network maximum.</li>
         <li>Gas per transfer: the <code>gas</code> field of any simple <code>coin.transfer</code> result, on any explorer.</li>
-        <li>Test transactions: every run lists its test accounts, so anyone can find each transaction on <a href="https://explorer.chainweb-community.org/mainnet">the explorer</a>.</li>
+        <li>Test transactions: every run lists its test accounts with a link to <a href="https://denascan.com">Denascan</a>, and each run from Nov 14, 2026 publishes every request key with its chain, block height and result, so anyone can look up each transaction (also on <a href="https://explorer.chainweb-community.org/mainnet">the community explorer</a>).</li>
       </ul>
 
       <h2>Sources</h2>
@@ -417,8 +423,10 @@ footer a:hover{color:var(--sand)}
     if (!runs.length) return;
     const rows = runs.map((r) => '<tr><td>' + esc(r.run) + '</td><td>' + esc(when(r.started_at)) + '</td><td>' + n(r.target_tps) + '</td><td>' + n(r.seconds) + ' s</td><td>' + n(r.sent) + '</td><td>' + n(r.included) + '</td><td>' + n(r.succeeded) + '</td><td><b>' + n(r.achieved_tps, 1) + '</b></td><td>' + n(r.median_confirm_s, 0) + ' s</td><td>' + n(r.max_block_fill_pct, 0) + '%</td><td>' + n(r.fees_kda, 4) + '</td></tr>').join('');
     const notes = runs.filter((r) => r.notes).map((r) => '<li><b>Run ' + esc(r.run) + ':</b> ' + esc(r.notes) + '</li>').join('');
-    const accts = runs.filter((r) => Array.isArray(r.accounts) && r.accounts.length).map((r) => '<li>Run ' + esc(r.run) + ': ' + r.accounts.map((a) => '<code>' + esc(a) + '</code>').join(', ') + '</li>').join('');
-    document.getElementById('results').innerHTML = '<div class="tw"><table class="runs"><thead><tr><th>Run</th><th>Started</th><th>Target TPS</th><th>Length</th><th>Sent</th><th>In blocks</th><th>Succeeded</th><th>Achieved TPS</th><th>Median confirmation</th><th>Fullest block</th><th>Fees (KDA)</th></tr></thead><tbody>' + rows + '</tbody></table></div>' + (notes ? '<ul>' + notes + '</ul>' : '') + (accts ? '<details><summary>Test accounts</summary><ul>' + accts + '</ul></details>' : '');
+    // Every test account links to the explorer; runs since Nov 14, 2026 also publish every request key.
+    const acct = (a) => '<a href="https://denascan.com/account/' + encodeURIComponent(a) + '"><code>' + esc(a) + '</code></a>';
+    const accts = runs.filter((r) => Array.isArray(r.accounts) && r.accounts.length).map((r) => '<li>Run ' + esc(r.run) + ': ' + r.accounts.map(acct).join(', ') + (r.requests_file ? ' &middot; <a href="data/' + encodeURIComponent(r.requests_file) + '">every request key (JSON)</a>' : '') + '</li>').join('');
+    document.getElementById('results').innerHTML = '<div class="tw"><table class="runs"><thead><tr><th>Run</th><th>Started</th><th>Target TPS</th><th>Length</th><th>Sent</th><th>In blocks</th><th>Succeeded</th><th>Achieved TPS</th><th>Median confirmation</th><th>Fullest block</th><th>Fees (KDA)</th></tr></thead><tbody>' + rows + '</tbody></table></div>' + (notes ? '<ul>' + notes + '</ul>' : '') + (accts ? '<details open><summary>Test accounts and transactions (check them on the explorer)</summary><ul>' + accts + '</ul></details>' : '');
   }).catch(() => {});
 })();
 </script>
