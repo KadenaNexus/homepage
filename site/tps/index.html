@@ -306,14 +306,19 @@ footer a:hover{color:var(--sand)}
         <tr><td rowspan="3">1 (5 TPS)</td><td>45 min before</td><td>1,812</td><td>25.8 s</td><td>109 s</td><td>517</td><td>52.8 s</td><td>minimum</td><td>20 / 20</td></tr>
         <tr><td>During</td><td>65</td><td>24.0 s</td><td>99 s</td><td>13</td><td>48.3 s</td><td>minimum</td><td>20 / 20</td></tr>
         <tr><td>10 min after</td><td>408</td><td>24.9 s</td><td>93 s</td><td>70</td><td>50.0 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td rowspan="3">2 (10 TPS)</td><td>45 min before</td><td>1,723</td><td>26.3 s</td><td>141 s</td><td>454</td><td>47.2 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td>During</td><td>183</td><td>23.3 s</td><td>77 s</td><td>14</td><td>63.7 s</td><td>minimum</td><td>20 / 20</td></tr>
+        <tr><td>10 min after</td><td>352</td><td>25.4 s</td><td>109 s</td><td>108</td><td>56.0 s</td><td>minimum</td><td>20 / 20</td></tr>
       </tbody></table></div>
       <h3>Peak over 100 blocks</h3>
-      <p>Trackers such as <a href="https://chainspect.app">Chainspect</a> rank chains by the highest rate sustained over 100 consecutive blocks. On Kadena we use the same count: five consecutive heights on all 20 chains, which is 100 blocks and about three minutes, counting every transaction except the miner's reward. A burst shorter than that window is spread over it, which is why runs now last three minutes.</p>
+      <p>Trackers such as <a href="https://chainspect.app">Chainspect</a> rank chains by the highest rate sustained over 100 consecutive blocks. On Kadena we use the same count: five consecutive heights on all 20 chains, which is 100 blocks and about three minutes, counting every transaction except the miner's reward. A burst shorter than that window is spread over it, which is why runs now last three minutes. Because the 20 chains' blocks are not perfectly in step, five heights cover a little more time than the run fills, so this figure is a conservative floor; the achieved rate in the results table is counted directly from the transfers.</p>
       <div class="tw"><table><thead><tr><th>Run</th><th>Peak over 100 blocks</th><th>Of which test transfers</th><th>Normal traffic peak before the run</th></tr></thead><tbody>
         <tr><td>1 (5 TPS, 60 s)</td><td>1.68 TPS (307 transactions in 183 s)</td><td>288</td><td>0.59 TPS</td></tr>
+        <tr><td>2 (10 TPS, 3 min)</td><td>6.25 TPS (1,008 transactions in 161 s)</td><td>1,004</td><td>0.39 TPS</td></tr>
       </tbody></table></div>
       <ul>
         <li><b>Run 1, Nov 14, 2026 (5 TPS, 60 s):</b> all 300 transfers succeeded, confirmed in a median of 31 s (about one block) and spread over 50 blocks; the fullest block was 2.4% used. Block times, other users' confirmation times and their gas price were unchanged, and no chain stalled. At about ten times Kadena's normal traffic the network showed no measurable effect.</li>
+        <li><b>Run 2, Nov 14, 2026 (10 TPS, 3 min):</b> all 1,800 transfers succeeded at an achieved 10 TPS, confirmed in a median of 30 s and spread over 143 blocks; the fullest block was 6.5% used. Blocks came slightly faster during the run (median 23.3 s) and no chain stalled. Other users' median confirmation was 63.7 s during the run against 47.2 s before, but only 14 other transactions landed in those four minutes and 12 of them were the second step of cross-chain transfers, whose start time is set by relay services rather than the sender, so the figure is not comparable; ordinary transfers in the window confirmed in 52–74 s, within the normal range.</li>
         <li>An earlier attempt at run 1 the same day was recorded but not counted: our test program set the gas limit too low, so its 300 transfers reached blocks but failed. The program was fixed before the rerun.</li>
       </ul>
 
