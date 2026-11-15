@@ -132,6 +132,10 @@ p{margin:0}
 .btn.primary.buy:hover{background:#8F4304;border-color:#8F4304}
 .buy-note{margin-top:.9rem;font-size:.95rem;color:var(--mist);max-width:46ch}
 .buy-note a{color:var(--sand);font-weight:600}
+.dn-note{max-width:52ch}
+.dn-live{display:inline-block;width:.55rem;height:.55rem;margin-right:.45rem;border-radius:50%;background:#94A3B8;vertical-align:.08em}
+.dn-note.on .dn-live{background:#1F8A4C;animation:dnlive 2s infinite}
+@keyframes dnlive{0%{box-shadow:0 0 0 0 rgba(31,138,76,.5)}70%{box-shadow:0 0 0 .45rem rgba(31,138,76,0)}100%{box-shadow:0 0 0 0 rgba(31,138,76,0)}}
 #braid{position:absolute;inset:0;width:100%;height:100%}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.92) 30%,rgba(255,255,255,.6) 50%,rgba(255,255,255,0) 68%);pointer-events:none}
 @media (max-width:860px){
@@ -357,6 +361,7 @@ footer a:hover{color:var(--sand)}
           </span>
           <span class="nfoot" id="n-foot">Live on Kadena mainnet, serving the network from Jeddah.</span>
         </a>
+        <p class="buy-note dn-note" id="dn-note"><span class="dn-live" aria-hidden="true"></span>New: <a href="/research/devnet/">Nexus devnet</a>, our private Kadena test network for Nexus apps and research, is running with 20 chains<span id="dn-count"></span>. Watch it live on Nexus Research.</p>
         </div>
       </div>
     </div>
@@ -742,6 +747,12 @@ if (/Android/i.test(navigator.userAgent)) document.getElementById('linx-open').h
       : 'Live on Kadena mainnet, serving the network from Jeddah.';
   }
   pollNode(); pollCrawler();
+  const dn = () => fetch('https://devnet.kadena.ws/status.json', {cache: 'no-store'}).then(r => r.json()).then(d => {
+    const on = d.online && (Date.now() - Date.parse(d.updated)) < 120000;
+    document.getElementById('dn-note').classList.toggle('on', on);
+    document.getElementById('dn-count').textContent = on ? ' (' + Number(d.totalBlocks).toLocaleString('en-US') + ' blocks so far)' : '';
+  }).catch(() => {});
+  dn(); setInterval(() => { if (!document.hidden) dn(); }, 15000);
   setInterval(() => { if (!document.hidden) pollNode(); }, 30000);
   setInterval(() => { if (!document.hidden) pollCrawler(); }, 300000);
 })();
