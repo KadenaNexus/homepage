@@ -1,0 +1,28 @@
+name: fees-x-post
+# Posts today's transfer-fee table (kadena.ws/research/fees/) to X once a day,
+# after the nightly site build has measured the fees and rendered card.png.
+# FEES_POST_MODE variable: "live" posts; unset or "dry" only prints the post.
+on:
+  schedule:
+    - cron: "43 6 * * *"   # 09:43 in Riyadh
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: fees-x-post
+  cancel-in-progress: false
+jobs:
+  post:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Post
+        env:
+          POST_MODE: ${{ vars.FEES_POST_MODE || 'dry' }}
+          X_API_KEY: ${{ secrets.FEES_X_API_KEY }}
+          X_API_SECRET: ${{ secrets.FEES_X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.FEES_X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.FEES_X_ACCESS_SECRET }}
+        run: node services/fees-bot/post.mjs

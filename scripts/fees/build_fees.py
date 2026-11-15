@@ -23,7 +23,9 @@ import html
 import io
 import json
 import os
+import shutil
 import statistics
+import subprocess
 import sys
 import urllib.request
 
@@ -190,9 +192,20 @@ FETCH = {"kadena": kadena, "solana": solana, "tron": tron, "bitcoin": bitcoin, "
          **{k: (lambda k=k: evm(k)) for k in EVM}}
 
 
-def prices():
+def prices(prev_rows):
+    """CoinGecko prices, with two retries; falls back to yesterday's published prices."""
+    import time
     ids = ",".join(sorted({c[4] for c in CHAINS}))
-    return {k: v["usd"] for k, v in get(f"https://api.coingecko.com/api/v3/simple/price?ids={ids}&vs_currencies=usd").items()}
+    for attempt in range(3):
+        try:
+            return {k: v["usd"] for k, v in get(f"https://api.coingecko.com/api/v3/simple/price?ids={ids}&vs_currencies=usd").items()}, False
+        except Exception as e:  # noqa: BLE001
+            print(f"build_fees: prices attempt {attempt + 1} failed ({e})", file=sys.stderr)
+            time.sleep(30)
+    old = {c[4]: prev_rows[c[0]]["price_usd"] for c in CHAINS if c[0] in prev_rows}
+    if not old:
+        raise RuntimeError("no prices")
+    return old, True
 
 
 # ---------------------------------------------------------------- previous data
@@ -260,7 +273,7 @@ def main():
     prev, hist = previous()
     prev_rows = {r["key"]: r for r in prev.get("chains", [])}
     try:
-        px = prices()
+        px, old_prices = prices(prev_rows)
     except Exception as e:  # noqa: BLE001
         print(f"build_fees: prices unavailable ({e}), keeping the published page", file=sys.stderr)
         return
@@ -286,7 +299,7 @@ def main():
         return
 
     os.makedirs(OUT, exist_ok=True)
-    data = {"updated": NOW.isoformat().replace("+00:00", "Z"), "source": URL, "chains": rows}
+    data = {"updated": NOW.isoformat().replace("+00:00", "Z"), "source": URL, "prices_from_previous_day": old_prices, "chains": rows}
     json.dump(data, open(os.path.join(OUT, "fees.json"), "w"), indent=1)
 
     # history: one row per chain per day, today's replaced
@@ -301,6 +314,7 @@ def main():
         w.writerows(old + new)
 
     write_page(rows)
+    write_card(rows)
     print(f"build_fees: {fresh}/{len(CHAINS)} chains measured, Kadena transfer {usd(next(r for r in rows if r['key'] == 'kadena')['native_usd'])}")
 
 
@@ -382,7 +396,53 @@ def write_page(rows):
     page = br.shell(SITE, "Transfer fees today: Kadena vs Ethereum, Solana, Bitcoin, Tron and more",
                     f"What one simple transfer costs today in US dollars on Kadena, Ethereum, Base, BNB Chain, Polygon, Solana, Tron, Bitcoin, Stellar and the XRP Ledger. Measured daily from public data.",
                     URL, ld, css, body)
+    if os.path.exists(os.path.join(OUT, "card.png")):  # today's table as the link preview
+        page = page.replace("https://kadena.ws/og/og-nodes.jpg", URL + "card.png")
     open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(page)
+
+
+def write_card(rows):
+    """1200x675 image of today's table (for X posts and link previews), rendered with headless Chrome."""
+    chrome = next((c for c in ("google-chrome", "google-chrome-stable", "chromium", "chromium-browser") if shutil.which(c)), None)
+    if not chrome:
+        print("build_fees: no Chrome found, card image not updated", file=sys.stderr)
+        return
+    rows = sorted(rows, key=lambda r: r["native_usd"])
+    trs = "".join(
+        f'<tr class="{"k" if r["key"] == "kadena" else ""}"><td>{html.escape(r["name"])}</td>'
+        f'<td>{usd(r["native_usd"])}</td><td>{"–" if r["stable_usd"] is None else usd(r["stable_usd"]) + ("*" if r["key"] == "tron" else "")}</td></tr>'
+        for r in rows)
+    card = f"""<!doctype html><html><head><meta charset="utf-8"><style>
+*{{box-sizing:border-box;margin:0;padding:0}}
+body{{width:1200px;height:675px;background:#0C1A2B;color:#C5D2DE;font-family:"Inter","Segoe UI","DejaVu Sans",Arial,sans-serif;padding:44px 56px}}
+.top{{display:flex;justify-content:space-between;align-items:baseline}}
+h1{{color:#fff;font-size:40px;font-weight:700;letter-spacing:-.5px}}
+.d{{font-size:22px;color:#8FA5B8}}
+p.s{{margin-top:6px;font-size:21px;color:#8FA5B8}}
+table{{width:100%;border-collapse:collapse;margin-top:22px;font-size:23px;font-variant-numeric:tabular-nums}}
+th{{text-align:right;font-size:17px;font-weight:600;color:#8FA5B8;text-transform:uppercase;letter-spacing:.06em;padding:0 14px 8px}}
+th:first-child,td:first-child{{text-align:left}}
+td{{text-align:right;padding:7px 14px;border-top:1px solid #22384F;color:#E2E8F0}}
+tr.k td{{background:#14463A;color:#34D399;font-weight:700}}
+.f{{position:absolute;left:56px;right:56px;bottom:30px;display:flex;justify-content:space-between;font-size:18px;color:#8FA5B8}}
+.f b{{color:#fff}}
+</style></head><body>
+<div class="top"><h1>What one transfer costs today</h1><span class="d">{NOW:%b} {NOW.day}, {NOW.year}</span></div>
+<p class="s">US dollars, cheapest first. Measured from public data.</p>
+<table><thead><tr><th>Chain</th><th>Send the coin</th><th>Send a stablecoin</th></tr></thead><tbody>{trs}</tbody></table>
+<div class="f"><span><b>Kadena Nexus Research</b> · kadena.ws/research/fees</span><span>* Tron USDT if TRX is burned · Not financial advice</span></div>
+</body></html>"""
+    src = os.path.join(OUT, ".card.html")
+    open(src, "w", encoding="utf-8").write(card)
+    png = os.path.join(OUT, "card.png")
+    try:
+        subprocess.run([chrome, "--headless=new", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
+                        "--window-size=1200,675", f"--screenshot={png}", "file://" + src],
+                       check=True, timeout=90, capture_output=True)
+    except Exception as e:  # noqa: BLE001
+        print(f"build_fees: card image failed ({e})", file=sys.stderr)
+    finally:
+        os.remove(src)
 
 
 if __name__ == "__main__":
