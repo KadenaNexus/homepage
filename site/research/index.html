@@ -213,20 +213,18 @@ footer a:hover{color:var(--sand)}
 .feature{display:block;margin-top:1.2rem;padding:clamp(1.2rem,3vw,1.8rem);border:1px solid var(--line);border-radius:16px;text-decoration:none;color:var(--mist)!important;transition:border-color .15s}
 .feature:hover{border-color:var(--teal)}
 .feature .id{display:flex;align-items:center;gap:.55rem;font:500 .82rem/1 var(--body);letter-spacing:.06em;text-transform:uppercase}
-.feature .id svg,.areas svg{width:1.15rem;height:1.15rem;stroke:#17603C;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.feature .id svg{width:1.15rem;height:1.15rem;stroke:#17603C;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .feature h3{font-size:clamp(1.3rem,2.4vw,1.7rem);line-height:1.2;margin-top:.9rem}
 .feature p{margin-top:.6rem;max-width:80ch}
 .feature .foot{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.1rem}
 .feature .more{color:var(--sand);font-weight:600;border-bottom:1px dotted var(--sand)}
-.areas{list-style:none;margin:1.2rem 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
-.areas a{display:block;height:100%;padding:1.1rem 1.2rem;border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--mist)!important;transition:border-color .15s}
-.areas a:hover{border-color:var(--teal)}
-.areas h3{font-size:1.12rem;margin-top:.6rem}
-.areas p{margin-top:.25rem;font-size:.95rem}
-@media (max-width:560px){.areas{grid-template-columns:1fr}}
-.quick{margin-top:1.4rem;font-size:.92rem}
-.quick a{color:var(--mist);text-decoration:none}
-.quick a:hover{color:var(--teal);text-decoration:underline}
+.ledger .links{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin-top:.5rem;font-size:.92rem;font-weight:600}
+.plan-list{list-style:none;margin:1.2rem 0 0;padding:0;border-top:1px solid var(--line)}
+.plan-list li{padding:.85rem 0;border-bottom:1px solid var(--line);font-size:.98rem}
+.plan-list .id{display:inline-block;min-width:5.5rem;font:600 .88rem ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mist)}
+.plan-list b{color:var(--sand);font-weight:600}
+.rel-h{font-size:1.1rem;margin-top:2.2rem}
+.rel{margin-top:.5rem;font-size:.97rem}
 .ledger{list-style:none;margin:2rem 0 0;padding:0;border-top:1px solid var(--line)}
 .ledger li{display:grid;grid-template-columns:5.5rem minmax(0,1fr) auto;gap:.4rem 1.5rem;padding:1.3rem 0;border-bottom:1px solid var(--line);align-items:start}
 .ledger .id{font:600 .9rem/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--teal)}
@@ -236,12 +234,13 @@ footer a:hover{color:var(--sand)}
 .ledger p{margin-top:.35rem;font-size:.97rem;max-width:68ch}
 .ledger .meta{font-size:.85rem;margin-top:.45rem}
 @media (max-width:620px){.ledger li{grid-template-columns:1fr auto}.ledger .id{grid-column:1}.ledger .pill{grid-column:2;grid-row:1}.ledger li>div{grid-column:1 / -1}}
-.std{margin:2rem 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.4rem 2.5rem;counter-reset:s}
+.std{margin:2rem 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.4rem 2.5rem;counter-reset:s}
 .std li{counter-increment:s;padding-top:1rem;border-top:2px solid var(--sand)}
 .std li::before{content:"0" counter(s);font:700 .85rem/1 var(--display);color:var(--pink)}
 .std b{display:block;margin-top:.45rem;color:var(--sand);font:600 1.08rem/1.3 var(--display)}
 .std span{display:block;margin-top:.3rem;font-size:.95rem}
-@media (max-width:860px){.std{grid-template-columns:1fr}}
+@media (max-width:1000px){.std{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.std{grid-template-columns:1fr}}
 .rs .legal{font-size:.9rem;margin-top:2.5rem;max-width:80ch}
 </style>
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -313,67 +312,59 @@ footer a:hover{color:var(--sand)}
 
   <section aria-labelledby="featured">
     <div class="wrap">
-      <div class="h-row"><h2 id="featured">Featured research</h2><span class="pill date">November 2026</span></div>
+      <div class="h-row"><h2 id="featured">Featured study</h2><span class="pill date">November 2026</span></div>
       <a class="feature" href="/tps/">
         <span class="id"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M7 13.5l3-3 2.5 2.5L17 8.5"/></svg>Network performance / NR-001</span>
         <h3>Kadena mainnet stress test: from 5 to 1,000 TPS</h3>
         <p>Six measured test runs across 20 Chainweb chains. Full-block capacity, block times, orphaned blocks and how the network recovered.</p>
-        <span class="foot"><span class="pill done">Completed</span><span class="more">Read findings ↗</span></span>
+        <span class="foot"><span class="pill done">Completed</span><span class="more">Read study ↗</span></span>
       </a>
     </div>
   </section>
 
-  <section aria-labelledby="areas">
+  <section aria-labelledby="published">
     <div class="wrap">
-      <h2 id="areas">Research areas</h2>
-      <ul class="areas">
-        <li><a href="#studies"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 16.5a8 8 0 1 1 15 0"/><path d="M12 13l3.5-4"/><circle cx="12" cy="13.5" r="1"/></svg><h3>Performance</h3><p>TPS, gas, latency</p></a></li>
-        <li><a href="#studies"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="5.5" cy="18" r="2"/><circle cx="18.5" cy="18" r="2"/><circle cx="12" cy="18" r="2"/><path d="M12 7v9M12 11.5H5.5V16M12 11.5h6.5V16"/></svg><h3>Chainweb</h3><p>Scaling and consensus</p></a></li>
-        <li><a href="https://quantum.kadena.ws/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 2.8v5.4c0 4.3-2.9 7.6-7 9.3-4.1-1.7-7-5-7-9.3V5.8Z"/><path d="M9 12l2.2 2.2L15.2 10"/></svg><h3>Security</h3><p>Protocol and contracts</p></a></li>
-        <li><a href="#live"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V14M9 20V10M14 20v-7M19 20V6"/><path d="M4 9l5-4 5 3 5-5"/></svg><h3>Economics</h3><p>Mining and adoption</p></a></li>
-      </ul>
-      <p class="quick"><a href="/reports/">Reports</a> · <a href="/reports/data/kadena-daily.csv">Datasets</a> · <a href="https://github.com/KadenaNexus">Source code</a> · <a href="#standards">Methodology</a></p>
-    </div>
-  </section>
-
-  <section aria-labelledby="studies">
-    <div class="wrap">
-      <h2 id="studies">Studies</h2>
-      <p class="sub">Each study gets a permanent number. Planned studies are listed so the community can see what comes next and suggest changes before we run them.</p>
+      <h2 id="published">Published studies</h2>
       <ol class="ledger">
-        <li><span class="id">NR-001</span><div><h3><a href="/tps/">Kadena mainnet throughput and saturation study</a></h3><p>How many transactions per second Kadena processes today, tested from 5 to 1,000 TPS, and where the limit comes from.</p><p class="meta">Benchmarks and experiments · November 14, 2026 · Mainnet</p></div><span class="pill done">Completed</span></li>
-        <li><span class="id">NR-002</span><div><h3>Block gas limit scaling</h3><p>Whether raising the block gas limit lifts sustained throughput as expected, tested on a private network before anything is proposed for mainnet.</p><p class="meta">Chainweb and scaling</p></div><span class="pill plan">Planned</span></li>
-        <li><span class="id">NR-003</span><div><h3>Chainweb horizontal scaling</h3><p>Modeling and comparing 20, 40, 60 and 100-chain configurations.</p><p class="meta">Chainweb and scaling</p></div><span class="pill plan">Planned</span></li>
-        <li><span class="id">NR-004</span><div><h3>Block propagation and confirmation latency</h3><p>How load affects block intervals, orphaned blocks and the time users wait for confirmation.</p><p class="meta">Benchmarks and experiments</p></div><span class="pill plan">Planned</span></li>
-        <li><span class="id">NR-005</span><div><h3>Mining distribution on Chainweb</h3><p>How hashrate is spread across pools and solo miners, from publicly collected block data.</p><p class="meta">Network economics</p></div><span class="pill plan">Planned</span></li>
+        <li><span class="id">NR-001</span><div><h3><a href="/tps/">Kadena mainnet throughput and saturation study</a></h3><p>How many transactions per second Kadena processes today, tested from 5 to 1,000 TPS, and where the limit comes from.</p><p class="meta">Benchmarks and experiments · November 14, 2026 · Mainnet</p><p class="links"><a href="/tps/">Read study</a><a href="/tps/#check">View data</a></p></div><span class="pill done">Completed</span></li>
       </ol>
     </div>
   </section>
 
-  <section aria-labelledby="live">
+  <section aria-labelledby="planned">
     <div class="wrap">
-      <h2 id="live">Live data and recurring reports</h2>
-      <p class="sub">Measurements that update on their own, read from public chain data.</p>
-      <ul class="ledger">
-        <li><span class="id">Monthly</span><div><h3><a href="/reports/">Kadena network reports</a></h3><p>Daily transactions, blocks and mining hashrate on all 20 chains, with a CSV download. Updated every week.</p><p class="meta">Network economics</p></div><span class="pill live">Ongoing</span></li>
-        <li><span class="id">Daily</span><div><h3><a href="/tokenomics/">KDA tokenomics</a></h3><p>Supply and emission figures read from mainnet and rebuilt every day.</p><p class="meta">Network economics</p></div><span class="pill live">Ongoing</span></li>
-        <li><span class="id">Daily</span><div><h3><a href="https://adoption.kadena.ws/">Kadena Adoption Index</a></h3><p>One number, updated daily, for whether the network is used more or less than its baseline, with a published methodology.</p><p class="meta">Network economics</p></div><span class="pill live">Ongoing</span></li>
-        <li><span class="id">Live</span><div><h3><a href="https://nodes.kadena.ws/">Kadena Network Monitor</a></h3><p>Nodes, throughput and chain health as they happen.</p><p class="meta">Benchmarks and experiments</p></div><span class="pill live">Ongoing</span></li>
-        <li><span class="id">Hourly</span><div><h3><a href="https://quantum.kadena.ws/">Quantum-Safe Kadena</a></h3><p>How post-quantum accounts will work on Kadena, with progress read from the core developers' public code.</p><p class="meta">Security</p></div><span class="pill live">Ongoing</span></li>
+      <h2 id="planned">Planned research</h2>
+      <ul class="plan-list">
+        <li><span class="id">NR-002</span><b>Block gas limit scaling</b> – whether a higher block gas limit lifts sustained throughput, tested on a private network first.</li>
+        <li><span class="id">NR-003</span><b>Chainweb horizontal scaling</b> – modeling 20, 40, 60 and 100-chain configurations.</li>
+        <li><span class="id">NR-004</span><b>Block propagation and confirmation latency</b> – how load affects block intervals, orphaned blocks and confirmation times.</li>
+        <li><span class="id">NR-005</span><b>Mining distribution on Chainweb</b> – how hashrate is spread across pools and solo miners, from public block data.</li>
       </ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="data">
+    <div class="wrap">
+      <h2 id="data">Network data and reports</h2>
+      <ul class="ledger">
+        <li><span class="id">Monthly</span><div><h3><a href="/reports/">Kadena network reports</a></h3><p>Daily transactions, blocks and mining hashrate on all 20 chains, updated every week.</p><p class="links"><a href="/reports/">Read reports</a><a href="/reports/data/kadena-daily.csv">Daily network data (CSV)</a></p></div><span class="pill live">Ongoing</span></li>
+        <li><span class="id">Live</span><div><h3><a href="https://nodes.kadena.ws/">Kadena Network Monitor</a></h3><p>Nodes, throughput and chain health as they happen.</p></div><span class="pill live">Ongoing</span></li>
+        <li><span class="id">Daily</span><div><h3><a href="https://adoption.kadena.ws/">Kadena Adoption Index</a></h3><p>One number, updated daily, for whether the network is used more or less than its baseline.</p><p class="links"><a href="https://adoption.kadena.ws/methodology">Methodology</a></p></div><span class="pill live">Ongoing</span></li>
+        <li><span class="id">Daily</span><div><h3><a href="/tokenomics/">KDA tokenomics</a></h3><p>Supply and emission figures read from mainnet and rebuilt every day.</p></div><span class="pill live">Ongoing</span></li>
+      </ul>
+      <h3 class="rel-h">Related resources</h3>
+      <p class="rel"><a href="https://quantum.kadena.ws/">Quantum-Safe Kadena</a> – how post-quantum accounts will work on Kadena, with progress read from the core developers' public code.</p>
     </div>
   </section>
 
   <section aria-labelledby="standards">
     <div class="wrap">
-      <h2 id="standards">Methodology: how we publish</h2>
+      <h2 id="standards">How we publish</h2>
       <ol class="std">
-        <li><b>A permanent number and date</b><span>Every study keeps its NR number and address, so links and citations do not break.</span></li>
-        <li><b>The method, in plain words</b><span>What we sent, from where, for how long, and how each figure was calculated.</span></li>
-        <li><b>The limits, stated</b><span>What the result does not show, and where a measurement is approximate.</span></li>
-        <li><b>Checkable on chain</b><span>Accounts, block heights and data files are listed so results can be verified without trusting us.</span></li>
-        <li><b>Measured apart from projected</b><span>What we observed on mainnet is kept separate from design possibilities and estimates.</span></li>
-        <li><b>Corrections shown</b><span>If a figure changes after publication, the study says what changed and when.</span></li>
+        <li><b>Methodology</b><span>What we sent, from where, for how long, and how each figure was calculated, in plain words.</span></li>
+        <li><b>Data</b><span>Accounts, block heights and data files are listed so results can be checked on chain.</span></li>
+        <li><b>Limitations</b><span>What the result does not show, where a figure is approximate, and what is projected rather than measured.</span></li>
+        <li><b>Corrections</b><span>If a figure changes after publication, the study says what changed and when.</span></li>
       </ol>
       <p class="legal">Have a question you would like tested, or a correction? Write to <a href="mailto:Saudi.KDA@kadena.ws">Saudi.KDA@kadena.ws</a> or join the <a href="https://t.me/KadenaNexus">Kadena Nexus Telegram group</a>. Kadena Nexus is an independent community project, works alongside the Kadena Community Edition developers, and is not affiliated with Kadena LLC. Nothing here is financial advice.</p>
     </div>
