@@ -259,7 +259,7 @@ footer a:hover{color:var(--sand)}
 
 .dn{background:#0C1A2B;color:#C5D2DE;border-radius:20px;padding:clamp(1.3rem,3.2vw,2.2rem)}
 .dn-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.8rem 1.5rem}
-.dn-title{display:flex;align-items:center;gap:.7rem;color:#fff;font:700 clamp(1.15rem,2.2vw,1.45rem)/1.2 var(--display)}
+.dn-title{margin:0;display:flex;align-items:center;gap:.7rem;color:#fff;font:700 clamp(1.15rem,2.2vw,1.45rem)/1.2 var(--display)}
 .dn-dot{width:.7rem;height:.7rem;border-radius:50%;background:#64748B;flex:none}
 .dn[data-state="on"] .dn-dot{background:#34D399;box-shadow:0 0 0 0 rgba(52,211,153,.6);animation:dnpulse 2s infinite}
 .dn[data-state="off"] .dn-dot{background:#F87171}
@@ -320,7 +320,7 @@ footer a:hover{color:var(--sand)}
       <p class="crumb"><a href="/">Kadena Nexus</a> / <a href="/research/">Research</a> / Nexus devnet</p>
       <div class="dn" data-devnet data-state="wait">
         <div class="dn-head">
-          <span class="dn-title"><span class="dn-dot" aria-hidden="true"></span>Nexus devnet</span>
+          <h1 class="dn-title"><span class="dn-dot" aria-hidden="true"></span>Nexus devnet</h1>
           <span class="dn-state" data-dn="state">Connecting…</span>
         </div>
         <p class="dn-facts"><span><b data-dn="node">chainweb-node</b></span><span><b data-dn="chains">20 chains</b></span><span data-dn="block"></span></p>
