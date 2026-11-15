@@ -15,6 +15,8 @@ explanations around them stay hand-written. Sources:
   - Mining (/mining/): network hashrate and each mining account's share of the
     last hour of blocks, counted on chain by Kadena Garden (mine.kadena.ws/api/meter);
     the block reward from its confirmed blocks; the KDA price from Gate.io
+  - Kadena's transfer fee and its ratio to Ethereum's, from site/research/fees/
+    fees.json (built just before by scripts/fees/build_fees.py)
   - Wallet, game and NFT lists (/wallets/, /games/) from kda-chain.org
 
 Lists are replaced inside <ul data-auto="NAME"> and <tbody data-auto="NAME">.
@@ -253,6 +255,18 @@ def mining():
     return out
 
 
+def fees():
+    """Kadena's transfer cost and how it compares with Ethereum, from
+    site/research/fees/fees.json (built just before by scripts/fees/build_fees.py)."""
+    sys.path.insert(0, os.path.join(ROOT, "scripts", "fees"))
+    import build_fees as bf
+    rows = {r["key"]: r for r in json.load(open(os.path.join(SITE, "research", "fees", "fees.json")))["chains"]}
+    k, e = rows["kadena"], rows["ethereum"]
+    if k.get("stale") or not (0 < k["native_usd"] < 0.01) or not e["native_usd"] > k["native_usd"]:
+        raise ValueError(f"fees {k['native_usd']} {e['native_usd']}")
+    return "about " + bf.usd(k["native_usd"]), bf.cheaper(k["native_usd"], e["native_usd"])
+
+
 def tokenomics():
     """Circulating supply and frozen platform share, as counted by
     scripts/tokenomics/build_tokenomics.py earlier in the same build."""
@@ -289,6 +303,7 @@ def gather():
     put(network_today, lambda s: {"network-today": esc(s)})
     put(gate_status, lambda s: {"gate-status": esc(s)})
     put(tokenomics, lambda s: {"supply": f"about {s[0] / 1e6:.0f} million KDA", "frozen": f"{s[1]:,.0f} KDA"})
+    put(fees, lambda s: {"kda-fee": esc(s[0]), "kda-fee-vs-eth": esc(s[1])})
     put(wallet_list, lambda s: {"wallet-list": s})
     put(game_list, lambda s: {"game-list": s})
     put(mining, lambda s: s)
