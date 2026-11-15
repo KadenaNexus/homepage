@@ -256,6 +256,32 @@ footer a:hover{color:var(--sand)}
 @media (max-width:1000px){.std{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:560px){.std{grid-template-columns:1fr}}
 .rs .legal{font-size:.9rem;margin-top:2.5rem;max-width:80ch}
+
+.dn{background:#0C1A2B;color:#C5D2DE;border-radius:20px;padding:clamp(1.3rem,3.2vw,2.2rem)}
+.dn-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.8rem 1.5rem}
+.dn-title{display:flex;align-items:center;gap:.7rem;color:#fff;font:700 clamp(1.15rem,2.2vw,1.45rem)/1.2 var(--display)}
+.dn-dot{width:.7rem;height:.7rem;border-radius:50%;background:#64748B;flex:none}
+.dn[data-state="on"] .dn-dot{background:#34D399;box-shadow:0 0 0 0 rgba(52,211,153,.6);animation:dnpulse 2s infinite}
+.dn[data-state="off"] .dn-dot{background:#F87171}
+@keyframes dnpulse{0%{box-shadow:0 0 0 0 rgba(52,211,153,.55)}70%{box-shadow:0 0 0 .55rem rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+.dn-state{font:600 .82rem/1 var(--body);padding:.38rem .65rem;border-radius:999px;background:rgba(148,163,184,.15);color:#CBD5E1}
+.dn[data-state="on"] .dn-state{background:rgba(52,211,153,.14);color:#34D399}
+.dn[data-state="off"] .dn-state{background:rgba(248,113,113,.14);color:#FCA5A5}
+.dn-facts{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;margin-top:1rem;font-size:.92rem}
+.dn-facts b{color:#fff;font-weight:600}
+.dn-grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:.45rem;margin-top:1.3rem}
+.dn-c{position:relative;background:#132438;border:1px solid #22384F;border-radius:10px;padding:.55rem .5rem;text-align:center;transition:background .6s,border-color .6s}
+.dn-c span{display:block;font-size:.7rem;color:#8FA5B8}
+.dn-c b{display:block;margin-top:.15rem;font:600 1rem/1.1 var(--display);color:#fff;font-variant-numeric:tabular-nums}
+.dn-c.hit{background:#14463A;border-color:#34D399;transition:none}
+@media (max-width:900px){.dn-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media (max-width:420px){.dn-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.dn-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.6rem 1.5rem;margin-top:1.1rem;font-size:.86rem;color:#8FA5B8}
+.dn-foot a{color:#7CC4DA}
+.dn-total{font:700 clamp(1.6rem,3vw,2.2rem)/1 var(--display);color:#34D399;font-variant-numeric:tabular-nums}
+.dn-checks{list-style:none;margin:1rem 0 0;padding:0;display:flex;flex-wrap:wrap;gap:.45rem}
+.dn-checks li{font:600 .8rem/1 var(--body);padding:.42rem .65rem;border-radius:999px;background:rgba(52,211,153,.12);color:#34D399}
+.dn-checks li.no{background:rgba(248,113,113,.14);color:#FCA5A5}
 </style>
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -359,12 +385,31 @@ footer a:hover{color:var(--sand)}
     <div class="wrap">
       <h2 id="planned">Planned research</h2>
       <ul class="plan-list">
-        <li id="nr-002"><span class="id">NR-002</span><span class="pt"><b>Block gas limit scaling</b> – whether a higher block gas limit lifts sustained throughput, tested on a private network first. <em class="env">Private network</em></span></li>
+        <li id="nr-002"><span class="id">NR-002</span><span class="pt"><b>Block gas limit scaling</b> – whether a higher block gas limit lifts sustained throughput, tested first on the <a href="/research/devnet/">Nexus devnet</a>. <em class="env">Private network</em></span></li>
         <li id="nr-003"><span class="id">NR-003</span><span class="pt"><b>Chainweb horizontal scaling</b> – modeling 20, 40, 60 and 100-chain configurations. <em class="env">Modeling</em></span></li>
         <li id="nr-004"><span class="id">NR-004</span><span class="pt"><b>Block propagation and confirmation latency</b> – how load affects block intervals, orphaned blocks and confirmation times. <em class="env">Mainnet</em></span></li>
         <li id="nr-005"><span class="id">NR-005</span><span class="pt"><b>Mining distribution on Chainweb</b> – how hashrate is spread across pools and solo miners, from public block data. <em class="env">Mainnet</em></span></li>
         <li id="nr-006"><span class="id">NR-006</span><span class="pt"><b>Cross-chain transfer reliability</b> – over 30 days of mainnet transfers, how many are still incomplete after 10 minutes, one hour and 24 hours, and why. <em class="env">Mainnet</em></span></li>
       </ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="labs">
+    <div class="wrap">
+      <h2 id="labs">Nexus devnet, live</h2>
+      <p class="sub">Our private Kadena test network, running the same node software as mainnet. We use it to test Kadena Nexus apps with test KDA and for studies that need a private network, starting with NR-002. Each tile is one chain and flashes when a new block is added.</p>
+      <div style="margin-top:1.4rem">
+      <div class="dn" data-devnet data-state="wait">
+        <div class="dn-head">
+          <span class="dn-title"><span class="dn-dot" aria-hidden="true"></span>Nexus devnet</span>
+          <span class="dn-state" data-dn="state">Connecting…</span>
+        </div>
+        <p class="dn-facts"><span><b data-dn="node">chainweb-node</b></span><span><b data-dn="chains">20 chains</b></span><span data-dn="block"></span></p>
+        <div class="dn-grid" aria-label="Current block height of each chain"></div>
+        <div class="dn-foot"><span><span class="dn-total" data-dn="total">–</span> blocks so far</span><span data-dn="updated"></span></div>
+        <p class="dn-foot"><a href="/research/devnet/">About the Nexus devnet →</a></p>
+      </div>
+      </div>
     </div>
   </section>
 
@@ -395,6 +440,34 @@ footer a:hover{color:var(--sand)}
     </div>
   </section>
 </main>
+<script>
+(function(){
+  var els=document.querySelectorAll('[data-devnet]');if(!els.length)return;
+  var prev={},grids=[];
+  els.forEach(function(el){var g=el.querySelector('.dn-grid');if(g){for(var i=0;i<20;i++){var c=document.createElement('div');c.className='dn-c';c.innerHTML='<span>Chain '+i+'</span><b>–</b>';g.appendChild(c);}grids.push(g);}});
+  function fmt(n){return Number(n).toLocaleString('en-US');}
+  function ago(t){var s=Math.max(0,Math.round((Date.now()-Date.parse(t))/1000));return s<60?s+' s ago':Math.round(s/60)+' min ago';}
+  function set(sel,v){document.querySelectorAll(sel).forEach(function(e){e.textContent=v;});}
+  function render(d){
+    var fresh=d.online&&d.updated&&(Date.now()-Date.parse(d.updated))<120000;
+    els.forEach(function(el){el.dataset.state=fresh?'on':'off';});
+    set('[data-dn="state"]',fresh?'Online':'Offline');
+    if(!fresh){set('[data-dn="updated"]',d.updated?'Last seen '+ago(d.updated):'No data');return;}
+    set('[data-dn="node"]','chainweb-node '+d.nodeVersion);
+    set('[data-dn="chains"]',d.chains+' chains');
+    set('[data-dn="block"]','a block every '+(d.minerBlockSeconds||d.targetBlockSeconds)+' s on each chain');
+    set('[data-dn="total"]',fmt(d.totalBlocks));
+    set('[data-dn="updated"]','Updated '+ago(d.updated));
+    grids.forEach(function(g){Object.keys(d.heights).forEach(function(k){var c=g.children[+k];if(!c)return;var h=d.heights[k];c.querySelector('b').textContent=fmt(h);if(prev[k]!==undefined&&h>prev[k]){c.classList.add('hit');setTimeout(function(){c.classList.remove('hit');},700);}});});
+    prev=Object.assign({},d.heights);
+    var lc=d.lastCheck;var ul=document.querySelectorAll('[data-dn="checks"]');
+    if(lc&&ul.length){var html=lc.checks.map(function(c){return '<li'+(c.pass?'':' class="no"')+'>'+(c.pass?'✓ ':'✕ ')+c.name+'</li>';}).join('');ul.forEach(function(u){u.innerHTML=html;});
+      set('[data-dn="checkdate"]',(lc.passed?'All passed':'Some failed')+' on '+new Date(lc.date+'T00:00:00Z').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric',timeZone:'UTC'})+(lc.transferGas?' · transfer '+lc.transferGas+' gas, contract deploy '+lc.deployGas+' gas':''));}
+  }
+  function load(){fetch('https://devnet.kadena.ws/status.json',{cache:'no-store'}).then(function(r){return r.json();}).then(render).catch(function(){render({online:false});});}
+  load();setInterval(load,5000);
+})();
+</script>
 
 <footer>
   <div class="wrap">
