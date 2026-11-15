@@ -185,47 +185,48 @@ footer a:hover{color:var(--sand)}
 <style>
 .nav a[aria-current]{color:var(--sand);font-weight:600}
 .rs a{color:var(--teal)}
-.rs-hero{border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--ink) 70%)}
-.rs-hero .wrap{padding-block:3rem 3.5rem}
-.crumb{font-size:.9rem;margin-bottom:1.6rem}
-.eyebrow{display:inline-flex;align-items:center;gap:.6rem;font:600 .82rem/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
-.eyebrow::before{content:"";width:1.6rem;height:2px;background:var(--pink)}
-.rs-hero h1{font-size:clamp(2.3rem,5vw,4.2rem);line-height:1.04;font-weight:700;max-width:16ch;margin-top:1rem}
-.rs-hero .lede{margin-top:1.2rem;font-size:1.2rem;max-width:58ch}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:2.6rem;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--ink)}
-.stats div{padding:1.3rem 1.5rem;border-left:1px solid var(--line)}
-.stats div:first-child{border-left:0}
-.stats b{display:block;font:700 clamp(1.9rem,3.6vw,2.8rem)/1 var(--display);color:var(--sand);font-variant-numeric:tabular-nums}
-.stats span{display:block;margin-top:.45rem;font-size:.92rem}
-.stats-src{margin-top:.7rem;font-size:.88rem}
-@media (max-width:700px){.stats{grid-template-columns:1fr}.stats div{border-left:0;border-top:1px solid var(--line)}.stats div:first-child{border-top:0}}
-.rs section{padding-block:clamp(3rem,6vw,4.5rem)}
+.rs-top{padding-block:2rem 0}
+.crumb{font-size:.9rem;margin-bottom:1.2rem}
+.panel{background:#0C1A2B;color:#C5D2DE;border-radius:20px;padding:clamp(1.4rem,3.5vw,2.6rem)}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.panel-name{display:inline-flex;align-items:center;gap:.6rem;font:700 1rem/1 var(--display);letter-spacing:.06em;text-transform:uppercase;color:#fff}
+.panel-name svg{width:1.15rem;height:1.15rem;stroke:#34D399;fill:none;stroke-width:2}
+.badge{font:600 .8rem/1 var(--body);color:#34D399;background:rgba(52,211,153,.14);padding:.4rem .7rem;border-radius:999px}
+.panel h1{color:#fff;font-size:clamp(2rem,4.4vw,3.4rem);line-height:1.06;font-weight:700;margin-top:clamp(1.6rem,4vw,2.6rem);max-width:22ch}
+.panel .lede{margin-top:.8rem;font-size:1.15rem;max-width:60ch}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem;margin-top:1.8rem}
+.stats a{display:block;text-decoration:none;background:#1A2C3F;border:1px solid transparent;border-radius:12px;padding:1rem 1.2rem}
+.stats a:hover{border-color:#34D399}
+.stats b{display:block;font:700 clamp(1.7rem,3.4vw,2.5rem)/1 var(--display);color:#34D399;font-variant-numeric:tabular-nums}
+.stats span{display:block;margin-top:.45rem;font-size:.88rem;color:#C5D2DE}
+@media (max-width:620px){.stats{grid-template-columns:1fr}}
+.rs section{padding-block:clamp(2.4rem,5vw,3.6rem)}
 .rs section+section{border-top:1px solid var(--line)}
-.rs h2{font-size:clamp(1.7rem,3vw,2.4rem);line-height:1.1}
+.rs h2{font-size:clamp(1.5rem,2.6vw,2rem);line-height:1.1}
 .rs .sub{margin-top:.7rem;max-width:62ch}
-.feature{margin-top:2rem;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:2rem 3rem;padding:clamp(1.5rem,4vw,2.4rem);border-radius:20px;background:var(--deep);color:#B9CDD5}
-.feature h3{color:#fff;font-size:clamp(1.5rem,2.8vw,2.1rem);line-height:1.12;margin-top:.8rem}
-.feature p{margin-top:.9rem;max-width:56ch}
-.feature .id{font:600 .8rem/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:#F4A65B}
-.feature .btn{margin-top:1.5rem;background:#fff;border-color:#fff;color:var(--sand)}
-.feature .btn:hover{background:var(--panel);border-color:var(--panel)}
-.feature dl{margin:0;display:grid;gap:.9rem;align-content:start}
-.feature dt{font-size:.8rem;color:#8FB0BC}
-.feature dd{margin:.1rem 0 0;color:#fff;font-weight:500}
-@media (max-width:860px){.feature{grid-template-columns:1fr}}
-.pill{display:inline-block;font:600 .76rem/1 var(--body);padding:.34rem .6rem;border-radius:999px;white-space:nowrap}
-.pill.done{background:#E3F1EA;color:#17603C}
+.rs a{color:var(--teal)}
+.h-row{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.pill{display:inline-block;font:600 .78rem/1 var(--body);padding:.36rem .65rem;border-radius:999px;white-space:nowrap}
+.pill.done{background:#DDF3E6;color:#17603C}
 .pill.live{background:#E1EEF2;color:var(--teal)}
-.pill.plan{background:var(--panel);color:var(--mist);border:1px solid var(--line)}
-.feature .pill.done{margin-left:.6rem;vertical-align:middle}
-.areas{list-style:none;margin:2rem 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
-.areas li{padding:1.3rem 1.3rem 1.4rem;border:1px solid var(--line);border-radius:16px;border-top:3px solid var(--teal)}
-.areas li:nth-child(even){border-top-color:var(--pink)}
-.areas h3{font-size:1.2rem}
-.areas p{margin-top:.5rem;font-size:.95rem}
-.areas .n{display:block;margin-top:.9rem;font-size:.85rem;color:var(--sand);font-weight:600}
-@media (max-width:1000px){.areas{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pill.plan,.pill.date{background:var(--panel);color:var(--sand);border:1px solid var(--line)}
+.feature{display:block;margin-top:1.2rem;padding:clamp(1.2rem,3vw,1.8rem);border:1px solid var(--line);border-radius:16px;text-decoration:none;color:var(--mist)!important;transition:border-color .15s}
+.feature:hover{border-color:var(--teal)}
+.feature .id{display:flex;align-items:center;gap:.55rem;font:500 .82rem/1 var(--body);letter-spacing:.06em;text-transform:uppercase}
+.feature .id svg,.areas svg{width:1.15rem;height:1.15rem;stroke:#17603C;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.feature h3{font-size:clamp(1.3rem,2.4vw,1.7rem);line-height:1.2;margin-top:.9rem}
+.feature p{margin-top:.6rem;max-width:80ch}
+.feature .foot{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.1rem}
+.feature .more{color:var(--sand);font-weight:600;border-bottom:1px dotted var(--sand)}
+.areas{list-style:none;margin:1.2rem 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
+.areas a{display:block;height:100%;padding:1.1rem 1.2rem;border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--mist)!important;transition:border-color .15s}
+.areas a:hover{border-color:var(--teal)}
+.areas h3{font-size:1.12rem;margin-top:.6rem}
+.areas p{margin-top:.25rem;font-size:.95rem}
 @media (max-width:560px){.areas{grid-template-columns:1fr}}
+.quick{margin-top:1.4rem;font-size:.92rem}
+.quick a{color:var(--mist);text-decoration:none}
+.quick a:hover{color:var(--teal);text-decoration:underline}
 .ledger{list-style:none;margin:2rem 0 0;padding:0;border-top:1px solid var(--line)}
 .ledger li{display:grid;grid-template-columns:5.5rem minmax(0,1fr) auto;gap:.4rem 1.5rem;padding:1.3rem 0;border-bottom:1px solid var(--line);align-items:start}
 .ledger .id{font:600 .9rem/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--teal)}
@@ -291,38 +292,34 @@ footer a:hover{color:var(--sand)}
 </header>
 
 <main id="main" class="rs">
-  <div class="rs-hero">
+  <div class="rs-top">
     <div class="wrap">
       <p class="crumb"><a href="/">Kadena Nexus</a> / Research</p>
-      <span class="eyebrow">Nexus Research</span>
-      <h1>Understanding Chainweb through evidence.</h1>
-      <p class="lede">Mainnet experiments, benchmarks and network studies on Kadena, published by Kadena Nexus with the method, the limits and the data, so anyone can check the results on chain.</p>
-      <div class="stats" aria-label="Headline results from study NR-001">
-        <div><b>408 TPS</b><span>processed at the busiest height, all 20 chains full</span></div>
-        <div><b>226.2 TPS</b><span>sustained over 100 consecutive blocks</span></div>
-        <div><b>179,700</b><span>transactions processed in one three-minute run</span></div>
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-name"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 20.2 7.25v9.5L12 21.5 3.8 16.75v-9.5Z"/></svg>Nexus Research</span>
+          <span class="badge">Independent</span>
+        </div>
+        <h1>Understanding Chainweb through evidence.</h1>
+        <p class="lede">Real-world experiments, reproducible benchmarks and independent research on Kadena.</p>
+        <div class="stats" aria-label="Headline results from study NR-001">
+          <a href="/tps/"><b>408</b><span>Peak TPS</span></a>
+          <a href="/tps/"><b>226.2</b><span>100-block TPS</span></a>
+          <a href="/tps/"><b>179.7K</b><span>Confirmed transactions</span></a>
+        </div>
       </div>
-      <p class="stats-src">From <a href="/tps/">NR-001, the Kadena mainnet stress test</a>, November 14, 2026.</p>
     </div>
   </div>
 
   <section aria-labelledby="featured">
     <div class="wrap">
-      <h2 id="featured">Featured study</h2>
-      <div class="feature">
-        <div>
-          <span class="id">Network performance · NR-001</span><span class="pill done">Completed</span>
-          <h3>Kadena mainnet stress test: from 5 to 1,000 TPS</h3>
-          <p>Six measured runs on mainnet from our own test accounts at the minimum fee. Kadena accepted 1,000 transfers a second for three minutes and processed every one, reaching the 408 TPS that today's block size allows across 20 chains, with no downtime.</p>
-          <a class="btn" href="/tps/">Read the findings</a>
-        </div>
-        <dl>
-          <div><dt>Published</dt><dd>November 14, 2026</dd></div>
-          <div><dt>Network</dt><dd>Kadena mainnet, all 20 chains</dd></div>
-          <div><dt>Measured</dt><dd>Throughput, block times, orphaned blocks, other users' confirmation times</dd></div>
-          <div><dt>Data</dt><dd>Test accounts listed with each run, checkable on chain</dd></div>
-        </dl>
-      </div>
+      <div class="h-row"><h2 id="featured">Featured research</h2><span class="pill date">November 2026</span></div>
+      <a class="feature" href="/tps/">
+        <span class="id"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M7 13.5l3-3 2.5 2.5L17 8.5"/></svg>Network performance / NR-001</span>
+        <h3>Kadena mainnet stress test: from 5 to 1,000 TPS</h3>
+        <p>Six measured test runs across 20 Chainweb chains. Full-block capacity, block times, orphaned blocks and how the network recovered.</p>
+        <span class="foot"><span class="pill done">Completed</span><span class="more">Read findings ↗</span></span>
+      </a>
     </div>
   </section>
 
@@ -330,11 +327,12 @@ footer a:hover{color:var(--sand)}
     <div class="wrap">
       <h2 id="areas">Research areas</h2>
       <ul class="areas">
-        <li><h3>Benchmarks and experiments</h3><p>Throughput, gas, latency and load tests on the live network.</p><span class="n">1 study published</span></li>
-        <li><h3>Chainweb and scaling</h3><p>Block size, block time and chain count, and how each changes capacity.</p><span class="n">Studies planned</span></li>
-        <li><h3>Security</h3><p>Post-quantum accounts, wallet and Pact contract safety.</p><span class="n">1 live tracker</span></li>
-        <li><h3>Network economics</h3><p>Mining, hashrate, supply and how the network is used.</p><span class="n">3 live data sets</span></li>
+        <li><a href="#studies"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 16.5a8 8 0 1 1 15 0"/><path d="M12 13l3.5-4"/><circle cx="12" cy="13.5" r="1"/></svg><h3>Performance</h3><p>TPS, gas, latency</p></a></li>
+        <li><a href="#studies"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="5.5" cy="18" r="2"/><circle cx="18.5" cy="18" r="2"/><circle cx="12" cy="18" r="2"/><path d="M12 7v9M12 11.5H5.5V16M12 11.5h6.5V16"/></svg><h3>Chainweb</h3><p>Scaling and consensus</p></a></li>
+        <li><a href="https://quantum.kadena.ws/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 2.8v5.4c0 4.3-2.9 7.6-7 9.3-4.1-1.7-7-5-7-9.3V5.8Z"/><path d="M9 12l2.2 2.2L15.2 10"/></svg><h3>Security</h3><p>Protocol and contracts</p></a></li>
+        <li><a href="#live"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V14M9 20V10M14 20v-7M19 20V6"/><path d="M4 9l5-4 5 3 5-5"/></svg><h3>Economics</h3><p>Mining and adoption</p></a></li>
       </ul>
+      <p class="quick"><a href="/reports/">Reports</a> · <a href="/reports/data/kadena-daily.csv">Datasets</a> · <a href="https://github.com/KadenaNexus">Source code</a> · <a href="#standards">Methodology</a></p>
     </div>
   </section>
 
@@ -368,7 +366,7 @@ footer a:hover{color:var(--sand)}
 
   <section aria-labelledby="standards">
     <div class="wrap">
-      <h2 id="standards">How we publish</h2>
+      <h2 id="standards">Methodology: how we publish</h2>
       <ol class="std">
         <li><b>A permanent number and date</b><span>Every study keeps its NR number and address, so links and citations do not break.</span></li>
         <li><b>The method, in plain words</b><span>What we sent, from where, for how long, and how each figure was calculated.</span></li>
