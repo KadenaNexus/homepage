@@ -27,7 +27,7 @@ import statistics as st
 import sys
 import urllib.request
 
-GENERATOR = "kadena-nexus-network-report 6"
+GENERATOR = "kadena-nexus-network-report 7"
 BASE = "https://kadena.ws/reports/"
 TEAL, INK, MUTED, GRID = "#1C637B", "#123A48", "#4F6B76", "#D6E0E4"
 PALE = "#9DBFCB"  # the recorder's share in the stacked all-transactions chart
@@ -303,6 +303,7 @@ def shell(site, page_title, desc, url, ld, extra_css, body):
 .policy code{{font-size:.9em;background:var(--panel);padding:.05em .3em;border-radius:4px}}
 .policy .topbar{{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;margin-bottom:.8rem}}
 .policy .topbar .crumb{{margin:0}}
+.policy .back{{margin:2.5rem 0 0;font-weight:600}}.policy .back a{{color:var(--teal);text-decoration:none}}.policy .back a:hover{{text-decoration:underline}}
 .policy .upd{{margin:0 0 0 auto;font-size:.82rem;line-height:1.3;color:var(--sand);font-weight:500;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.35rem .8rem;display:inline-flex;align-items:center;gap:.45rem}}
 .policy .upd .nx{{white-space:nowrap}}
 .policy .upd .dot{{width:.5rem;height:.5rem;border-radius:50%;background:var(--teal);flex:none}}
@@ -524,6 +525,7 @@ def build_month(all_days, year, month, site, snap, published=None):
 
       <h2>Follow the network live</h2>
       <p>The <a href="https://nodes.kadena.ws/">Kadena Network Monitor</a> shows every block as it lands, throughput and confirmation times. The <a href="https://adoption.kadena.ws/">Adoption Index</a> updates daily. Other months: <a href="/reports/">all Kadena network reports</a>. Supply and the frozen platform share: <a href="/tokenomics/">KDA tokenomics</a>. New to Kadena? Start with <a href="/community-edition/">What is Kadena Community Edition?</a></p>
+      <p class="back"><a href="/research/">← Back to Nexus Research</a></p>
       <p class="updated">Kadena Nexus is an independent community project and is not affiliated with Kadena LLC. Nothing here is financial advice.</p>
     </div>
   </article>
@@ -577,6 +579,7 @@ def build_index(all_days, site, today):
       <p>Every day since {fdate(first)}, {first.year} is in one file, with transactions per chain and recorder calls counted separately: <a href="/reports/data/kadena-daily.csv" download>Kadena daily network data (CSV)</a>. It is free to use with credit to Kadena Nexus (CC BY 4.0).</p>
       <h2>Live numbers</h2>
       <p>For what is happening right now, see the <a href="https://nodes.kadena.ws/">Kadena Network Monitor</a> and today's <a href="https://adoption.kadena.ws/">Adoption Index</a>. Daily news: <a href="/news/">Kadena news</a>.</p>
+      <p class="back"><a href="/research/">← Back to Nexus Research</a></p>
       <p class="updated">Kadena Nexus is an independent community project and is not affiliated with Kadena LLC. Nothing here is financial advice.</p>
     </div>
   </article>

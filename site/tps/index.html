@@ -276,6 +276,7 @@ details summary{cursor:pointer;font-weight:600}
 .policy code{font-size:.9em;background:var(--panel);padding:.05em .3em;border-radius:4px}
 .policy .topbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;margin-bottom:.8rem}
 .policy .topbar .crumb{margin:0}
+.policy .back{margin:2.5rem 0 0;font-weight:600}.policy .back a{color:var(--teal);text-decoration:none}.policy .back a:hover{text-decoration:underline}
 .policy .upd{margin:0 0 0 auto;font-size:.82rem;line-height:1.3;color:var(--sand);font-weight:500;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.35rem .8rem;display:inline-flex;align-items:center;gap:.45rem}
 .policy .upd .nx{white-space:nowrap}
 .policy .upd .dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--teal);flex:none}
@@ -409,7 +410,7 @@ details summary{cursor:pointer;font-weight:600}
 
       </details>
 
-      <h2>Check it yourself</h2>
+      <h2 id="check">Check it yourself</h2>
       <ul>
         <li>Gas per transfer: the <code>gas</code> field of any simple <code>coin.transfer</code> result, on any explorer.</li>
         <li>Test transactions: every run lists its test accounts with a link to <a href="https://denascan.com">Denascan</a>, and each run from Nov 14, 2026 publishes every request key with its chain, block height and result, so anyone can look up each transaction (also on <a href="https://explorer.chainweb-community.org/mainnet">the community explorer</a>).</li>
@@ -427,6 +428,7 @@ details summary{cursor:pointer;font-weight:600}
       <h2>More</h2>
       <p>Live network health: <a href="https://nodes.kadena.ws/">Network Monitor</a>. Large KDA moves: <a href="/whales/">Whale Watch</a>. Network activity month by month: <a href="/reports/">Kadena network reports</a>.</p>
       <p class="updated">Kadena Nexus is an independent community project and is not affiliated with Kadena LLC. It works alongside the kda-community developers and the community DAO. Figures are Kadena Nexus readings of public chain data and the node source code, Nov 14, 2026. Other chains' figures are as reported by the sources listed.</p>
+      <p class="back"><a href="/research/">← Back to Nexus Research</a></p>
     </div>
   </article>
 </main>
