@@ -267,7 +267,15 @@ footer a:hover{color:var(--sand)}
      "name": "How many transactions per second can Kadena process?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "In a mainnet stress test on November 14, 2026, Kadena accepted 1,000 transactions per second for three minutes and processed all 179,700, with zero downtime. At the busiest height all 20 chains produced full blocks at once: 408 TPS, about 38 times Bitcoin's busiest day."
+      "text": "In our mainnet stress test on November 14, 2026, Kadena accepted 1,000 transactions per second for three minutes and processed all 179,700, with zero downtime. At the busiest height all 20 chains produced full blocks at once: 408 TPS, about 38 times Bitcoin's busiest day. Full results: Kadena mainnet stress test."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "How much does a Kadena transaction cost?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "A simple KDA transfer costs a tiny fraction of a cent: about $0.000000029 today, about 275 thousand times less than the same transfer on Ethereum. Fees are paid in KDA, and an app can also pay them for its users through a gas station. Kadena is cheap partly because KDA's price and network use are low today, but fees stayed at the minimum even when every block was full in our stress test. We compare Kadena with nine other chains every day: transfer fees today."
      }
     },
     {
@@ -315,7 +323,7 @@ footer a:hover{color:var(--sand)}
      "name": "How do I buy KDA?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "On an exchange that still lists it (Gate.io or AnonKyc), by bridging USDC to Kadena and swapping on a Kadena DEX (Kadeway at buy.kadena.ws does both in one guided flow), or person to person on the Kadena P2P Marketplace. See How to buy KDA for each route step by step."
+      "text": "On an exchange that still lists it (Gate.io or AnonKyc), by bridging USDC to Kadena and swapping on a Kadena DEX (Kadeway does both in one guided flow), or person to person on the Kadena P2P Marketplace. See How to buy KDA for each route step by step."
      }
     },
     {
@@ -474,6 +482,8 @@ footer a:hover{color:var(--sand)}
       <p>Each of Kadena's 20 chains targets one block every 30 seconds, so the network as a whole adds about 40 blocks a minute. The <a href="https://nodes.kadena.ws/">Kadena Network Monitor</a> shows the live average block time and every block as it lands.</p>
       <h3>How many transactions per second can Kadena process?</h3>
       <p>In our mainnet stress test on November 14, 2026, Kadena accepted 1,000 transactions per second for three minutes and processed all 179,700, with zero downtime. At the busiest height all 20 chains produced full blocks at once: 408 TPS, about 38 times Bitcoin's busiest day. Full results: <a href="/tps/">Kadena mainnet stress test</a>.</p>
+      <h3>How much does a Kadena transaction cost?</h3>
+      <p>A simple KDA transfer costs a tiny fraction of a cent: <span data-auto="kda-fee">about $0.000000029</span> today, <span data-auto="kda-fee-vs-eth">about 275 thousand times</span> less than the same transfer on Ethereum. Fees are paid in KDA, and an app can also pay them for its users through a gas station. Kadena is cheap partly because KDA's price and network use are low today, but fees stayed at the minimum even when every block was full in our stress test. We compare Kadena with nine other chains every day: <a href="/research/fees/">transfer fees today</a>.</p>
       <h3>How many chains does Kadena have?</h3>
       <p>20. Each chain links to three others in a braided pattern, so the chains confirm each other's blocks. Your account has the same name on every chain, and KDA can be moved between chains.</p>
       <h3>What is the maximum supply of KDA?</h3>
