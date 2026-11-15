@@ -232,8 +232,10 @@ footer a:hover{color:var(--sand)}
 .feature .more{color:var(--sand);font-weight:600;border-bottom:1px dotted var(--sand)}
 .ledger .links{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin-top:.5rem;font-size:.92rem;font-weight:600}
 .plan-list{list-style:none;margin:1.2rem 0 0;padding:0;border-top:1px solid var(--line)}
-.plan-list li{padding:.85rem 0;border-bottom:1px solid var(--line);font-size:.98rem}
-.plan-list .id{display:inline-block;min-width:5.5rem;font:600 .88rem ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mist)}
+.plan-list li{display:grid;grid-template-columns:5.5rem minmax(0,1fr);gap:.2rem 1rem;padding:.85rem 0;border-bottom:1px solid var(--line);font-size:.98rem}
+.plan-list .env{display:inline-block;margin-left:.3rem;font:600 .74rem/1 var(--body);font-style:normal;color:var(--teal);background:#E1EEF2;padding:.28rem .5rem;border-radius:999px;vertical-align:.1em}
+@media (max-width:560px){.plan-list li{grid-template-columns:1fr}}
+.plan-list .id{font:600 .88rem ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mist)}
 .plan-list b{color:var(--sand);font-weight:600}
 .rel-h{font-size:1.1rem;margin-top:2.2rem}
 .rel{margin-top:.5rem;font-size:.97rem}
@@ -317,7 +319,7 @@ footer a:hover{color:var(--sand)}
             <p class="lede">Real-world experiments, reproducible benchmarks and independent research on Kadena.</p>
           </div>
           <nav class="areas" aria-label="Research areas">
-            <a href="#suggest"><b>DeFi and applications</b><span>DEX liquidity, bridges, wallets and cross-chain transfers</span><i class="st plan">Open for study proposals</i></a>
+            <a href="#nr-006"><b>DeFi and applications</b><span>DEX liquidity, bridges, wallets and cross-chain transfers</span><i class="st plan">1 planned</i></a>
             <a href="https://quantum.kadena.ws/"><b>Security and privacy</b><span>Pact contract safety, wallet security and post-quantum research</span><i class="st live">Live tracker</i></a>
             <a href="#nr-001"><b>Chainweb and scaling</b><span>Block capacity, propagation and adding chains</span><i class="st done">1 published · 3 planned</i></a>
             <a href="#nr-005"><b>Mining and network economics</b><span>Mining distribution, fees, token supply and incentives</span><i class="st plan">1 planned · live data</i></a>
@@ -357,10 +359,11 @@ footer a:hover{color:var(--sand)}
     <div class="wrap">
       <h2 id="planned">Planned research</h2>
       <ul class="plan-list">
-        <li id="nr-002"><span class="id">NR-002</span><b>Block gas limit scaling</b> – whether a higher block gas limit lifts sustained throughput, tested on a private network first.</li>
-        <li id="nr-003"><span class="id">NR-003</span><b>Chainweb horizontal scaling</b> – modeling 20, 40, 60 and 100-chain configurations.</li>
-        <li id="nr-004"><span class="id">NR-004</span><b>Block propagation and confirmation latency</b> – how load affects block intervals, orphaned blocks and confirmation times.</li>
-        <li id="nr-005"><span class="id">NR-005</span><b>Mining distribution on Chainweb</b> – how hashrate is spread across pools and solo miners, from public block data.</li>
+        <li id="nr-002"><span class="id">NR-002</span><span class="pt"><b>Block gas limit scaling</b> – whether a higher block gas limit lifts sustained throughput, tested on a private network first. <em class="env">Private network</em></span></li>
+        <li id="nr-003"><span class="id">NR-003</span><span class="pt"><b>Chainweb horizontal scaling</b> – modeling 20, 40, 60 and 100-chain configurations. <em class="env">Modeling</em></span></li>
+        <li id="nr-004"><span class="id">NR-004</span><span class="pt"><b>Block propagation and confirmation latency</b> – how load affects block intervals, orphaned blocks and confirmation times. <em class="env">Mainnet</em></span></li>
+        <li id="nr-005"><span class="id">NR-005</span><span class="pt"><b>Mining distribution on Chainweb</b> – how hashrate is spread across pools and solo miners, from public block data. <em class="env">Mainnet</em></span></li>
+        <li id="nr-006"><span class="id">NR-006</span><span class="pt"><b>Cross-chain transfer reliability</b> – over 30 days of mainnet transfers, how many are still incomplete after 10 minutes, one hour and 24 hours, and why. <em class="env">Mainnet</em></span></li>
       </ul>
     </div>
   </section>
