@@ -194,6 +194,18 @@ footer a:hover{color:var(--sand)}
 .badge{font:600 .8rem/1 var(--body);color:#34D399;background:rgba(52,211,153,.14);padding:.4rem .7rem;border-radius:999px}
 .panel h1{color:#fff;font-size:clamp(2rem,4.4vw,3.4rem);line-height:1.06;font-weight:700;margin-top:clamp(1.6rem,4vw,2.6rem);max-width:22ch}
 .panel .lede{margin-top:.8rem;font-size:1.15rem;max-width:60ch}
+.panel-body{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:1.5rem 2.5rem;align-items:center;margin-top:clamp(1.6rem,4vw,2.6rem)}
+.panel-body h1{margin-top:0}
+.areas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
+.areas a{display:flex;flex-direction:column;gap:.3rem;padding:.9rem 1rem;border-radius:12px;background:#132438;border:1px solid #22384F;text-decoration:none;color:#A9BBCB!important;transition:border-color .15s,background .15s}
+.areas a:hover{border-color:#34D399;background:#17293F}
+.areas b{color:#fff;font:600 .98rem/1.25 var(--display)}
+.areas span{font-size:.84rem;line-height:1.4}
+.areas .st{margin-top:auto;padding-top:.35rem;font:600 .74rem/1 var(--body);font-style:normal}
+.areas .st.done{color:#34D399}.areas .st.live{color:#7CC4DA}.areas .st.plan{color:#F4A65B}
+@media (max-width:900px){.panel-body{grid-template-columns:1fr}}
+@media (max-width:420px){.areas{grid-template-columns:1fr}}
+.plan-list li:target,.ledger li:target{background:#FFF6EC;box-shadow:-.6rem 0 0 #FFF6EC,.6rem 0 0 #FFF6EC}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem;margin-top:1.8rem}
 .stats a{display:block;text-decoration:none;background:#1A2C3F;border:1px solid transparent;border-radius:12px;padding:1rem 1.2rem}
 .stats a:hover{border-color:#34D399}
@@ -299,8 +311,18 @@ footer a:hover{color:var(--sand)}
           <span class="panel-name"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 20.2 7.25v9.5L12 21.5 3.8 16.75v-9.5Z"/></svg>Nexus Research</span>
           <span class="badge">Independent</span>
         </div>
-        <h1>Understanding Chainweb through evidence.</h1>
-        <p class="lede">Real-world experiments, reproducible benchmarks and independent research on Kadena.</p>
+        <div class="panel-body">
+          <div>
+            <h1>Understanding Chainweb through evidence.</h1>
+            <p class="lede">Real-world experiments, reproducible benchmarks and independent research on Kadena.</p>
+          </div>
+          <nav class="areas" aria-label="Research areas">
+            <a href="#suggest"><b>DeFi and applications</b><span>DEX liquidity, bridges, wallets and cross-chain transfers</span><i class="st plan">Open for study proposals</i></a>
+            <a href="https://quantum.kadena.ws/"><b>Security and privacy</b><span>Pact contract safety, wallet security and post-quantum research</span><i class="st live">Live tracker</i></a>
+            <a href="#nr-001"><b>Chainweb and scaling</b><span>Block capacity, propagation and adding chains</span><i class="st done">1 published · 3 planned</i></a>
+            <a href="#nr-005"><b>Mining and network economics</b><span>Mining distribution, fees, token supply and incentives</span><i class="st plan">1 planned · live data</i></a>
+          </nav>
+        </div>
         <div class="stats" aria-label="Headline results from study NR-001">
           <a href="/tps/"><b>408</b><span>Peak TPS</span></a>
           <a href="/tps/"><b>226.2</b><span>100-block TPS</span></a>
@@ -326,7 +348,7 @@ footer a:hover{color:var(--sand)}
     <div class="wrap">
       <h2 id="published">Published studies</h2>
       <ol class="ledger">
-        <li><span class="id">NR-001</span><div><h3><a href="/tps/">Kadena mainnet throughput and saturation study</a></h3><p>How many transactions per second Kadena processes today, tested from 5 to 1,000 TPS, and where the limit comes from.</p><p class="meta">Benchmarks and experiments · November 14, 2026 · Mainnet</p><p class="links"><a href="/tps/">Read study</a><a href="/tps/#check">View data</a></p></div><span class="pill done">Completed</span></li>
+        <li id="nr-001"><span class="id">NR-001</span><div><h3><a href="/tps/">Kadena mainnet throughput and saturation study</a></h3><p>How many transactions per second Kadena processes today, tested from 5 to 1,000 TPS, and where the limit comes from.</p><p class="meta">Benchmarks and experiments · November 14, 2026 · Mainnet</p><p class="links"><a href="/tps/">Read study</a><a href="/tps/#check">View data</a></p></div><span class="pill done">Completed</span></li>
       </ol>
     </div>
   </section>
@@ -335,10 +357,10 @@ footer a:hover{color:var(--sand)}
     <div class="wrap">
       <h2 id="planned">Planned research</h2>
       <ul class="plan-list">
-        <li><span class="id">NR-002</span><b>Block gas limit scaling</b> – whether a higher block gas limit lifts sustained throughput, tested on a private network first.</li>
-        <li><span class="id">NR-003</span><b>Chainweb horizontal scaling</b> – modeling 20, 40, 60 and 100-chain configurations.</li>
-        <li><span class="id">NR-004</span><b>Block propagation and confirmation latency</b> – how load affects block intervals, orphaned blocks and confirmation times.</li>
-        <li><span class="id">NR-005</span><b>Mining distribution on Chainweb</b> – how hashrate is spread across pools and solo miners, from public block data.</li>
+        <li id="nr-002"><span class="id">NR-002</span><b>Block gas limit scaling</b> – whether a higher block gas limit lifts sustained throughput, tested on a private network first.</li>
+        <li id="nr-003"><span class="id">NR-003</span><b>Chainweb horizontal scaling</b> – modeling 20, 40, 60 and 100-chain configurations.</li>
+        <li id="nr-004"><span class="id">NR-004</span><b>Block propagation and confirmation latency</b> – how load affects block intervals, orphaned blocks and confirmation times.</li>
+        <li id="nr-005"><span class="id">NR-005</span><b>Mining distribution on Chainweb</b> – how hashrate is spread across pools and solo miners, from public block data.</li>
       </ul>
     </div>
   </section>
@@ -366,7 +388,7 @@ footer a:hover{color:var(--sand)}
         <li><b>Limitations</b><span>What the result does not show, where a figure is approximate, and what is projected rather than measured.</span></li>
         <li><b>Corrections</b><span>If a figure changes after publication, the study says what changed and when.</span></li>
       </ol>
-      <p class="legal">Have a question you would like tested, or a correction? Write to <a href="mailto:Saudi.KDA@kadena.ws">Saudi.KDA@kadena.ws</a> or join the <a href="https://t.me/KadenaNexus">Kadena Nexus Telegram group</a>. Kadena Nexus is an independent community project, works alongside the Kadena Community Edition developers, and is not affiliated with Kadena LLC. Nothing here is financial advice.</p>
+      <p class="legal" id="suggest">Have a question you would like tested, or a correction? Write to <a href="mailto:Saudi.KDA@kadena.ws">Saudi.KDA@kadena.ws</a> or join the <a href="https://t.me/KadenaNexus">Kadena Nexus Telegram group</a>. Kadena Nexus is an independent community project, works alongside the Kadena Community Edition developers, and is not affiliated with Kadena LLC. Nothing here is financial advice.</p>
     </div>
   </section>
 </main>
