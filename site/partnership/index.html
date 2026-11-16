@@ -269,6 +269,15 @@ footer a:hover{color:var(--sand)}
 .tracks b{display:block;font:600 1.1rem/1.2 var(--display);color:var(--sand);margin-bottom:.3rem}
 .cta{display:inline-block;background:var(--teal);color:#fff!important;text-decoration:none;font-weight:600;padding:.75rem 1.3rem;border-radius:999px}
 .cta:hover{background:var(--deep)}
+.opps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin:0 0 1rem}
+.opps a{display:block;text-decoration:none;border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;color:var(--mist)}
+.opps a:hover{border-color:var(--teal)}
+.opps b{display:block;font:600 1.05rem/1.25 var(--display);color:var(--sand);margin-bottom:.25rem}
+.opps span{display:block;margin-top:.5rem;color:var(--teal);font-weight:600;font-size:.92rem}
+.steps{list-style:none;counter-reset:st;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.6rem;padding:0!important;margin:0 0 1rem}
+.steps li{counter-increment:st;border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;margin:0;font-size:.92rem}
+.steps li::before{content:counter(st);display:block;font:700 1.3rem/1 var(--display);color:var(--pink);margin-bottom:.35rem}
+.steps b{display:block;color:var(--sand)}
 .pcards{display:grid;gap:.8rem;margin:0 0 1rem}
 .pcard{border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem}
 .pcard h3{margin:0 0 .5rem;font-size:1.08rem}
@@ -287,7 +296,7 @@ footer a:hover{color:var(--sand)}
 .pform button{justify-self:start;border:0;cursor:pointer;font:600 1rem/1 var(--body)}
 .pform .hint{font-weight:400;color:var(--mist);font-size:.88rem}
 .pform .msg{margin:0;font-size:.92rem}
-@media (max-width:700px){.tracks,.cols{grid-template-columns:1fr}.pcard dl{grid-template-columns:1fr;gap:.1rem}.pcard dd{margin-bottom:.5rem}}
+@media (max-width:700px){.tracks,.cols,.opps,.steps{grid-template-columns:1fr}.pcard dl{grid-template-columns:1fr;gap:.1rem}.pcard dd{margin-bottom:.5rem}}
 </style>
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -308,6 +317,7 @@ footer a:hover{color:var(--sand)}
       <a href="/#security">Security</a>
       <a href="/#about">About</a>
       <a href="https://kadenadevs.kadena.ws/">Build</a>
+      <a href="/partnership/" aria-current="page">Partners</a>
       <a class="buy" href="https://buy.kadena.ws/">Buy KDA</a>
       <a class="contact" href="mailto:Saudi.KDA@kadena.ws">Contact us</a>
     </nav>
@@ -325,6 +335,26 @@ footer a:hover{color:var(--sand)}
         <a href="#visibility"><b>Bring visibility</b>Media, creators and projects that can put Kadena in front of new audiences.</a>
       </div>
       <p><a class="cta" href="#propose">Propose a partnership</a></p>
+
+      <h2 id="open">Open partnership opportunities</h2>
+      <p>We are actively looking for:</p>
+      <div class="opps">
+        <a href="#propose" data-track="Users" data-topic="Wallets and on-ramps"><b>Wallets and on-ramps</b>Make KDA easier to access for your users.<span>Propose this</span></a>
+        <a href="#propose" data-track="Liquidity and market making" data-topic="Exchanges and liquidity"><b>Exchanges and liquidity partners</b>Expand spot-market access to KDA.<span>Propose this</span></a>
+        <a href="#propose" data-track="Users" data-topic="Mining communities"><b>Mining communities</b>Introduce Kadena Garden to your miners.<span>Propose this</span></a>
+        <a href="#propose" data-track="Advertising and exposure" data-topic="Media and creators"><b>Media and creators</b>Paid educational campaigns that introduce Kadena to new audiences.<span>Propose this</span></a>
+        <a href="#propose" data-track="Users" data-topic="Crypto communities"><b>Crypto communities</b>Measurable regional campaigns in your language.<span>Propose this</span></a>
+      </div>
+      <p>Have something different in mind? We are open to proposals.</p>
+
+      <h2 id="brings">What Kadena Nexus brings</h2>
+      <ul>
+        <li><strong>Technical integration support</strong> from the Nexus development team.</li>
+        <li><strong>Co-marketing</strong> on Kadena Nexus channels and sites.</li>
+        <li><strong>Paid campaigns</strong> where the proposal calls for one.</li>
+        <li><strong>Revenue sharing</strong> on real fees from the users you bring.</li>
+        <li><strong>Ready-to-publish data</strong> from <a href="/research/">Nexus Research</a> and the <a href="https://adoption.kadena.ws/">Adoption Index</a>.</li>
+      </ul>
 
       <h2 id="why">Why Kadena</h2>
       <p>Kadena is a proof-of-work chain that kept running after its original company closed, and it is now maintained by its community. Each point below links to a live page, so you can check it yourself.</p>
@@ -389,9 +419,19 @@ footer a:hover{color:var(--sand)}
       </div>
       <p>If a proposal needs one of these to work, it is not a fit for us, and we will say so early.</p>
 
+      <h2 id="next">What happens next</h2>
+      <ol class="steps">
+        <li><b>Submit</b>Send your proposal.</li>
+        <li><b>Review</b>We check the fit.</li>
+        <li><b>Agree</b>Scope, milestones and compensation, in writing.</li>
+        <li><b>Launch</b>The campaign or integration goes live.</li>
+        <li><b>Measure</b>Results are measured and settled as agreed.</li>
+      </ol>
+
       <h2 id="propose">Propose a partnership</h2>
       <p>Tell us what you can bring to Kadena and how you would like to be paid. Saudi.KDA reads every proposal.</p>
       <form class="pform" id="pform" novalidate>
+        <input type="hidden" name="topic" value="">
         <label>Your name or project name<input name="name" required autocomplete="organization"></label>
         <label>Website or main channel<input name="site" inputmode="url" placeholder="https://"></label>
         <label>Track
@@ -423,6 +463,15 @@ footer a:hover{color:var(--sand)}
         <li>Email: <a href="mailto:Saudi.KDA@kadena.ws?subject=Partnership%20proposal">Saudi.KDA@kadena.ws</a></li>
         <li>X: <a href="https://x.com/KadenaNexus">@KadenaNexus</a></li>
       </ul>
+      <h2 id="faq">Questions</h2>
+      <h3>Do you pay for partnerships?</h3>
+      <p>Yes. Depending on the proposal, we use a fixed campaign fee, a revenue share, or both.</p>
+      <h3>Can exchanges and wallets contact you for technical integration?</h3>
+      <p>Yes. Choose the matching track in the form and tell us what you need.</p>
+      <h3>Can small creators apply?</h3>
+      <p>Yes, if your audience is relevant and the results can be measured.</p>
+      <h3>Is this a partnership with Kadena itself?</h3>
+      <p>No. Kadena Nexus is an independent community project that works alongside the Kadena Community Edition developers.</p>
       <p class="updated">Kadena Nexus is an independent community project. A partnership with Kadena Nexus is not an agreement with the Kadena network or its core developers. Not financial advice.</p>
     </div>
   </article>
@@ -488,12 +537,15 @@ footer a:hover{color:var(--sand)}
 (() => {
   const f = document.getElementById('pform'), msg = document.getElementById('pmsg');
   if (!f) return;
+  document.querySelectorAll('.opps a').forEach(a => a.addEventListener('click', () => {
+    f.elements.track.value = a.dataset.track; f.elements.topic.value = a.dataset.topic;
+  }));
   f.addEventListener('submit', e => {
     e.preventDefault();
     const d = Object.fromEntries(new FormData(f));
     const missing = ['name','proposal','contact'].filter(k => !String(d[k]||'').trim());
     if (missing.length) { msg.textContent = 'Please fill in your name, your proposal and a way to reach you.'; f.elements[missing[0]].focus(); return; }
-    const body = ['Name or project: '+d.name,'Website or channel: '+(d.site||'-'),'Track: '+d.track,'','Proposal:',d.proposal,'','Audience or capital: '+(d.reach||'-'),'Preferred terms: '+d.terms,'Price: '+(d.price||'-'),'Contact: '+d.contact].join('\n');
+    const body = ['Name or project: '+d.name,'Website or channel: '+(d.site||'-'),'Track: '+d.track+(d.topic?' ('+d.topic+')':''),'','Proposal:',d.proposal,'','Audience or capital: '+(d.reach||'-'),'Preferred terms: '+d.terms,'Price: '+(d.price||'-'),'Contact: '+d.contact].join('\n');
     location.href = 'mailto:Saudi.KDA@kadena.ws?subject=' + encodeURIComponent('Partnership proposal: ' + d.name) + '&body=' + encodeURIComponent(body);
     msg.textContent = 'Your email app should now be open. If it is not, write to Saudi.KDA@kadena.ws or message @SaudiKDA on Telegram.';
   });
