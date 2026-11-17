@@ -368,7 +368,7 @@
       state.allowanceId = id;
       save();
       const vault = await read(`(${info.module}.vault-account "${id}")`);
-      await ownerSend("Putting KDA in the vault.", `(coin.transfer "${account}" "${vault}" ${fund})`, {}, transferCaps(account, vault), { __AMOUNT__: fund });
+      await ownerSend("Putting KDA in the vault.", `(${info.module}.fund "${id}" "${account}" ${fund})`, {}, transferCaps(account, vault), { __AMOUNT__: fund });
       say("");
       await refresh();
     });
@@ -401,7 +401,7 @@
   $("btn-add").addEventListener("click", () => act(async () => {
     const amount = amountFrom("move-amount", "The amount");
     const account = ownerAccount();
-    await ownerSend("Adding to the vault.", `(coin.transfer "${account}" "${state.view.vault}" ${amount})`, {}, transferCaps(account, state.view.vault), { __AMOUNT__: amount });
+    await ownerSend("Adding to the vault.", `(${info.module}.fund "${state.allowanceId}" "${account}" ${amount})`, {}, transferCaps(account, state.view.vault), { __AMOUNT__: amount });
     say("");
     await refresh();
   }));
