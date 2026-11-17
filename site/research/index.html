@@ -221,6 +221,7 @@ footer a:hover{color:var(--sand)}
 .pill{display:inline-block;font:600 .78rem/1 var(--body);padding:.36rem .65rem;border-radius:999px;white-space:nowrap}
 .pill.done{background:#DDF3E6;color:#17603C}
 .pill.live{background:#E1EEF2;color:var(--teal)}
+.pill.prio{background:#FDEBD7;color:#8A3F0F;border:1px solid #F1C59B}
 .pill.plan,.pill.date{background:var(--panel);color:var(--sand);border:1px solid var(--line)}
 .feature{display:block;margin-top:1.2rem;padding:clamp(1.2rem,3vw,1.8rem);border:1px solid var(--line);border-radius:16px;text-decoration:none;color:var(--mist)!important;transition:border-color .15s}
 .feature:hover{border-color:var(--teal)}
@@ -347,7 +348,7 @@ footer a:hover{color:var(--sand)}
             <p class="lede">Real-world experiments, reproducible benchmarks and independent research on Kadena.</p>
           </div>
           <nav class="areas" aria-label="Research areas">
-            <a href="#nr-006"><b>DeFi and applications</b><span>DEX liquidity, bridges, wallets and cross-chain transfers</span><i class="st plan">1 planned</i></a>
+            <a href="#nr-007"><b>DeFi and applications</b><span>Agent payments, DEX liquidity, bridges and cross-chain transfers</span><i class="st plan">1 in progress · 1 planned</i></a>
             <a href="https://quantum.kadena.ws/"><b>Security and privacy</b><span>Pact contract safety, wallet security and post-quantum research</span><i class="st live">Live tracker</i></a>
             <a href="#nr-001"><b>Chainweb and scaling</b><span>Block capacity, propagation and adding chains</span><i class="st done">1 published · 3 planned</i></a>
             <a href="#nr-005"><b>Mining and network economics</b><span>Mining distribution, fees, token supply and incentives</span><i class="st plan">1 planned · live data</i></a>
@@ -383,6 +384,15 @@ footer a:hover{color:var(--sand)}
     </div>
   </section>
 
+  <section aria-labelledby="progress">
+    <div class="wrap">
+      <h2 id="progress">Research in progress</h2>
+      <ol class="ledger">
+        <li id="nr-007"><span class="id">NR-007</span><div><h3><a href="/agentpay/">Kadena AgentPay AI: agent payments in KDA over x402</a></h3><p>Whether an AI agent can buy data and compute in KDA over x402, the open standard for payments over HTTP, with the owner's spending limits enforced by a Pact contract. First results on the <a href="/research/devnet/">Nexus devnet</a>: a 0.01 KDA purchase was paid and delivered in 18.1 seconds using 532 gas, and payments above the owner's limit or to a seller the owner had not approved were refused by the chain. These are test network results, not mainnet activity.</p><p class="meta">DeFi and applications · First devnet results November 17, 2026 · Private network</p><p class="links"><a href="/agentpay/">About AgentPay AI</a><a href="/agentpay/#results">Devnet results</a></p></div><span class="pill prio">Priority</span></li>
+      </ol>
+    </div>
+  </section>
+
   <section aria-labelledby="planned">
     <div class="wrap">
       <h2 id="planned">Planned research</h2>
@@ -399,7 +409,7 @@ footer a:hover{color:var(--sand)}
   <section aria-labelledby="labs">
     <div class="wrap">
       <h2 id="labs">Nexus devnet, live</h2>
-      <p class="sub">Our private Kadena test network, running the same node software as mainnet. We use it to test Kadena Nexus apps with test KDA and for studies that need a private network, starting with NR-002. Each tile is one chain and flashes when a new block is added.</p>
+      <p class="sub">Our private Kadena test network, running the same node software as mainnet. We use it to test Kadena Nexus apps with test KDA and for studies that need a private network. Running on it now: <a href="#nr-007">NR-007, Kadena AgentPay AI</a>. Each tile is one chain and flashes when a new block is added.</p>
       <div style="margin-top:1.4rem">
       <div class="dn" data-devnet data-state="wait">
         <div class="dn-head">

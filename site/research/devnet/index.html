@@ -221,6 +221,7 @@ footer a:hover{color:var(--sand)}
 .pill{display:inline-block;font:600 .78rem/1 var(--body);padding:.36rem .65rem;border-radius:999px;white-space:nowrap}
 .pill.done{background:#DDF3E6;color:#17603C}
 .pill.live{background:#E1EEF2;color:var(--teal)}
+.pill.prio{background:#FDEBD7;color:#8A3F0F;border:1px solid #F1C59B}
 .pill.plan,.pill.date{background:var(--panel);color:var(--sand);border:1px solid var(--line)}
 .feature{display:block;margin-top:1.2rem;padding:clamp(1.2rem,3vw,1.8rem);border:1px solid var(--line);border-radius:16px;text-decoration:none;color:var(--mist)!important;transition:border-color .15s}
 .feature:hover{border-color:var(--teal)}
@@ -341,6 +342,7 @@ footer a:hover{color:var(--sand)}
       <p class="sub">A private Kadena network that Kadena Nexus runs on its own server. It uses the community's chainweb-node, the same version as mainnet, with all 20 chains. The coins on it are test coins with no value, and nobody outside the Nexus team can send transactions to it. This page shows its live state, read from a status file the server publishes every few seconds.</p>
       <ul class="ledger">
         <li><span class="id">Apps</span><div><h3>Testing Kadena Nexus apps</h3><p>New contracts and app changes run here first, with test KDA, before anything touches mainnet.</p></div><span class="pill live">In use</span></li>
+        <li><span class="id">NR-007</span><div><h3><a href="/agentpay/">Kadena AgentPay AI</a></h3><p>AI agents paying for data in test KDA over x402, with spending limits enforced by a Pact contract. First results November 17, 2026.</p></div><span class="pill prio">Priority</span></li>
         <li><span class="id">NR-002</span><div><h3>Block gas limit scaling</h3><p>Comparing block gas limit settings with each other on a private network, without a fork and without affecting anyone.</p></div><span class="pill plan">Planned</span></li>
       </ul>
     </div>
