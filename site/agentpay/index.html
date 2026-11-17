@@ -355,7 +355,7 @@ details p{margin:.6rem 0 0}
       <div class="tracks">
         <div><b>The owner sets the limits</b>A maximum per payment, a maximum per day, a pause switch, and an optional list of approved sellers.</div>
         <div><b>The agent holds no funds</b>The KDA stays in a vault. The agent has only a signing key, which can make payments inside the limits and nothing else.</div>
-        <div><b>It speaks x402</b>Payments use <a href="https://x402.org/">x402</a>, the open standard for payments over HTTP, so a seller can be paid in KDA with a standard request.</div>
+        <div><b>It follows x402</b>Payments follow <a href="https://x402.org/">x402</a>, the open standard for payments over HTTP, and are <a href="#x402-libraries">tested with the official x402 JavaScript libraries</a>.</div>
       </div>
       <p class="ctas"><a class="apb" href="#results">See the devnet results</a><a class="apb ghost" href="#contact">Sell to agents for KDA</a></p>
 
@@ -399,7 +399,7 @@ details p{margin:.6rem 0 0}
         <li><b>Price</b>The seller answers "402 Payment Required" with the price in KDA and a one-time payment id.</li>
         <li><b>Signature</b>The agent signs one payment for exactly those terms. It needs no KDA of its own; the facilitator pays the gas.</li>
         <li><b>Limits</b>The contract on Kadena applies the owner's limits. A payment outside them is refused and costs nothing.</li>
-        <li><b>Delivery</b>Once the payment is in a block, the seller returns the data with an on-chain receipt.</li>
+        <li><b>Delivery</b>The seller returns the data with a receipt: once the payment is in a block, or right away for small purchases.</li>
       </ol>
 
       <h2 id="limits">What the chain enforces</h2>
@@ -414,14 +414,16 @@ details p{margin:.6rem 0 0}
       </dl>
 
       <h2 id="results">Devnet results</h2>
-      <p>On November 17, 2026, an AI agent bought data for KDA over x402 on the Kadena Nexus devnet, a private Kadena test network run for <a href="/research/">Nexus Research</a>. These are test results, not mainnet activity.</p>
+      <p>On November 17, 2026, a test agent bought data for KDA using the x402 payment format on the Kadena Nexus devnet, a private Kadena test network run for <a href="/research/">Nexus Research</a>. The buyer was a test script, not an AI model, and buyer, seller and facilitator all ran Kadena Nexus software. These are test results, not mainnet activity.</p>
       <div class="tablewrap">
         <table class="results">
           <thead><tr><th scope="col">Check</th><th scope="col">Result</th></tr></thead>
           <tbody>
-            <tr><td>Agent buys a data report for 0.01 KDA over x402</td><td class="ok">Paid and delivered</td></tr>
-            <tr><td>Time from request to data, including the block</td><td>18.1 seconds</td></tr>
-            <tr><td>Gas used by the payment</td><td>532</td></tr>
+            <tr><td>Test agent buys a data report for 0.01 KDA over x402</td><td class="ok">Paid and delivered</td></tr>
+            <tr><td>Time from request to data when the seller waits for the block (three runs)</td><td>15 to 24 seconds</td></tr>
+            <tr><td>Fast delivery: time from request to data for a 0.001 KDA item (two runs)</td><td>0.03 seconds</td></tr>
+            <tr><td>The fast purchase confirmed in a block afterwards</td><td class="ok">Confirmed, 15 to 21 seconds later</td></tr>
+            <tr><td>Gas used by a payment</td><td>532</td></tr>
             <tr><td>KDA held by the agent's own key</td><td>None</td></tr>
             <tr><td>Purchase priced above the per-payment limit</td><td class="ok">Refused by the chain</td></tr>
             <tr><td>Purchase from a seller the owner had not approved</td><td class="ok">Refused by the chain</td></tr>
@@ -431,8 +433,18 @@ details p{margin:.6rem 0 0}
           </tbody>
         </table>
       </div>
-      <p class="sources">Two devnet runs passed, with 19 and 16 checks. Before each change to the code, 71 checks of the contract and 30 checks of the payment layer run automatically.</p>
-      <p class="rule">A purchase currently waits for a Kadena block, which is why it takes seconds and not milliseconds. A faster mode for small purchases is the next piece of work.</p>
+      <p class="sources">Four devnet runs passed, with 19, 16, 19 and 19 checks. Before each change to the code, 71 checks of the contract and 54 checks of the payment layer run automatically.</p>
+      <p class="rule">A seller can deliver small purchases as soon as the payment has been checked and sent to the chain, and confirm the block afterwards. Larger purchases wait for the block. The 0.03 seconds was measured with buyer, seller and node on one server; across the internet it will take longer.</p>
+
+      <h2 id="x402-libraries">Tested with the official x402 libraries</h2>
+      <p>The official JavaScript libraries from the x402 Foundation (version 2.31.0) were run against AgentPay, and all 16 checks pass:</p>
+      <ul>
+        <li>The official client read our price answer, paid, and decoded our receipt.</li>
+        <li>The official facilitator client used our facilitator to check and settle a payment.</li>
+        <li>A seller built with the official middleware was paid by our agent.</li>
+        <li>The official client and the official seller worked together, with our facilitator between them.</li>
+      </ul>
+      <p>The libraries have no Kadena support of their own; two small plug-ins add it. This test used a stand-in for the chain, not the devnet, and covers the JavaScript libraries only. Kadena is not yet a listed x402 network.</p>
 
       <h2 id="why">Why build this on Kadena</h2>
       <div class="cols">
@@ -446,7 +458,8 @@ details p{margin:.6rem 0 0}
       <ul class="road">
         <li class="done"><span class="st">Done</span><span><b>Allowance contract.</b> Limits, pause, approved sellers and receipts, tested on the devnet.</span></li>
         <li class="done"><span class="st">Done</span><span><b>x402 layer.</b> Paid endpoint for sellers, client for agents, and a facilitator, following x402 version 2.</span></li>
-        <li class="next"><span class="st">Next</span><span><b>Faster small purchases.</b> Deliver right after the payment is checked, without waiting for the block.</span></li>
+        <li class="done"><span class="st">Done</span><span><b>Fast delivery for small purchases.</b> The data is delivered once the payment is sent, and the block is confirmed afterwards.</span></li>
+        <li class="done"><span class="st">Done</span><span><b>Tested with the official x402 JavaScript libraries,</b> as client, facilitator client and seller.</span></li>
         <li class="next"><span class="st">Next</span><span><b>Owner dashboard.</b> Create an allowance, set limits, pause, manage sellers and see payment history.</span></li>
         <li><span class="st">Before mainnet</span><span><b>Independent review</b> of the contract, then a mainnet deployment.</span></li>
         <li><span class="st">Later</span><span><b>x402 network listing</b> for Kadena, and a version for Chainweb EVM alongside the community developers' EVM work.</span></li>
