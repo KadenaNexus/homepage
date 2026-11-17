@@ -184,7 +184,21 @@
       const payment = buildPayment(offer, "dashboard demo");
       line("3. Agent signs one payment for exactly those terms and asks again");
       say("Agent: payment signed. Waiting for the seller…");
-      const second = await call(product.path, { headers: { "PAYMENT-SIGNATURE": toB64(payment) } });
+      // The seller may be waiting for a block. Show that in the log itself, with
+      // a running count, so the wait is visible where the reader is looking.
+      const waiting = line("Waiting for the seller…");
+      const waitStart = Date.now();
+      const tick = setInterval(() => {
+        const s = Math.round((Date.now() - waitStart) / 1000);
+        waiting.textContent = s < 3 ? "Waiting for the seller…" : `Waiting for the seller, which is waiting for a block (${s}s)…`;
+      }, 1000);
+      let second;
+      try {
+        second = await call(product.path, { headers: { "PAYMENT-SIGNATURE": toB64(payment) } });
+      } finally {
+        clearInterval(tick);
+        waiting.remove();
+      }
       const header = second.response.headers.get("PAYMENT-RESPONSE");
       const receipt = header ? fromB64(header) : null;
       const seconds = ((Date.now() - started) / 1000).toFixed(1);
