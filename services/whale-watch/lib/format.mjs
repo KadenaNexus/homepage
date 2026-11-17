@@ -99,7 +99,9 @@ export function exchangeNote(fromL, toL) {
   if (fx && !tx && closing(fromL)) return `📤 ${fromL.name} is closing: ${closing(fromL)}`;
   if (tx && !fx && closing(toL)) return `📥 Sent to a closing exchange: ${closing(toL)}`;
   const gone = (l) => (l.status ? 'an exchange that no longer trades KDA' : null);
-  if (fx && tx) return '🔁 Moved between two exchanges';
+  if (fx && tx) return !toL.status && fromL.status && isNamed(toL)
+    ? `📥 Moved to ${toL.name}, which still trades KDA, so it can be sold there`
+    : '🔁 Moved between two exchanges';
   if (tx) return gone(toL) ? `📥 Sent to ${gone(toL)}` : '📥 Exchange deposit: KDA sent to an exchange can be sold there';
   if (fx) return gone(fromL) ? `📤 Leaving ${gone(fromL)}` : "📤 Exchange withdrawal: KDA taken off an exchange, usually into the owner's own wallet";
   return null;

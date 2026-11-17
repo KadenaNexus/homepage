@@ -35,6 +35,7 @@ export const CONFIG = {
   huge: Number(env.HUGE_MIN || 1000000),
   whaleLine: Number(env.WHALE_LINE || 1000000),
   dormantDays: Number(env.DORMANT_DAYS || 365),
+  depositMinSweeps: Number(env.DEPOSIT_MIN_SWEEPS || 2), // a wallet that sent all its KDA to one exchange this often is its deposit address
   repeatHours: Number(env.REPEAT_HOURS || 6),
   confirmations: Number(env.CONFIRMATIONS || 6),
   pollSeconds: Number(env.POLL_SECONDS || 30),
@@ -112,8 +113,36 @@ export class Watcher {
     if (this.labels[a]) return this.labels[a];
     if (this.pools.has(a)) return { name: 'a DEX pool', type: 'dex' };
     if (isPlatformShare(a)) return { name: `platform share ${a}`, type: 'platform' };
+    const dep = this.state.deposits?.[a];
+    if (dep?.name) return this.depositLabel(dep);
     return null;
   };
+
+  // A detected deposit address carries its exchange's name and status, marked likely:
+  // it is inferred from where its KDA goes, not confirmed by the exchange.
+  depositLabel(dep) {
+    const hot = this.labels[dep.hot] || {};
+    return { name: dep.name, type: 'exchange', confidence: 'likely', role: 'deposit address (detected)', status: hot.status, public: !!hot.public, detected: true };
+  }
+
+  // A wallet whose own KDA has only ever gone to one exchange's confirmed hot wallet, at least
+  // `depositMinSweeps` times, is that exchange's deposit address: KDA arriving there is a customer's
+  // deposit (credited to them on arrival, swept later), not a new whale. Learned once, kept in state.
+  async learnDeposit(account) {
+    if (!account || !account.startsWith('k:') || this.labelOf(account)) return false;
+    const known = (this.state.deposits ||= {});
+    if (known[account] && this.now() - known[account].checkedAt < 86400e3) return false; // checked recently: not one
+    let outs;
+    try { outs = await this.ix.outflows(account); } catch (e) { log('deposit check skipped:', e.message); return false; }
+    const hots = outs.map((o) => this.labels[o.to]);
+    const ok = outs.length >= this.cfg.depositMinSweeps
+      && hots.every((l) => l?.type === 'exchange' && l.confidence === 'confirmed' && l.name === hots[0].name);
+    known[account] = ok
+      ? { name: hots[0].name, hot: outs[0].to, sweeps: outs.length, swept: Math.round(outs.reduce((a, o) => a + o.amount, 0)), checkedAt: this.now() }
+      : { checkedAt: this.now() };
+    if (ok) log(`learned ${hots[0].name} deposit address ${account} (${outs.length} sweeps)`);
+    return ok;
+  }
 
   // Public name of an exchange: its own name when any of its wallets is confirmed,
   // otherwise "Other exchanges". Flows are grouped by this name.
@@ -175,8 +204,9 @@ export class Watcher {
     return p;
   }
 
-  countFlow(tr) {
-    const fl = this.labelOf(tr.from), tl = this.labelOf(tr.to);
+  // `as` gives the labels to count with (default: the current ones); sign -1 takes a count back.
+  countFlow(tr, sign = 1, as = null) {
+    const fl = as ? as.from : this.labelOf(tr.from), tl = as ? as.to : this.labelOf(tr.to);
     const fx = fl?.type === 'exchange' ? fl.name : null;
     const tx = tl?.type === 'exchange' ? tl.name : null;
     if (!fx && !tx) return;
@@ -184,8 +214,9 @@ export class Watcher {
     const d = this.day(tr.time);
     const h = (this.state.hours[this.hourKey(tr.time)] ||= { in: 0, out: 0, ex: {} });
     h.ex ||= {}; // hours recorded before per-exchange counts existed have none
-    if (tx) { d.flowIn += tr.amount; h.in += tr.amount; (d.flows[tx] ||= { in: 0, out: 0 }).in += tr.amount; (h.ex[tx] ||= { in: 0, out: 0 }).in += tr.amount; }
-    if (fx) { d.flowOut += tr.amount; h.out += tr.amount; (d.flows[fx] ||= { in: 0, out: 0 }).out += tr.amount; (h.ex[fx] ||= { in: 0, out: 0 }).out += tr.amount; }
+    const n = tr.amount * sign;
+    if (tx) { d.flowIn += n; h.in += n; (d.flows[tx] ||= { in: 0, out: 0 }).in += n; (h.ex[tx] ||= { in: 0, out: 0 }).in += n; }
+    if (fx) { d.flowOut += n; h.out += n; (d.flows[fx] ||= { in: 0, out: 0 }).out += n; (h.ex[fx] ||= { in: 0, out: 0 }).out += n; }
   }
 
   addItem(item) {
@@ -228,6 +259,7 @@ export class Watcher {
 
   async enrich(item) {
     if (item.type !== 'move' || !this.isFresh(item)) return;
+    await this.detectDeposits(item);
     const fromL = this.labelOf(item.from);
     if (!fromL) {
       try {
@@ -244,6 +276,25 @@ export class Watcher {
         if (bal >= this.cfg.whaleLine && bal - item.amount < this.cfg.whaleLine) item.newWhale = bal;
       } catch (e) { log('balance check skipped:', e.message); }
     }
+  }
+
+  // Learn unlabeled sides that are exchange deposit addresses, then redo what processBlock
+  // decided with the old labels: the exchange flow counts, the names and the internal flag.
+  async detectDeposits(item) {
+    const before = { from: this.labelOf(item.from), to: this.labelOf(item.to) };
+    const learnedTo = before.to ? false : await this.learnDeposit(item.to);
+    const learnedFrom = before.from ? false : await this.learnDeposit(item.from);
+    const learned = learnedTo || learnedFrom;
+    if (!learned) return;
+    if (!this.seeding) {
+      const tr = { from: item.from, to: item.to, amount: item.amount, time: item.time };
+      this.countFlow(tr, -1, before);
+      this.countFlow(tr, 1);
+    }
+    item.fromLabel = F.displayName(this.labelOf(item.from));
+    item.toLabel = F.displayName(this.labelOf(item.to));
+    const fl = this.labelOf(item.from), tl = this.labelOf(item.to);
+    if (fl?.type === 'exchange' && tl?.type === 'exchange' && fl.name === tl.name) item.internal = true;
   }
 
   async totalBalance(account) {
@@ -426,6 +477,8 @@ export class Watcher {
     for (const k of Object.keys(this.state.hours)) if (k < hourCut) delete this.state.hours[k];
     const keep = new Set(this.feed.map((f) => f.id));
     for (const k of Object.keys(this.state.posted)) if (!keep.has(k)) delete this.state.posted[k];
+    // detected deposit addresses are kept; wallets found not to be one are re-checked, so forgotten after a week
+    for (const [k, d] of Object.entries(this.state.deposits || {})) if (!d.name && this.now() - d.checkedAt > 7 * 86400e3) delete this.state.deposits[k];
   }
 
   // Save, then run the checkpoint command (if any). Throws when the command fails.
