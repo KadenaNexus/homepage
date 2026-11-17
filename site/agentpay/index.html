@@ -357,7 +357,7 @@ details p{margin:.6rem 0 0}
         <div><b>The agent holds no funds</b>The KDA stays in a vault. The agent has only a signing key, which can make payments inside the limits and nothing else.</div>
         <div><b>It follows x402</b>Payments follow <a href="https://x402.org/">x402</a>, the open standard for payments over HTTP, and are <a href="#x402-libraries">tested with the official x402 JavaScript libraries</a>.</div>
       </div>
-      <p class="ctas"><a class="apb" href="#results">See the devnet results</a><a class="apb ghost" href="#contact">Sell to agents for KDA</a></p>
+      <p class="ctas"><a class="apb" href="/agentpay/app/">Try the devnet demo</a><a class="apb ghost" href="#results">See the devnet results</a><a class="apb ghost" href="#contact">Sell to agents for KDA</a></p>
 
       <h2 id="how">How one purchase works</h2>
       <p>An agent asks a seller for something, such as a data report. The seller answers with a price. The agent pays, and the seller hands over the data once the payment is in a block.</p>
@@ -460,14 +460,15 @@ details p{margin:.6rem 0 0}
         <li class="done"><span class="st">Done</span><span><b>x402 layer.</b> Paid endpoint for sellers, client for agents, and a facilitator, following x402 version 2.</span></li>
         <li class="done"><span class="st">Done</span><span><b>Fast delivery for small purchases.</b> The data is delivered once the payment is sent, and the block is confirmed afterwards.</span></li>
         <li class="done"><span class="st">Done</span><span><b>Tested with the official x402 JavaScript libraries,</b> as client, facilitator client and seller.</span></li>
-        <li class="next"><span class="st">Next</span><span><b>Owner dashboard.</b> Create an allowance, set limits, pause, manage sellers and see payment history.</span></li>
+        <li class="done"><span class="st">Done</span><span><b>Owner dashboard, as a <a href="/agentpay/app/">devnet demo</a>.</b> Create an allowance, set limits, pause, manage sellers and watch a test agent buy.</span></li>
+        <li class="next"><span class="st">Next</span><span><b>Wallet signing in the dashboard,</b> so it can be used with real accounts on mainnet.</span></li>
         <li><span class="st">Before mainnet</span><span><b>Independent review</b> of the contract, then a mainnet deployment.</span></li>
         <li><span class="st">Later</span><span><b>x402 network listing</b> for Kadena, and a version for Chainweb EVM alongside the community developers' EVM work.</span></li>
       </ul>
       <p>The code is private while it is in development and will be published at launch, like the other <a href="https://github.com/KadenaNexus">Kadena Nexus</a> projects.</p>
 
       <h2 id="faq">Questions</h2>
-      <details><summary>Can I use it today?</summary><p>Not yet. It runs on a private test network. This page will be updated when there is a public demo and again at mainnet launch.</p></details>
+      <details><summary>Can I use it today?</summary><p>You can try it with test KDA in the <a href="/agentpay/app/">devnet demo</a>, which runs on our private test network. It is not on mainnet yet. This page will be updated at mainnet launch.</p></details>
       <details><summary>What is x402?</summary><p>An open standard that lets software pay for a web request. A server answers "402 Payment Required" with a price, and the client pays and asks again. It was created by Coinbase and is now governed by the x402 Foundation at the Linux Foundation. Read more at <a href="https://x402.org/">x402.org</a>.</p></details>
       <details><summary>What happens if the agent is tricked into paying?</summary><p>The damage is capped by the owner's limits. With the approved-sellers list on, a tricked agent still cannot pay an account the owner did not approve. The owner can pause the allowance at any time.</p></details>
       <details><summary>Is this a trading bot?</summary><p>No. It does not trade or hold funds for anyone. It is a way for an agent to pay for services, with the owner's KDA staying in a vault the owner controls.</p></details>
