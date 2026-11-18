@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src https://api.chainweb-community.org wss://relay.walletconnect.org https://verify.walletconnect.org; frame-src https://verify.walletconnect.org; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Kadena AgentPay AI owner page | Kadena Nexus</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main class="owner">
+  <h1>Kadena AgentPay AI: owner page</h1>
+  <p class="lead">Give an AI agent a spending allowance in KDA and stay in control of it. You sign every change with your own wallet. This page never sees or stores your key.</p>
+  <p id="net" class="net">Loading…</p>
+  <p id="contract" class="note" role="status"></p>
+
+  <section id="step-wallet">
+    <h2>1. Your account</h2>
+    <p id="who" class="facts">Not connected.</p>
+    <div class="row">
+      <button id="btn-ecko" type="button">Connect eckoWALLET</button>
+      <button id="btn-phone" type="button" hidden>Connect a phone wallet (Linx, eckoWALLET app)</button>
+      <button id="btn-manual" type="button" class="quiet">Sign elsewhere and paste</button>
+      <button id="btn-leave" type="button" class="quiet" hidden>Disconnect</button>
+    </div>
+    <div id="phone" hidden>
+      <p>Scan this code with your wallet. On a phone, copy the link and paste it into the wallet's WalletConnect screen.</p>
+      <canvas id="qr" width="264" height="264" role="img" aria-label="QR code with the connection link"></canvas>
+      <div class="row">
+        <button id="btn-copy-link" type="button" class="quiet live">Copy link</button>
+        <button id="btn-stop" type="button" class="quiet live">Cancel</button>
+      </div>
+    </div>
+    <form id="form-manual" hidden>
+      <label for="in-account">Your KDA account (for example k:…)</label>
+      <input id="in-account" autocomplete="off" spellcheck="false" maxlength="256">
+      <button type="submit">Use this account</button>
+      <p class="hint">You will sign each transaction in another tool, such as Chainweaver, and paste the signature here.</p>
+    </form>
+  </section>
+
+  <section id="step-allowance" hidden>
+    <h2>2. Allowance</h2>
+    <form id="form-open" class="row">
+      <label for="in-id">Allowance id</label>
+      <input id="in-id" autocomplete="off" spellcheck="false" maxlength="64">
+      <button type="submit">Open</button>
+    </form>
+    <details id="new">
+      <summary>Create a new allowance</summary>
+      <form id="form-create">
+        <label for="new-id">Allowance id (3 to 64 letters, digits, or . _ : -)</label>
+        <input id="new-id" autocomplete="off" spellcheck="false" maxlength="64">
+        <label for="new-agent">Agent's public key (64 hex characters, from the agent's software)</label>
+        <input id="new-agent" autocomplete="off" spellcheck="false" maxlength="64">
+        <label for="new-per">Most KDA per payment</label>
+        <input id="new-per" inputmode="decimal" autocomplete="off">
+        <label for="new-daily">Most KDA per day (UTC)</label>
+        <input id="new-daily" inputmode="decimal" autocomplete="off">
+        <button type="submit">Review</button>
+      </form>
+    </details>
+  </section>
+
+  <section id="panel" hidden>
+    <h2 id="panel-title">Allowance</h2>
+    <p id="mine" class="note" role="status"></p>
+    <dl id="facts" class="facts"></dl>
+    <div class="row">
+      <button id="btn-pause" type="button">Pause</button>
+      <button id="btn-refresh" type="button" class="quiet">Refresh</button>
+    </div>
+    <form id="form-move" class="row">
+      <label for="move-amount">KDA</label>
+      <input id="move-amount" inputmode="decimal" autocomplete="off">
+      <button id="btn-fund" type="button">Put in the vault</button>
+      <button id="btn-withdraw" type="button">Withdraw to my account</button>
+    </form>
+    <form id="form-limits" class="row">
+      <label for="set-per">Per payment</label>
+      <input id="set-per" inputmode="decimal" autocomplete="off">
+      <label for="set-daily">Per day</label>
+      <input id="set-daily" inputmode="decimal" autocomplete="off">
+      <button type="submit">Change limits</button>
+    </form>
+    <form id="form-agent" class="row">
+      <label for="set-agent">New agent public key</label>
+      <input id="set-agent" autocomplete="off" spellcheck="false" maxlength="64">
+      <button type="submit">Replace agent key</button>
+    </form>
+    <form id="form-seller" class="row">
+      <label for="seller">Seller account</label>
+      <input id="seller" autocomplete="off" spellcheck="false" maxlength="256">
+      <button id="btn-approve" type="button">Approve</button>
+      <button id="btn-remove" type="button">Remove</button>
+      <button id="btn-list" type="button" class="quiet">Approved sellers only: off</button>
+    </form>
+  </section>
+
+  <section id="review" hidden aria-live="polite">
+    <h2 id="review-title">Review</h2>
+    <ul id="review-lines"></ul>
+    <h3>What your signature is good for</h3>
+    <ul id="review-caps" class="caps"></ul>
+    <p id="review-gas" class="hint"></p>
+    <details>
+      <summary>Exact transaction</summary>
+      <pre id="review-code"></pre>
+      <pre id="review-cmd"></pre>
+    </details>
+    <div id="review-paste" hidden>
+      <label for="unsigned">Unsigned transaction: copy this into your signing tool</label>
+      <textarea id="unsigned" readonly rows="6" spellcheck="false"></textarea>
+      <button id="btn-copy" type="button" class="quiet">Copy</button>
+      <label for="pasted">Paste the signature, or the signed transaction</label>
+      <textarea id="pasted" rows="4" spellcheck="false"></textarea>
+    </div>
+    <div id="approve" hidden>
+      <p id="approve-text" class="note"></p>
+      <div class="row">
+        <a id="approve-open" class="button" hidden>Open wallet</a>
+        <button id="btn-again" type="button" class="quiet live">Send the request again</button>
+      </div>
+    </div>
+    <div class="row">
+      <button id="btn-sign" type="button">Sign with wallet</button>
+      <button id="btn-cancel" type="button" class="quiet">Cancel</button>
+    </div>
+  </section>
+
+  <p id="status" class="status" role="status" aria-live="polite"></p>
+</main>
+
+<script src="owner-lib.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
