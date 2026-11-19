@@ -118,3 +118,7 @@ pre{background:var(--panel);border:1px solid var(--line);border-radius:8px;paddi
   .row input,.row input[inputmode=decimal]{width:100%}
   .row button{flex:1 1 auto}
 }
+
+button.small{padding:.35rem .6rem;font-size:.8rem}
+.panel-head .row{margin:0}
+#btn-check-sent{margin:.2rem 0 .4rem}
