@@ -46,7 +46,7 @@
   // ---- account
   async function useAccount(account, how) {
     const details = await node.read(L.reads.details(account));
-    if (!details) throw new L.Refused("This account does not exist on this chain yet. It needs some KDA first, also to pay transaction fees.");
+    if (!details) throw new L.Refused(`This account has no KDA on chain ${config.chainId} yet. On Kadena every chain keeps its own balance. Send a little KDA to this account on chain ${config.chainId} (1 KDA is plenty for fees), then connect again.`);
     const key = L.singleKeyOf(details);
     if (how.publicKey && how.publicKey !== key) throw new L.Refused("The wallet's key is not the key that controls this account on the chain.");
     signer = { account, publicKey: key };
@@ -102,7 +102,8 @@
     awaiting = p;
     $("approve").hidden = !p;
     if (!p) return;
-    note($("approve-text"), `Approve the request in ${p.wallet}. Check there that it shows the same purposes as listed above.`);
+    const linx = /linx/i.test(p.wallet) ? " In Linx, open the Data tab to see the full request." : "";
+    note($("approve-text"), `Approve the request in ${p.wallet}. Check there that it shows the same purposes as listed above.${linx}`);
     const open = $("approve-open");
     open.hidden = !p.link;
     if (p.link) { open.href = p.link; open.textContent = `Open ${p.wallet}`; } else open.removeAttribute("href");
@@ -143,6 +144,16 @@
       ["Payments so far", `${show(a["payment-count"])} (${show(a["total-paid"])} KDA)`], ["Status", view.paused ? "Paused: the agent can pay nothing" : "Active"],
       ["Sellers", view.listOn ? "Approved sellers only" : "Any seller"]];
     $("facts").replaceChildren(...facts.flatMap(([k, v]) => { const dt = document.createElement("dt"), dd = document.createElement("dd"); dt.textContent = k; dd.textContent = v; return [dt, dd]; }));
+    // The four numbers an owner looks at first.
+    const tiles = [["In the vault", show(balance), "KDA"], ["Left today", show(remaining), "KDA"],
+      ["Per payment", show(a["per-payment"]), "KDA"], ["Per day (UTC)", show(a["daily-cap"]), "KDA"]];
+    $("tiles").replaceChildren(...tiles.map(([label, value, unit]) => {
+      const tile = document.createElement("div"), l = document.createElement("span"), v = document.createElement("strong"), u = document.createElement("small");
+      tile.className = "tile"; l.textContent = label; v.textContent = `${value} `; u.textContent = unit; v.append(u); tile.append(l, v);
+      return tile;
+    }));
+    $("pill").textContent = view.paused ? "Paused" : "Active";
+    $("pill").className = `pill ${view.paused ? "off" : "on"}`;
     const mine = a.owner === signer.account;
     note($("mine"), mine ? "" : "This allowance belongs to another account. The chain will refuse changes signed by yours.", mine ? "" : "warn");
     $("btn-pause").textContent = view.paused ? "Resume payments" : "Pause all payments";
@@ -203,7 +214,7 @@
       }
       const seconds = Math.round((Date.now() - started) / 1000);
       if (seconds > L.TTL_SECONDS + 60) throw new Error(`No block yet. Transaction ${key} may still be confirmed; press Refresh later.`);
-      say(`Sent (${key}). Waiting for a block: ${seconds}s…`);
+      say(`Sent. Waiting for a block, which usually takes under a minute: ${seconds}s… (transaction ${key})`);
       await new Promise(r => setTimeout(r, POLL_MS));
     }
     if (after) await after();
@@ -237,6 +248,7 @@
     config = L.checkConfig(window.AGENTPAY_OWNER_CONFIG);
     node = L.connect(config, L.crypto);
     $("net").textContent = `Network ${config.networkId}, chain ${config.chainId}, contract ${config.module}.`;
+    $("net-chip").textContent = `${config.networkId} · chain ${config.chainId}`;
     const before = remembered();
     if (before.account) $("in-account").value = before.account;
     if (before.id) $("in-id").value = before.id;

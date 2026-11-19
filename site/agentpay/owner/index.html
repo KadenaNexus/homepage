@@ -2,14 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src https://api.chainweb-community.org wss://relay.walletconnect.org https://verify.walletconnect.org; frame-src https://verify.walletconnect.org; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://api.chainweb-community.org wss://relay.walletconnect.org https://verify.walletconnect.org; frame-src https://verify.walletconnect.org; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex">
 <title>Kadena AgentPay AI owner page | Kadena Nexus</title>
 <meta name="description" content="Owner page of Kadena AgentPay AI: set an AI agent's spending allowance in KDA, change its limits, pause it and withdraw, signing every change with your own wallet.">
 <link rel="canonical" href="https://kadena.ws/agentpay/owner/">
-<link rel="icon" href="/favicon.ico">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="nexus-mark.png">
+<meta name="theme-color" content="#1C637B">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Kadena AgentPay AI owner page">
 <meta property="og:description" content="Owner page of Kadena AgentPay AI: set an AI agent's spending allowance in KDA, change its limits, pause it and withdraw, signing every change with your own wallet.">
@@ -20,21 +23,54 @@
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
-<main class="owner">
-  <h1>Kadena AgentPay AI: owner page</h1>
-  <p class="lead">Give an AI agent a spending allowance in KDA and stay in control of it. You sign every change with your own wallet. This page never sees or stores your key.</p>
-  <p id="net" class="net">Loading…</p>
-  <p id="contract" class="note" role="status"></p>
+<header class="nx-top">
+  <div class="nx-wrap">
+    <a class="nx-brand" href="/agentpay/">
+      <img src="nexus-mark.png" width="32" height="32" alt="">
+      <span>Kadena AgentPay AI</span>
+    </a>
+    <a class="nx-part" href="https://kadena.ws/">Part of Kadena Nexus</a>
+    <div class="nx-actions"><span id="net-chip" class="chip">…</span></div>
+  </div>
+</header>
 
-  <section id="step-wallet">
-    <h2>1. Your account</h2>
-    <p id="who" class="facts">Not connected.</p>
+<main class="owner">
+  <section class="hero">
+    <p class="eyebrow">Owner page</p>
+    <h1>Give an AI agent a budget. Keep the keys.</h1>
+    <p class="lead">Set what your agent may spend in KDA, per payment and per day. The Kadena chain enforces the limits. You sign every change with your own wallet, and this page never sees or stores your key.</p>
+    <p id="net" class="net">Loading…</p>
+    <p id="contract" class="note" role="status"></p>
+  </section>
+
+  <details class="explain">
+    <summary>New here? The four words you need</summary>
+    <dl class="terms">
+      <dt>Allowance</dt>
+      <dd>A budget you create for one agent. You give it a name, and only your account can change it.</dd>
+      <dt>Vault</dt>
+      <dd>The on-chain account that holds the allowance's KDA. Only you can take KDA out. The agent can only pay from it, within your limits.</dd>
+      <dt>Agent key</dt>
+      <dd>The key your agent's software uses to pay. It comes from the agent, not from your wallet. It cannot withdraw and cannot change limits. If it leaks, the most that can be spent is what your limits allow, and you can replace it.</dd>
+      <dt>Limits</dt>
+      <dd>The most the agent may pay in one payment, and the most in one day (the day follows UTC time). The chain refuses anything above them.</dd>
+    </dl>
+  </details>
+
+  <section id="step-wallet" class="card">
+    <h2><span class="step">1</span> Your account</h2>
+    <p id="who" class="who">Not connected.</p>
     <div class="row">
       <button id="btn-ecko" type="button">Connect eckoWALLET</button>
       <button id="btn-phone" type="button" hidden>Connect a phone wallet (Linx, eckoWALLET app)</button>
       <button id="btn-manual" type="button" class="quiet">Sign elsewhere and paste</button>
       <button id="btn-leave" type="button" class="quiet" hidden>Disconnect</button>
     </div>
+    <details class="help">
+      <summary>Which one should I choose?</summary>
+      <p><strong>eckoWALLET</strong> is for a computer with the eckoWALLET browser extension. <strong>Phone wallet</strong> connects Linx or the eckoWALLET app: scan the code, or copy the link into the wallet. <strong>Sign elsewhere</strong> is for Chainweaver and similar tools: you copy each transaction out, sign it there, and paste the signature back.</p>
+      <p>Your account needs a little KDA on this chain to pay transaction fees. A fee is a tiny fraction of 1 KDA.</p>
+    </details>
     <div id="phone" hidden>
       <p>Scan this code with your wallet. On a phone, copy the link and paste it into the wallet's WalletConnect screen.</p>
       <canvas id="qr" width="264" height="264" role="img" aria-label="QR code with the connection link"></canvas>
@@ -51,69 +87,123 @@
     </form>
   </section>
 
-  <section id="step-allowance" hidden>
-    <h2>2. Allowance</h2>
+  <section id="step-allowance" class="card" hidden>
+    <h2><span class="step">2</span> Allowance</h2>
     <form id="form-open" class="row">
       <label for="in-id">Allowance id</label>
       <input id="in-id" autocomplete="off" spellcheck="false" maxlength="64">
       <button type="submit">Open</button>
     </form>
+    <p class="hint">Type the name of an allowance you created before. Keep your allowance names: this page cannot look them up for you.</p>
     <details id="new">
       <summary>Create a new allowance</summary>
       <form id="form-create">
         <label for="new-id">Allowance id (3 to 64 letters, digits, or . _ : -)</label>
         <input id="new-id" autocomplete="off" spellcheck="false" maxlength="64">
+        <p class="hint">Any name you will recognize, for example research-agent-1.</p>
         <label for="new-agent">Agent's public key (64 hex characters, from the agent's software)</label>
         <input id="new-agent" autocomplete="off" spellcheck="false" maxlength="64">
+        <p class="hint">Your agent's software creates this key and shows you its public half. Never paste a private key here.</p>
         <label for="new-per">Most KDA per payment</label>
         <input id="new-per" inputmode="decimal" autocomplete="off">
         <label for="new-daily">Most KDA per day (UTC)</label>
         <input id="new-daily" inputmode="decimal" autocomplete="off">
+        <p class="hint">Creating an allowance moves no KDA. You put KDA in the vault as a separate step.</p>
         <button type="submit">Review</button>
       </form>
     </details>
   </section>
 
-  <section id="panel" hidden>
-    <h2 id="panel-title">Allowance</h2>
-    <p id="mine" class="note" role="status"></p>
-    <dl id="facts" class="facts"></dl>
-    <div class="row">
-      <button id="btn-pause" type="button">Pause</button>
-      <button id="btn-refresh" type="button" class="quiet">Refresh</button>
+  <section id="panel" class="card" hidden>
+    <div class="panel-head">
+      <h2 id="panel-title">Allowance</h2>
+      <span id="pill" class="pill">…</span>
     </div>
-    <form id="form-move" class="row">
-      <label for="move-amount">KDA</label>
-      <input id="move-amount" inputmode="decimal" autocomplete="off">
-      <button id="btn-fund" type="button">Put in the vault</button>
-      <button id="btn-withdraw" type="button">Withdraw to my account</button>
-    </form>
-    <form id="form-limits" class="row">
-      <label for="set-per">Per payment</label>
-      <input id="set-per" inputmode="decimal" autocomplete="off">
-      <label for="set-daily">Per day</label>
-      <input id="set-daily" inputmode="decimal" autocomplete="off">
-      <button type="submit">Change limits</button>
-    </form>
-    <form id="form-agent" class="row">
-      <label for="set-agent">New agent public key</label>
-      <input id="set-agent" autocomplete="off" spellcheck="false" maxlength="64">
-      <button type="submit">Replace agent key</button>
-    </form>
-    <form id="form-seller" class="row">
-      <label for="seller">Seller account</label>
-      <input id="seller" autocomplete="off" spellcheck="false" maxlength="256">
-      <button id="btn-approve" type="button">Approve</button>
-      <button id="btn-remove" type="button">Remove</button>
-      <button id="btn-list" type="button" class="quiet">Approved sellers only: off</button>
-    </form>
+    <p id="mine" class="note" role="status"></p>
+    <div id="tiles" class="tiles"></div>
+
+    <div class="group">
+      <h3>Stop and start</h3>
+      <div class="row">
+        <button id="btn-pause" type="button">Pause</button>
+        <button id="btn-refresh" type="button" class="quiet">Refresh</button>
+      </div>
+      <details class="help">
+        <summary>What does pausing do?</summary>
+        <p>While paused, the agent can pay nothing at all. Your KDA stays in the vault and you can still withdraw it. Use it the moment something looks wrong. Resume turns payments back on with the same limits.</p>
+      </details>
+    </div>
+
+    <div class="group">
+      <h3>Money in the vault</h3>
+      <form id="form-move" class="row">
+        <label for="move-amount">KDA</label>
+        <input id="move-amount" inputmode="decimal" autocomplete="off">
+        <button id="btn-fund" type="button">Put in the vault</button>
+        <button id="btn-withdraw" type="button">Withdraw to my account</button>
+      </form>
+      <details class="help">
+        <summary>What do these two buttons do?</summary>
+        <p><strong>Put in the vault</strong> moves KDA from your account into the vault, where the agent can spend it within your limits. <strong>Withdraw to my account</strong> moves KDA from the vault back to you. You can withdraw any amount at any time, paused or not. Start with a small amount.</p>
+      </details>
+    </div>
+
+    <div class="group">
+      <h3>Limits</h3>
+      <form id="form-limits" class="row">
+        <label for="set-per">Per payment</label>
+        <input id="set-per" inputmode="decimal" autocomplete="off">
+        <label for="set-daily">Per day</label>
+        <input id="set-daily" inputmode="decimal" autocomplete="off">
+        <button type="submit">Change limits</button>
+      </form>
+      <details class="help">
+        <summary>How do the limits work?</summary>
+        <p>Per payment is the most the agent may pay at once. Per day is the most it may pay in one UTC day in total. The daily limit cannot be lower than the per-payment limit. New limits apply to the next payment.</p>
+      </details>
+    </div>
+
+    <div class="group">
+      <h3>Agent key</h3>
+      <form id="form-agent" class="row">
+        <label for="set-agent">New agent public key</label>
+        <input id="set-agent" autocomplete="off" spellcheck="false" maxlength="64">
+        <button type="submit">Replace agent key</button>
+      </form>
+      <details class="help">
+        <summary>When should I replace the agent key?</summary>
+        <p>When you move to a new agent, or if you think the agent's key was copied. The old key stops working at once. Your KDA, limits and history stay as they are.</p>
+      </details>
+    </div>
+
+    <div class="group">
+      <h3>Who the agent may pay</h3>
+      <form id="form-seller" class="row">
+        <label for="seller">Seller account</label>
+        <input id="seller" autocomplete="off" spellcheck="false" maxlength="256">
+        <button id="btn-approve" type="button">Approve</button>
+        <button id="btn-remove" type="button">Remove</button>
+        <button id="btn-list" type="button" class="quiet">Approved sellers only: off</button>
+      </form>
+      <details class="help">
+        <summary>What is the approved sellers list?</summary>
+        <p>By default the agent may pay any account, within your limits. Turn <strong>Approved sellers only</strong> on, and it may pay only the accounts you approved. Approve adds an account to that list; Remove takes it off. A seller account must already exist on this chain.</p>
+      </details>
+    </div>
+
+    <details class="all">
+      <summary>All details</summary>
+      <dl id="facts" class="facts"></dl>
+    </details>
   </section>
 
-  <section id="review" hidden aria-live="polite">
+  <section id="review" class="card review" hidden aria-live="polite">
+    <p class="eyebrow">Check before you sign</p>
     <h2 id="review-title">Review</h2>
     <ul id="review-lines"></ul>
     <h3>What your signature is good for</h3>
     <ul id="review-caps" class="caps"></ul>
+    <p class="hint">Your wallet should show these same purposes. If it shows anything else, or an unrestricted signature, reject it.</p>
     <p id="review-gas" class="hint"></p>
     <details>
       <summary>Exact transaction</summary>
@@ -135,13 +225,20 @@
       </div>
     </div>
     <div class="row">
-      <button id="btn-sign" type="button">Sign with wallet</button>
+      <button id="btn-sign" type="button" class="go">Sign with wallet</button>
       <button id="btn-cancel" type="button" class="quiet">Cancel</button>
     </div>
   </section>
 
   <p id="status" class="status" role="status" aria-live="polite"></p>
 </main>
+
+<footer class="nx-foot">
+  <a href="https://kadena.ws/">Part of Kadena Nexus</a>
+  <a href="/agentpay/">About AgentPay</a>
+  <a href="https://t.me/KadenaNexus">Telegram</a>
+  <a href="https://x.com/KadenaNexus">X</a>
+</footer>
 
 <script src="owner-lib.js"></script>
 <script src="config.js"></script>
