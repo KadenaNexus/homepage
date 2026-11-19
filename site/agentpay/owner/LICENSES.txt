@@ -1,3 +1,5 @@
+The fonts in fonts/ are Bricolage Grotesque and Instrument Sans, both under the SIL Open Font License 1.1 (https://openfontlicense.org), packaged by Fontsource.
+
 owner-lib.js in this folder contains two open-source libraries.
 
 == @noble/hashes 1.8.0 (BLAKE2b hashing) ==
