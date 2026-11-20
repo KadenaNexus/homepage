@@ -406,6 +406,13 @@
    "source": "Listed in the exchange-wallet list shared by Kadena community developers (Oct 2026).",
    "status": "delisted",
    "statusSource": "Per Kadena Nexus (Saudi.KDA), Oct 21, 2026: Gate is the only centralized exchange still trading KDA."
+  },
+  "k:9e9849f831790e7fcb0f2cc6f31558c2e08151649c88187cdb07ba9c36f71c96": {
+   "name": "Gate",
+   "type": "exchange",
+   "confidence": "likely",
+   "role": "deposit address (chain 0)",
+   "source": "Checked on chain Nov 17, 2026: every KDA this wallet has sent (6 times, Feb–Sep 2026, 9.07M KDA) went in full, cross-chain, to the confirmed Gate hot wallet k:0d584a…2fb0 on chain 1, each about 00:50 UTC the day after it arrived, which is Gate's daily deposit sweep time. Same pattern as the CoinEx deposit address k:55de87…398a. Its only inflows are CoinEx withdrawals (about 11.6M KDA, including 2,539,748 KDA on Nov 17, 2026). Not confirmed by Gate."
   }
  }
 }

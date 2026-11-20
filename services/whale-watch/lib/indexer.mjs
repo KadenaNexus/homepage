@@ -41,6 +41,27 @@ export class Indexer {
     return undefined; // too busy to tell: not dormant
   }
 
+  // Where the account's own KDA went: one entry per outgoing transfer of at least `min` KDA
+  // (gas is far smaller), with cross-chain transfers followed to their receiver.
+  async outflows(account, { min = 1, pages = 2 } = {}) {
+    const out = [];
+    let after = null;
+    for (let page = 0; page < pages; page++) {
+      const d = await this.q(
+        `query($a:String!,$after:String){transfers(accountName:$a,fungibleName:"coin",first:50,after:$after){pageInfo{hasNextPage endCursor} edges{node{amount senderAccount receiverAccount crossChainTransfer{receiverAccount}}}}}`,
+        { a: account, after },
+      );
+      for (const { node } of d.transfers.edges) {
+        if (node.senderAccount !== account || Number(node.amount) < min) continue;
+        const to = node.receiverAccount || node.crossChainTransfer?.receiverAccount;
+        if (to && to !== account) out.push({ to, amount: Number(node.amount) });
+      }
+      if (!d.transfers.pageInfo.hasNextPage) break;
+      after = d.transfers.pageInfo.endCursor;
+    }
+    return out;
+  }
+
   // Holders with at least `minBalance` KDA, largest first (balances summed across chains).
   async holdersAbove(minBalance, maxPages = 30) {
     const out = [];

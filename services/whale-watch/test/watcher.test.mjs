@@ -410,3 +410,55 @@ test('alert layout matches the summaries (Oct 26 CoinEx repeat)', () => {
   assert.ok(F.weightedLength(t) <= 280);
 });
 
+
+test('a wallet that always forwards to Gate is read as a Gate deposit, not a new whale (Nov 17)', async () => {
+  const { w, dir, posts } = tmpWatcher();
+  const COINEX = 'k:7cfe3761add000c3e711fdd3316d625365ab7b9ed97a8a814acabff0359d8e10';
+  const GATE = 'k:0d584a4cbbfd9a4878d816512894e65918e54fae13df39a6f520fc90caea2fb0';
+  const DEP = 'k:9e9849f831790e7fcb0f2cc6f31558c2e08151649c88187cdb07ba9c36f71c96', OTHER = 'k:' + '7'.repeat(64);
+  fs.writeFileSync(path.join(dir, 'labels.json'), JSON.stringify({ accounts: {
+    [COINEX]: { name: 'CoinEx', type: 'exchange', confidence: 'confirmed', status: 'closed', closesOn: '2026-12-22', source: 'x' },
+    [GATE]: { name: 'Gate', type: 'exchange', confidence: 'confirmed', source: 'x' },
+  } }));
+  w.loadLabels();
+  const asked = [];
+  w.ix = {
+    outflows: async (a) => { asked.push(a); return a === DEP ? [{ to: GATE, amount: 980807 }, { to: GATE, amount: 6094471.5 }] : [{ to: GATE, amount: 5 }, { to: OTHER, amount: 9 }]; },
+    lastActivityBefore: async () => null,
+  };
+  w.cw = { local: async () => { throw new Error('balance must not be read for an exchange deposit'); } };
+  const t0 = Date.parse('2026-11-17T08:22:57Z');
+  w.now = () => t0 + 10 * 60e3;
+  const item = { type: 'move', id: 'udd:0:0', time: t0, chain: 0, toChain: 0, height: 7412025, requestKey: 'uddGqDq9yXZ1HXvMoHsTQopJgUWOEzRsiwPo8Dsgj2c', amount: 2539748, from: COINEX, to: DEP };
+  w.countFlow(item);
+  w.addItem(item);
+  assert.equal(item.toLabel, null);
+  await w.enrich(item);
+  assert.equal(item.newWhale, undefined);
+  assert.equal(item.toLabel, 'Gate (likely)');
+  assert.equal(w.state.deposits[DEP].name, 'Gate');
+  // the exchange flows now show the KDA arriving at Gate as well as leaving CoinEx
+  const day = w.day(t0);
+  assert.equal(Math.round(day.flows.Gate.in), 2539748);
+  assert.equal(Math.round(day.flows.CoinEx.out), 2539748);
+  await w.postFresh();
+  assert.equal(posts.length, 1);
+  assert.match(posts[0].text, /2,539,748 \$KDA.* moved from CoinEx \(closed\) to Gate \(likely\)\n📥 Moved to Gate, which still trades KDA, so it can be sold there\n/);
+  assert.doesNotMatch(posts[0].text, /New whale|unknown wallet/);
+  assert.ok(F.weightedLength(posts[0].text) <= 280);
+  // the nightly sweep to Gate's hot wallet is Gate moving its own KDA: not posted
+  const sweep = { type: 'move', id: 'sweep:0:0', time: t0 + 16 * 3600e3, chain: 0, toChain: 1, height: 7414000, requestKey: 'sweep', amount: 2540748, from: DEP, to: GATE };
+  w.now = () => sweep.time + 60e3;
+  const fl = w.labelOf(sweep.from), tl = w.labelOf(sweep.to);
+  if (fl?.type === 'exchange' && tl?.type === 'exchange' && fl.name === tl.name) sweep.internal = true; // as processBlock decides
+  w.countFlow(sweep); w.addItem(sweep); await w.enrich(sweep);
+  assert.equal(sweep.internal, true);
+  await w.postFresh();
+  assert.equal(posts.length, 1);
+  // a wallet that sent KDA anywhere else is not a deposit address, and is not asked again the same day
+  const plain = { type: 'move', id: 'p:0:0', time: sweep.time, chain: 0, toChain: 0, height: 1, requestKey: 'p', amount: 200000, from: COINEX, to: OTHER };
+  w.cw = { local: async () => 0 };
+  await w.enrich(plain); await w.enrich(plain);
+  assert.equal(asked.filter((a) => a === OTHER).length, 1);
+  assert.equal(w.labelOf(OTHER), null);
+});
