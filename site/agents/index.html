@@ -151,6 +151,8 @@ code,.mono{font:500 .88rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monosp
 .pay{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}
 .pay span b{font-weight:600}
 .split{color:var(--mist);font-size:.88rem}
+.less{font-style:normal;font:600 .72rem/1 var(--body);letter-spacing:.05em;text-transform:uppercase;background:#FCEBD9;color:#8F4304;border-radius:999px;padding:.25rem .55rem;margin-left:.35rem;white-space:nowrap}
+.tool dd a{color:var(--teal)}
 .planned{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.4rem}
 .planned article{border:1px dashed #B9C9CF;border-radius:14px;padding:1.1rem 1.2rem;background:#fff}
 .planned h3{font-size:1.05rem;display:flex;align-items:center;gap:.6rem;justify-content:space-between}
@@ -311,7 +313,7 @@ pre .o{color:#F4A95E}
         <a class="btn primary" href="#tools">See the tools</a>
         <a class="btn" href="#use">Use it from your agent</a>
       </div>
-      <p class="beta">Beta. Pay per call in USDC on Base or in KDA on Kadena, over the open x402 standard.</p>
+      <p class="beta">Beta. Pay per call in USDC on Base or in KDA on Kadena, over the open x402 standard. Paying in KDA costs less.</p>
     </div>
     <aside class="case" aria-label="A case on record">
       <span class="eyebrow">A case on record</span>
@@ -347,7 +349,7 @@ pre .o{color:#F4A95E}
   <div class="wrap">
     <span class="eyebrow">The tools</span>
     <h2>What each tool takes, returns and costs</h2>
-    <p class="sub">Every tool is one web address that answers JSON. Prices and request counts on this page are read live from the service.</p>
+    <p class="sub">Every tool is one web address that answers JSON. Each has a free sample that shows the shape of the answer. A call costs less when paid in KDA than in USDC. Prices and request counts on this page are read live from the service.</p>
 
     <article class="tool" id="early-warnings">
       <header><h3>Early warnings</h3><span class="count"><b data-count="early-warnings">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
@@ -357,7 +359,8 @@ pre .o{color:#F4A95E}
         <dt>Input</dt><dd><code>network</code>, optional. One of <code>ethereum</code>, <code>bsc</code>, <code>arbitrum</code>, <code>base</code>. Leave it out for all four.</dd>
         <dt>Returns</dt><dd>Each warning with the wallets, the amount, when it moved and when it was seen, plus the on-chain evidence. Unconfirmed by design: a warning is not a confirmed theft.</dd>
         <dt>Covers</dt><dd><div class="chips" style="margin:0"><span class="chip">Ethereum</span><span class="chip">BNB Chain</span><span class="chip">Arbitrum</span><span class="chip">Base</span></div></dd>
-        <dt>Price per call</dt><dd class="pay"><span><b data-usd="early-warnings">$0.05</b> in USDC on Base</span><span>or <b data-kda="early-warnings">0.05</b> KDA on Kadena</span></dd>
+        <dt>Price per call</dt><dd class="pay"><span><b data-usd="early-warnings">$0.05</b> in USDC on Base</span><span>or <b data-kda="early-warnings">0.05</b> KDA on Kadena <i class="less">costs less</i></span></dd>
+        <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/early-warnings">agentpay.kadena.ws/v1/sample/early-warnings</a></dd>
         <dt>Paid with</dt><dd class="split" data-split="early-warnings">&ndash;</dd>
       </dl>
     </article>
@@ -366,11 +369,12 @@ pre .o{color:#F4A95E}
       <header><h3>Address check</h3><span class="count"><b data-count="address-check">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
       <p class="what">Is this address linked to a reported hack, exploit, phishing or scam, to a traced flow of stolen funds, or to an issuer freeze? Ask before your agent sends money to an address it has never seen.</p>
       <dl>
-        <dt>Endpoint</dt><dd><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/address-check/<em>{network}</em>/<em>{address}</em></code><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/address-check/<em>{address}</em></code></dd>
+        <dt>Endpoint</dt><dd><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/address-check/<em>{network}</em>/<em>{address}</em></code><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/address-check/<em>{address}</em></code><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/address-check?address=<em>{address}</em></code></dd>
         <dt>Input</dt><dd><code>address</code>, required. <code>network</code>, optional: without it the network is read from the form of the address.</dd>
         <dt>Returns</dt><dd>A risk level, the reasons, and a link to each case. No record is not proof that an address is safe, and every answer says so.</dd>
         <dt>Covers</dt><dd><div class="chips" style="margin:0"><span class="chip">Ethereum</span><span class="chip">Base</span><span class="chip">BNB Chain</span><span class="chip">Arbitrum</span><span class="chip">Polygon</span><span class="chip">Optimism</span><span class="chip">Avalanche</span><span class="chip">Tron</span><span class="chip">Bitcoin</span><span class="chip">Solana</span></div></dd>
-        <dt>Price per call</dt><dd class="pay"><span><b data-usd="address-check">$0.02</b> in USDC on Base</span><span>or <b data-kda="address-check">0.02</b> KDA on Kadena</span></dd>
+        <dt>Price per call</dt><dd class="pay"><span><b data-usd="address-check">$0.02</b> in USDC on Base</span><span>or <b data-kda="address-check">0.02</b> KDA on Kadena <i class="less">costs less</i></span></dd>
+        <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/address-check">agentpay.kadena.ws/v1/sample/address-check</a></dd>
         <dt>Paid with</dt><dd class="split" data-split="address-check">&ndash;</dd>
       </dl>
     </article>
@@ -383,7 +387,8 @@ pre .o{color:#F4A95E}
         <dt>Input</dt><dd>None.</dd>
         <dt>Returns</dt><dd>One figure per chain, when it was read, and how it was worked out. A chain that cannot be read is marked, never estimated.</dd>
         <dt>Covers</dt><dd><div class="chips" style="margin:0"><span class="chip">Ethereum</span><span class="chip">Base</span><span class="chip">Arbitrum</span><span class="chip">Optimism</span><span class="chip">BNB Chain</span><span class="chip">Polygon</span><span class="chip">Avalanche</span><span class="chip">Solana</span><span class="chip">Tron</span><span class="chip">Bitcoin</span><span class="chip">Stellar</span><span class="chip">XRP Ledger</span><span class="chip">Kadena</span></div></dd>
-        <dt>Price per call</dt><dd class="pay"><span><b data-usd="fees">$0.01</b> in USDC on Base</span><span>or <b data-kda="fees">0.01</b> KDA on Kadena</span></dd>
+        <dt>Price per call</dt><dd class="pay"><span><b data-usd="fees">$0.01</b> in USDC on Base</span><span>or <b data-kda="fees">0.01</b> KDA on Kadena <i class="less">costs less</i></span></dd>
+        <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/fees">agentpay.kadena.ws/v1/sample/fees</a></dd>
         <dt>Paid with</dt><dd class="split" data-split="fees">&ndash;</dd>
       </dl>
     </article>
@@ -396,7 +401,8 @@ pre .o{color:#F4A95E}
         <dt>Input</dt><dd><code>chain</code>, required. One of <code>ethereum</code>, <code>base</code>, <code>arbitrum</code>, <code>optimism</code>, <code>bnb</code>, <code>polygon</code>, <code>avalanche</code>, <code>solana</code>, <code>tron</code>, <code>bitcoin</code>, <code>stellar</code>, <code>xrpl</code>, <code>kadena</code>.</dd>
         <dt>Returns</dt><dd>The fee rate, the cost of a coin transfer and the cost of a stablecoin transfer, with the time it was read.</dd>
         <dt>Covers</dt><dd>Any of the 13 chains above.</dd>
-        <dt>Price per call</dt><dd class="pay"><span><b data-usd="fee">$0.002</b> in USDC on Base</span><span>or <b data-kda="fee">0.002</b> KDA on Kadena</span></dd>
+        <dt>Price per call</dt><dd class="pay"><span><b data-usd="fee">$0.002</b> in USDC on Base</span><span>or <b data-kda="fee">0.002</b> KDA on Kadena <i class="less">costs less</i></span></dd>
+        <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/fee">agentpay.kadena.ws/v1/sample/fee</a></dd>
         <dt>Paid with</dt><dd class="split" data-split="fee">&ndash;</dd>
       </dl>
     </article>
@@ -425,6 +431,7 @@ pre .o{color:#F4A95E}
           <a href="https://agentpay.kadena.ws/v1">Catalog</a>
           <a href="https://agentpay.kadena.ws/openapi.json">OpenAPI document</a>
           <a href="https://agentpay.kadena.ws/v1/usage">Usage counts</a>
+          <a href="https://agentpay.kadena.ws/v1/sample/early-warnings">A free sample</a>
         </div>
         <p class="sub" style="font-size:.95rem">Also listed where agents look for tools: the Coinbase x402 catalog and x402scan.</p>
       </div>
@@ -433,7 +440,7 @@ GET https://agentpay.kadena.ws/v1/early-warnings/base
 
 <span class="o">402 Payment Required</span>
   USDC on Base     0.05
-  KDA on Kadena    0.05
+  KDA on Kadena    0.05   (costs less)
 
 <span class="c"># 2. ask again, with the signed payment</span>
 GET https://agentpay.kadena.ws/v1/early-warnings/base
