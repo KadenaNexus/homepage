@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kadena Nexus Agents: early warnings and safety checks for AI agents | Kadena Nexus</title>
-<meta name="description" content="Paid tools for AI agents over x402: a preflight check before paying an address, early warnings of possible crypto thefts, an incident feed, and live gas fees on 13 blockchains. Pay per call in USDC on Base or KDA. No account, no API key.">
+<title>Kadena Nexus: tools for AI agents</title>
+<meta name="description" content="Kadena Nexus tools for AI agents, paid per call over x402: Preflight before paying an address, wallet risk check, USDT and USDC freeze check, hack alerts, early warnings and live gas fees on 13 blockchains. USDC on Base or KDA. No account, no API key.">
 <link rel="canonical" href="https://kadena.ws/agents/">
-<meta property="og:title" content="Kadena Nexus Agents: early warnings and safety checks for AI agents">
-<meta property="og:description" content="Paid tools for AI agents over x402: a preflight check before paying an address, early warnings of possible crypto thefts, an incident feed, and live gas fees on 13 blockchains. Pay per call in USDC on Base or KDA. No account, no API key.">
+<meta property="og:title" content="Kadena Nexus: tools for AI agents">
+<meta property="og:description" content="Kadena Nexus tools for AI agents, paid per call over x402: Preflight before paying an address, wallet risk check, USDT and USDC freeze check, hack alerts, early warnings and live gas fees on 13 blockchains. USDC on Base or KDA. No account, no API key.">
 <meta property="og:url" content="https://kadena.ws/agents/">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://kadena.ws/og/og-home.jpg">
@@ -200,7 +200,7 @@ pre .o{color:#F4A95E}
 {
  "@context": "https://schema.org",
  "@type": "WebPage",
- "name": "Kadena Nexus Agents",
+ "name": "Kadena Nexus: tools for AI agents",
  "url": "https://kadena.ws/agents/",
  "description": "Paid tools for AI agents over x402: a preflight check before paying an address, early warnings of possible crypto thefts, an incident feed, address and stablecoin freeze checks, and live gas fees on 13 blockchains.",
  "publisher": {
@@ -232,7 +232,7 @@ pre .o{color:#F4A95E}
     "position": 2,
     "item": {
      "@type": "WebAPI",
-     "name": "Early warnings",
+     "name": "Early Warnings",
      "description": "Unconfirmed early warnings of possible crypto thefts from the last 48 hours on Ethereum, BNB Chain, Arbitrum and Base.",
      "url": "https://kadena.ws/agents/#early-warnings",
      "documentation": "https://agentpay.kadena.ws/openapi.json",
@@ -247,7 +247,7 @@ pre .o{color:#F4A95E}
     "position": 3,
     "item": {
      "@type": "WebAPI",
-     "name": "Incident feed",
+     "name": "Hack Alerts",
      "description": "Public crypto hacks, exploits, phishing attacks and breaches from the last 30 days, with the addresses named in the reports.",
      "url": "https://kadena.ws/agents/#incidents",
      "documentation": "https://agentpay.kadena.ws/openapi.json",
@@ -262,7 +262,7 @@ pre .o{color:#F4A95E}
     "position": 4,
     "item": {
      "@type": "WebAPI",
-     "name": "Address check",
+     "name": "Wallet Risk Check",
      "description": "Whether an address is linked to reported stolen funds or an issuer freeze, on 10 networks.",
      "url": "https://kadena.ws/agents/#address-check",
      "documentation": "https://agentpay.kadena.ws/openapi.json",
@@ -277,7 +277,7 @@ pre .o{color:#F4A95E}
     "position": 5,
     "item": {
      "@type": "WebAPI",
-     "name": "Stablecoin freeze check",
+     "name": "USDT USDC Freeze",
      "description": "Whether the issuer has frozen USDT or USDC at an address, read from the token contracts.",
      "url": "https://kadena.ws/agents/#freeze-check",
      "documentation": "https://agentpay.kadena.ws/openapi.json",
@@ -292,7 +292,7 @@ pre .o{color:#F4A95E}
     "position": 6,
     "item": {
      "@type": "WebAPI",
-     "name": "Live fees, every chain",
+     "name": "Gas Price and Fees",
      "description": "What a coin transfer and a stablecoin transfer cost right now on 13 blockchains.",
      "url": "https://kadena.ws/agents/#fees",
      "documentation": "https://agentpay.kadena.ws/openapi.json",
@@ -307,7 +307,7 @@ pre .o{color:#F4A95E}
     "position": 7,
     "item": {
      "@type": "WebAPI",
-     "name": "Live fee, one chain",
+     "name": "Gas Fee One Chain",
      "description": "Live transfer fee on one blockchain.",
      "url": "https://kadena.ws/agents/#fee",
      "documentation": "https://agentpay.kadena.ws/openapi.json",
@@ -321,9 +321,9 @@ pre .o{color:#F4A95E}
  }
 }
 </script>
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" href="/nexus-mark.png">
+<link rel="icon" href="/icons/agents/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/icons/agents/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/icons/agents/app-icon.png">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -411,7 +411,7 @@ pre .o{color:#F4A95E}
     </article>
 
     <article class="tool" id="early-warnings">
-      <header><h3>Early warnings</h3><span class="count"><b data-count="early-warnings">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
+      <header><h3>Early Warnings</h3><span class="count"><b data-count="early-warnings">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
       <p class="what">Two signals from the last 48 hours, raised from the chains within about a minute: a large share of an exchange or bridge wallet leaving in minutes, and fresh wallets funded from a mixer that then deployed a contract.</p>
       <dl>
         <dt>Endpoint</dt><dd><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/early-warnings</code><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/early-warnings/<em>{network}</em></code></dd>
@@ -425,7 +425,7 @@ pre .o{color:#F4A95E}
     </article>
 
     <article class="tool" id="incidents">
-      <header><h3>Incident feed</h3><span class="count"><b data-count="incidents">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
+      <header><h3>Hack Alerts</h3><span class="count"><b data-count="incidents">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
       <p class="what">Public hacks, exploits, phishing attacks and breaches from the last 30 days, newest first, so an agent knows what has happened and which addresses the reports name.</p>
       <dl>
         <dt>Endpoint</dt><dd><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/incidents</code><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/incidents/<em>{network}</em></code></dd>
@@ -439,7 +439,7 @@ pre .o{color:#F4A95E}
     </article>
 
     <article class="tool" id="address-check">
-      <header><h3>Address check</h3><span class="count"><b data-count="address-check">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
+      <header><h3>Wallet Risk Check</h3><span class="count"><b data-count="address-check">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
       <p class="what">Is this address linked to a reported hack, exploit, phishing or scam, to a traced flow of stolen funds, or to an issuer freeze? Ask before your agent sends money to an address it has never seen.</p>
       <dl>
         <dt>Endpoint</dt><dd><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/address-check/<em>{network}</em>/<em>{address}</em></code><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/address-check/<em>{address}</em></code><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/address-check?address=<em>{address}</em></code></dd>
@@ -453,7 +453,7 @@ pre .o{color:#F4A95E}
     </article>
 
     <article class="tool" id="freeze-check">
-      <header><h3>Stablecoin freeze check</h3><span class="count"><b data-count="freeze-check">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
+      <header><h3>USDT USDC Freeze</h3><span class="count"><b data-count="freeze-check">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
       <p class="what">Has the issuer frozen USDT or USDC at this address? A frozen address cannot move that token, so what your agent sends it may be stuck. Read from the token contracts at the moment you ask.</p>
       <dl>
         <dt>Endpoint</dt><dd><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/freeze-check/<em>{address}</em></code><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/freeze-check?address=<em>{address}</em></code></dd>
@@ -467,7 +467,7 @@ pre .o{color:#F4A95E}
     </article>
 
     <article class="tool" id="fees">
-      <header><h3>Live fees, every chain</h3><span class="count"><b data-count="fees">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
+      <header><h3>Gas Price and Fees</h3><span class="count"><b data-count="fees">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
       <p class="what">What a coin transfer and a stablecoin transfer cost right now on 13 blockchains, in the chain's coin and in US dollars, and which chain is cheapest.</p>
       <dl>
         <dt>Endpoint</dt><dd><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/fees</code></dd>
@@ -481,7 +481,7 @@ pre .o{color:#F4A95E}
     </article>
 
     <article class="tool" id="fee">
-      <header><h3>Live fee, one chain</h3><span class="count"><b data-count="fee">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
+      <header><h3>Gas Fee One Chain</h3><span class="count"><b data-count="fee">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
       <p class="what">The same figures for a single chain, for agents that already know where they are paying.</p>
       <dl>
         <dt>Endpoint</dt><dd><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/fees/<em>{chain}</em></code></dd>
