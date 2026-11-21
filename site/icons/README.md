@@ -12,6 +12,7 @@ One icon per product, all in the same family: teal tile, orange and white symbol
 | `adoption/` | Adoption Index | adoption.kadena.ws |
 | `garden/` | Kadena Garden | mine.kadena.ws |
 | `whales/` | Whale Watch | kadena.ws/whales |
+| `agents/` | Tools for AI agents | kadena.ws/agents |
 
 Each folder has:
 - `app-icon.png` – 512×512, rounded corners, transparent outside (browser tab icon)
