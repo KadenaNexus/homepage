@@ -12,6 +12,7 @@ One icon per product, all in the same family: teal tile, orange and white symbol
 | `adoption/` | Adoption Index | adoption.kadena.ws |
 | `garden/` | Kadena Garden | mine.kadena.ws |
 | `whales/` | Whale Watch | kadena.ws/whales |
+| `agents/` | Tools for AI agents | kadena.ws/agents |
 
 Each folder has:
 - `app-icon.png` – 512×512, rounded corners, transparent outside (browser tab icon)
@@ -20,3 +21,5 @@ Each folder has:
 - `favicon.ico` – 16, 32 and 48 px
 
 Public URL pattern for listings: `https://kadena.ws/icons/<folder>/app-icon-square.png`
+
+The `agents/` icon is the exception to the family: the Kadena Community Edition K on a dark square, with the Nexus mark at the bottom right, because it is shown in directories outside the Kadena community.
