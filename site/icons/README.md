@@ -21,3 +21,5 @@ Each folder has:
 - `favicon.ico` – 16, 32 and 48 px
 
 Public URL pattern for listings: `https://kadena.ws/icons/<folder>/app-icon-square.png`
+
+The `agents/` icon is the exception to the family: the Kadena Community Edition K on a dark square, with the Nexus mark at the bottom right, because it is shown in directories outside the Kadena community.
