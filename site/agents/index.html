@@ -541,45 +541,6 @@ PAYMENT-SIGNATURE: ...
   </div>
 </section>
 
-<section class="use" id="workflows">
-  <div class="wrap">
-    <span class="eyebrow">Ready-made workflows</span>
-    <h2>Two jobs you can hand to your agent as they are</h2>
-    <p class="sub">Each is a prompt that combines the tools above. Paste it into your agent and fill in the parts in angle brackets. The agent pays per call, and nothing is sent without your confirmation.</p>
-    <div class="grid">
-      <div>
-        <h3>Pay safely</h3>
-        <p style="margin:.5rem 0 1rem;font-size:.95rem">Check the recipient and find the cheapest network before a payment goes out. About $0.035 per payment.</p>
-        <pre style="white-space:pre-wrap" aria-label="Prompt: pay safely">Before you send &lt;amount&gt; &lt;token&gt; to &lt;address&gt;, use the Kadena Nexus tools at https://agentpay.kadena.ws (x402; pay in USDC on Base or Polygon, or in KDA). Confirm the maximum spend with me first: about $0.035.
-
-1. GET /v1/preflight?address=&lt;address&gt;&amp;network=&lt;network&gt;  ($0.025)
-   verdict "stop": do not send, and tell me the reasons.
-   verdict "caution": show me the reasons and ask.
-   verdict "nothing found": continue. It is not proof that the address is safe.
-2. If I have not fixed the network: GET /v1/fees  ($0.01)
-   Suggest the cheapest network that the recipient and I can both use for this token.
-3. Report the verdict, each reason with its link, any unreadChecks, and the fee.
-   Do not send the payment until I confirm.</pre>
-      </div>
-      <div>
-        <h3>Security briefing</h3>
-        <p style="margin:.5rem 0 1rem;font-size:.95rem">What was hacked lately, and what looks like it is being prepared. About $0.08 per run.</p>
-        <pre style="white-space:pre-wrap" aria-label="Prompt: security briefing">Give me a crypto security briefing with the Kadena Nexus tools at https://agentpay.kadena.ws (x402; pay in USDC on Base or Polygon, or in KDA). Confirm the maximum spend with me first: about $0.08.
-
-1. GET /v1/incidents  ($0.03)
-   Public hacks and exploits of the last 30 days.
-2. GET /v1/early-warnings  ($0.05)
-   Unconfirmed warnings from the last 48 hours.
-3. Report:
-   - incidents since &lt;date&gt;, with amount, network and the link to each case
-   - warnings, marked clearly as unconfirmed
-   - anything that touches &lt;my networks or addresses&gt;
-   An address named in a report is "mentioned": that is not proof of who controls it.</pre>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="trust" id="trust">
   <div class="wrap">
     <span class="eyebrow">Why trust the answers</span>
