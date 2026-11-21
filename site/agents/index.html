@@ -5,10 +5,10 @@
 <script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kadena Nexus Agents: early warnings and safety checks for AI agents | Kadena Nexus</title>
-<meta name="description" content="Paid tools for AI agents over x402: early warnings of possible crypto thefts, an incident feed, address and stablecoin freeze checks, and live transfer fees on 13 blockchains. Pay per call in USDC on Base or KDA. No account, no API key.">
+<meta name="description" content="Paid tools for AI agents over x402: a preflight check before paying an address, early warnings of possible crypto thefts, an incident feed, and live gas fees on 13 blockchains. Pay per call in USDC on Base or KDA. No account, no API key.">
 <link rel="canonical" href="https://kadena.ws/agents/">
 <meta property="og:title" content="Kadena Nexus Agents: early warnings and safety checks for AI agents">
-<meta property="og:description" content="Paid tools for AI agents over x402: early warnings of possible crypto thefts, an incident feed, address and stablecoin freeze checks, and live transfer fees on 13 blockchains. Pay per call in USDC on Base or KDA. No account, no API key.">
+<meta property="og:description" content="Paid tools for AI agents over x402: a preflight check before paying an address, early warnings of possible crypto thefts, an incident feed, and live gas fees on 13 blockchains. Pay per call in USDC on Base or KDA. No account, no API key.">
 <meta property="og:url" content="https://kadena.ws/agents/">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://kadena.ws/og/og-home.jpg">
@@ -202,7 +202,7 @@ pre .o{color:#F4A95E}
  "@type": "WebPage",
  "name": "Kadena Nexus Agents",
  "url": "https://kadena.ws/agents/",
- "description": "Paid tools for AI agents over x402: early warnings of possible crypto thefts, an incident feed, address and stablecoin freeze checks, and live transfer fees on 13 blockchains.",
+ "description": "Paid tools for AI agents over x402: a preflight check before paying an address, early warnings of possible crypto thefts, an incident feed, address and stablecoin freeze checks, and live gas fees on 13 blockchains.",
  "publisher": {
   "@type": "Organization",
   "name": "Kadena Nexus",
@@ -217,6 +217,21 @@ pre .o{color:#F4A95E}
     "position": 1,
     "item": {
      "@type": "WebAPI",
+     "name": "Preflight",
+     "description": "One check before paying an address: wallet risk, stablecoin freeze and transfer fee, with a verdict of stop, caution or nothing found.",
+     "url": "https://kadena.ws/agents/#preflight",
+     "documentation": "https://agentpay.kadena.ws/openapi.json",
+     "provider": {
+      "@type": "Organization",
+      "name": "Kadena Nexus"
+     }
+    }
+   },
+   {
+    "@type": "ListItem",
+    "position": 2,
+    "item": {
+     "@type": "WebAPI",
      "name": "Early warnings",
      "description": "Unconfirmed early warnings of possible crypto thefts from the last 48 hours on Ethereum, BNB Chain, Arbitrum and Base.",
      "url": "https://kadena.ws/agents/#early-warnings",
@@ -229,7 +244,7 @@ pre .o{color:#F4A95E}
    },
    {
     "@type": "ListItem",
-    "position": 2,
+    "position": 3,
     "item": {
      "@type": "WebAPI",
      "name": "Incident feed",
@@ -244,7 +259,7 @@ pre .o{color:#F4A95E}
    },
    {
     "@type": "ListItem",
-    "position": 3,
+    "position": 4,
     "item": {
      "@type": "WebAPI",
      "name": "Address check",
@@ -259,7 +274,7 @@ pre .o{color:#F4A95E}
    },
    {
     "@type": "ListItem",
-    "position": 4,
+    "position": 5,
     "item": {
      "@type": "WebAPI",
      "name": "Stablecoin freeze check",
@@ -274,7 +289,7 @@ pre .o{color:#F4A95E}
    },
    {
     "@type": "ListItem",
-    "position": 5,
+    "position": 6,
     "item": {
      "@type": "WebAPI",
      "name": "Live fees, every chain",
@@ -289,7 +304,7 @@ pre .o{color:#F4A95E}
    },
    {
     "@type": "ListItem",
-    "position": 6,
+    "position": 7,
     "item": {
      "@type": "WebAPI",
      "name": "Live fee, one chain",
@@ -355,7 +370,7 @@ pre .o{color:#F4A95E}
 
 <div class="wrap">
   <div class="nums">
-    <div><b>6</b><span>tools live today</span></div>
+    <div><b>7</b><span>tools live today</span></div>
     <div><b>13</b><span>blockchains with live fees</span></div>
     <div><b>10</b><span>networks in the address check</span></div>
     <div><b id="total">&ndash;</b><span>paid requests served so far</span></div>
@@ -370,7 +385,7 @@ pre .o{color:#F4A95E}
       <article><h3>Security teams</h3><div class="uses">Early warnings, incident feed</div><p>At exchanges, bridges and protocols. See an abnormal outflow or a wallet preparing an attack, and decide in minutes whether to pause withdrawals or check your own wallets.</p></article>
       <article><h3>Compliance and investigators</h3><div class="uses">Address check, freeze check, incident feed</div><p>In companies and public agencies. Screen an address against reported thefts and issuer freezes, with a link to the case behind every reason.</p></article>
       <article><h3>Traders and trading agents</h3><div class="uses">Early warnings, live fees</div><p>Act on what the chain shows before it becomes a headline, for example by reducing exposure to a venue when funds start leaving. Public data only, and not trading advice.</p></article>
-      <article><h3>Wallets and payment agents</h3><div class="uses">Address check, freeze check, live fees</div><p>Before sending, check that the receiving address is not linked to stolen funds or frozen by the issuer, and pick the cheapest chain for the payment.</p></article>
+      <article><h3>Wallets and payment agents</h3><div class="uses">Preflight, address check, live fees</div><p>Before sending, check that the receiving address is not linked to stolen funds or frozen by the issuer, and pick the cheapest chain for the payment.</p></article>
     </div>
   </div>
 </section>
@@ -380,6 +395,20 @@ pre .o{color:#F4A95E}
     <span class="eyebrow">The tools</span>
     <h2>What each tool takes, returns and costs</h2>
     <p class="sub">Every tool is one web address that answers JSON. Each has a free sample that shows the shape of the answer. A call costs less when paid in KDA than in USDC. Prices and request counts on this page are read live from the service.</p>
+
+    <article class="tool" id="preflight">
+      <header><h3>Preflight: one check before you pay</h3><span class="count"><b data-count="preflight">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
+      <p class="what">The one call to make before an agent sends money to an address it has not paid before. It runs the address check, the stablecoin freeze check and the fee lookup together and gives one word to act on: <strong>stop</strong>, <strong>caution</strong> or <strong>nothing found</strong>.</p>
+      <dl>
+        <dt>Endpoint</dt><dd><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/preflight/<em>{network}</em>/<em>{address}</em></code><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/preflight?address=<em>{address}</em>&amp;network=<em>{network}</em></code></dd>
+        <dt>Input</dt><dd><code>address</code>, required. <code>network</code>, optional: name it to get the transfer fee as well.</dd>
+        <dt>Returns</dt><dd>The verdict and a one-sentence summary, then the findings behind it: the risk level with a link to each case, whether USDT or USDC is frozen at the address, and the cost of a transfer. A check that cannot be read gives caution. Nothing found is not proof that an address is safe, and every answer says so.</dd>
+        <dt>Covers</dt><dd>The ten networks of the address check. The freeze check applies to 0x and Tron addresses.</dd>
+        <dt>Price per call</dt><dd class="pay"><span><b data-usd="preflight">$0.025</b> in USDC on Base</span><span>or <b data-kda="preflight">0.025</b> KDA on Kadena <i class="less">costs less</i></span></dd>
+        <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/preflight">agentpay.kadena.ws/v1/sample/preflight</a></dd>
+        <dt>Paid with</dt><dd class="split" data-split="preflight">&ndash;</dd>
+      </dl>
+    </article>
 
     <article class="tool" id="early-warnings">
       <header><h3>Early warnings</h3><span class="count"><b data-count="early-warnings">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
@@ -486,6 +515,7 @@ pre .o{color:#F4A95E}
         <div class="links">
           <a href="https://agentpay.kadena.ws/v1">Catalog</a>
           <a href="https://agentpay.kadena.ws/openapi.json">OpenAPI document</a>
+          <a href="https://agentpay.kadena.ws/llms.txt">Guide for agents</a>
           <a href="https://agentpay.kadena.ws/v1/usage">Usage counts</a>
           <a href="https://agentpay.kadena.ws/v1/sample/early-warnings">A free sample</a>
         </div>
@@ -589,7 +619,7 @@ PAYMENT-SIGNATURE: ...
   const at = 'https://agentpay.kadena.ws/v1';
   const set = (sel, text) => document.querySelectorAll(sel).forEach(el => { el.textContent = text; });
   const read = url => fetch(url, {cache: 'no-store'}).then(r => r.ok ? r.json() : Promise.reject(r.status));
-  const names = ['fees', 'fee', 'address-check', 'early-warnings', 'freeze-check', 'incidents'];
+  const names = ['fees', 'fee', 'address-check', 'early-warnings', 'freeze-check', 'incidents', 'preflight'];
   const price = v => /^\d+(\.\d+)?$/.test(String(v)) ? String(v) : null;
   read(at).then(cat => {
     (cat.services || []).forEach((s, i) => {
