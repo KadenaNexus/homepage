@@ -402,7 +402,7 @@ pre .o{color:#F4A95E}
       <dl>
         <dt>Endpoint</dt><dd><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/preflight/<em>{network}</em>/<em>{address}</em></code><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/preflight?address=<em>{address}</em>&amp;network=<em>{network}</em></code></dd>
         <dt>Input</dt><dd><code>address</code>, required. <code>network</code>, optional: name it to get the transfer fee as well.</dd>
-        <dt>Returns</dt><dd>The verdict and a one-sentence summary, then the findings behind it: the risk level with a link to each case, whether USDT or USDC is frozen at the address, and the cost of a transfer. A check that cannot be read gives caution. Nothing found is not proof that an address is safe, and every answer says so.</dd>
+        <dt>Returns</dt><dd>The verdict and a one-sentence summary, then the findings behind it: the risk level with a link to each case, whether USDT or USDC is frozen at the address, and the cost of a transfer. The verdict rests on the risk check and the freeze check: if either cannot be read, it is caution. The fee is cost information and never changes the verdict. Nothing found is not proof that an address is safe, and every answer says so.</dd>
         <dt>Covers</dt><dd>The ten networks of the address check. The freeze check applies to 0x and Tron addresses.</dd>
         <dt>Price per call</dt><dd class="pay"><span><b data-usd="preflight">$0.025</b> in USDC on Base</span><span>or <b data-kda="preflight">0.025</b> KDA on Kadena <i class="less">costs less</i></span></dd>
         <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/preflight">agentpay.kadena.ws/v1/sample/preflight</a></dd>
