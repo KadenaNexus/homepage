@@ -5,10 +5,10 @@
 <script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kadena AgentPay AI: AI agents that pay in KDA | Kadena Nexus</title>
-<meta name="description" content="Kadena AgentPay AI lets an AI agent pay for data and compute in KDA over x402, within spending limits its owner sets and the Kadena chain enforces. In development, running on the Nexus devnet.">
+<meta name="description" content="Kadena AgentPay AI lets an AI agent pay for data and compute in KDA over x402, within spending limits its owner sets and the Kadena chain enforces. Live on Kadena mainnet as a pilot.">
 <link rel="canonical" href="https://kadena.ws/agentpay/">
 <meta property="og:title" content="Kadena AgentPay AI: AI agents that pay in KDA">
-<meta property="og:description" content="AI agents pay for data and compute in KDA over x402, within limits the Kadena chain enforces. In development on the Nexus devnet.">
+<meta property="og:description" content="AI agents pay for data and compute in KDA over x402, within limits the Kadena chain enforces. Live on Kadena mainnet as a pilot.">
 <meta property="og:url" content="https://kadena.ws/agentpay/">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://kadena.ws/og/og-home.jpg">
@@ -202,10 +202,10 @@ footer a:hover{color:var(--sand)}
    "@id": "https://kadena.ws/agentpay/#page",
    "name": "Kadena AgentPay AI",
    "headline": "AI agents that pay in KDA, within limits the chain enforces",
-   "description": "Kadena AgentPay AI lets an AI agent pay for data and compute in KDA over x402, within spending limits its owner sets and the Kadena chain enforces. In development, running on the Nexus devnet.",
+   "description": "Kadena AgentPay AI lets an AI agent pay for data and compute in KDA over x402, within spending limits its owner sets and the Kadena chain enforces. Live on Kadena mainnet as a pilot.",
    "url": "https://kadena.ws/agentpay/",
    "inLanguage": "en",
-   "dateModified": "2026-11-17",
+   "dateModified": "2026-11-22",
    "publisher": {
     "@id": "https://kadena.ws/#org"
    },
@@ -349,7 +349,7 @@ details p{margin:.6rem 0 0}
 <main id="main">
   <article class="policy" aria-labelledby="page-title">
     <div class="wrap">
-      <p class="status"><i></i>In development &middot; running on the Nexus devnet</p>
+      <p class="status"><i></i>Live on Kadena mainnet &middot; pilot</p>
       <h1 id="page-title">AI agents that pay in KDA, within limits the chain enforces</h1>
       <p class="lede">Kadena AgentPay AI lets an AI agent pay for data and compute on its own. The owner sets the spending limits once, and a Pact contract on Kadena applies them to every payment. The agent cannot overspend, even if the agent or its server is compromised.</p>
       <div class="tracks">
@@ -357,7 +357,8 @@ details p{margin:.6rem 0 0}
         <div><b>The agent holds no funds</b>The KDA stays in a vault. The agent has only a signing key, which can make payments inside the limits and nothing else.</div>
         <div><b>It follows x402</b>Payments follow <a href="https://x402.org/">x402</a>, the open standard for payments over HTTP, and are <a href="#x402-libraries">tested with the official x402 JavaScript libraries</a>.</div>
       </div>
-      <p class="ctas"><a class="apb" href="/agentpay/app/">Try the devnet demo</a><a class="apb ghost" href="#results">See the devnet results</a><a class="apb ghost" href="#contact">Sell to agents for KDA</a></p>
+      <p class="ctas"><a class="apb" href="/agents/">See the tools agents can buy</a><a class="apb ghost" href="/agentpay/owner/">Give an agent a budget</a><a class="apb ghost" href="#results">See the mainnet results</a></p>
+      <p>The live service is at <a href="https://agentpay.kadena.ws/v1">agentpay.kadena.ws</a>. Agents pay per call in KDA through this contract, or in USDC on Base or Polygon.</p>
 
       <h2 id="how">How one purchase works</h2>
       <p>An agent asks a seller for something, such as a data report. The seller answers with a price. The agent pays, and the seller hands over the data once the payment is in a block.</p>
@@ -399,7 +400,7 @@ details p{margin:.6rem 0 0}
         <li><b>Price</b>The seller answers "402 Payment Required" with the price in KDA and a one-time payment id.</li>
         <li><b>Signature</b>The agent signs one payment for exactly those terms. It needs no KDA of its own; the facilitator pays the gas.</li>
         <li><b>Limits</b>The contract on Kadena applies the owner's limits. A payment outside them is refused and costs nothing.</li>
-        <li><b>Delivery</b>The seller returns the data with a receipt: once the payment is in a block, or right away for small purchases.</li>
+        <li><b>Delivery</b>The seller returns the data with a receipt once the payment is in a block. On mainnet every purchase waits for the block.</li>
       </ol>
 
       <h2 id="limits">What the chain enforces</h2>
@@ -413,8 +414,23 @@ details p{margin:.6rem 0 0}
         <dt>No withdrawals by the agent</dt><dd>Only the owner can withdraw from the vault, change limits or replace the agent key.</dd>
       </dl>
 
-      <h2 id="results">Devnet results</h2>
-      <p>On November 17, 2026, a test agent bought data for KDA using the x402 payment format on the Kadena Nexus devnet, a private Kadena test network run for <a href="/research/">Nexus Research</a>. The buyer was a test script, not an AI model, and buyer, seller and facilitator all ran Kadena Nexus software. These are test results, not mainnet activity.</p>
+      <h2 id="results">Mainnet results</h2>
+      <p>On November 20, 2026, a test agent bought all four of our first tools at agentpay.kadena.ws with real KDA, paying from an allowance owned by Saudi.KDA. The owner did not confirm any payment; the contract applied the limits (0.2 KDA per payment, 2 KDA per day). The buyer was our own test agent, not a customer.</p>
+      <div class="tablewrap">
+        <table class="results">
+          <thead><tr><th scope="col">Tool</th><th scope="col">Price</th><th scope="col">Request to data</th><th scope="col">Block</th></tr></thead>
+          <tbody>
+            <tr><td>Live fee, one chain</td><td>0.002 KDA</td><td>22 s</td><td>7421690</td></tr>
+            <tr><td>Live fees, 13 chains</td><td>0.01 KDA</td><td>28 s</td><td>7421691</td></tr>
+            <tr><td>Address check</td><td>0.02 KDA</td><td>18 s</td><td>7421692</td></tr>
+            <tr><td>Early warnings</td><td>0.05 KDA</td><td>43 s</td><td>7421693</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sources">Checked on chain afterwards: the seller received exactly 0.082 KDA, the vault fell by the same amount, and each payment used 541 gas, paid by a separate gas account. The agent's own key held no KDA. All on Kadena mainnet, chain 1.</p>
+      <p>On November 22, 2026, the first <a href="/proof/">Receipt Proof</a> was recorded on mainnet in block 7426716, paid in KDA through the same contract.</p>
+      <details><summary>Earlier tests on the devnet (November 17, 2026)</summary>
+      <p>On November 17, 2026, a test agent bought data for KDA using the x402 payment format on the Kadena Nexus devnet, a private Kadena test network run for <a href="/research/">Nexus Research</a>. The buyer was a test script, not an AI model, and buyer, seller and facilitator all ran Kadena Nexus software. These runs also checked that the chain refuses payments outside the limits.</p>
       <div class="tablewrap">
         <table class="results">
           <thead><tr><th scope="col">Check</th><th scope="col">Result</th></tr></thead>
@@ -434,7 +450,8 @@ details p{margin:.6rem 0 0}
         </table>
       </div>
       <p class="sources">Four devnet runs passed, with 19, 16, 19 and 19 checks. Before each change to the code, 71 checks of the contract and 54 checks of the payment layer run automatically.</p>
-      <p class="rule">A seller can deliver small purchases as soon as the payment has been checked and sent to the chain, and confirm the block afterwards. Larger purchases wait for the block. The 0.03 seconds was measured with buyer, seller and node on one server; across the internet it will take longer.</p>
+      <p class="rule">On the devnet, a seller delivered small purchases as soon as the payment had been checked and sent to the chain, and confirmed the block afterwards. This is switched off on mainnet for now. The 0.03 seconds was measured with buyer, seller and node on one server; across the internet it will take longer.</p>
+      </details>
 
       <h2 id="x402-libraries">Tested with the official x402 libraries</h2>
       <p>The official JavaScript libraries from the x402 Foundation (version 2.31.0) were run against AgentPay, and all 16 checks pass:</p>
@@ -456,26 +473,26 @@ details p{margin:.6rem 0 0}
 
       <h2 id="roadmap">Where it stands</h2>
       <ul class="road">
-        <li class="done"><span class="st">Done</span><span><b>Allowance contract.</b> Limits, pause, approved sellers and receipts, tested on the devnet.</span></li>
+        <li class="done"><span class="st">Done</span><span><b>Allowance contract.</b> Limits, pause, approved sellers and receipts, tested on the devnet and running on mainnet.</span></li>
         <li class="done"><span class="st">Done</span><span><b>x402 layer.</b> Paid endpoint for sellers, client for agents, and a facilitator, following x402 version 2.</span></li>
         <li class="done"><span class="st">Done</span><span><b>Fast delivery for small purchases.</b> The data is delivered once the payment is sent, and the block is confirmed afterwards.</span></li>
         <li class="done"><span class="st">Done</span><span><b>Tested with the official x402 JavaScript libraries,</b> as client, facilitator client and seller.</span></li>
-        <li class="done"><span class="st">Done</span><span><b>Owner dashboard, as a <a href="/agentpay/app/">devnet demo</a>.</b> Create an allowance, set limits, pause, manage sellers and watch a test agent buy.</span></li>
-        <li class="next"><span class="st">Next</span><span><b>Wallet signing in the dashboard,</b> so it can be used with real accounts on mainnet.</span></li>
-        <li><span class="st">Before mainnet</span><span><b>Independent review</b> of the contract, then a mainnet deployment.</span></li>
+        <li class="done"><span class="st">Done</span><span><b>Owner page on mainnet.</b> <a href="/agentpay/owner/">Create an allowance</a>, set limits, pause and manage sellers, signing with eckoWALLET or Linx. The <a href="/agentpay/app/">devnet demo</a> stays up for practice.</span></li>
+        <li class="done"><span class="st">Done</span><span><b>Mainnet pilot.</b> Paid tools at <a href="/agents/">kadena.ws/agents</a>, payable in KDA or in USDC on Base or Polygon.</span></li>
+        <li class="next"><span class="st">Before full launch</span><span><b>Independent review</b> of the contract, a fresh deployment with the final admin keys and a 24-hour upgrade delay, and a second independent node.</span></li>
         <li><span class="st">Later</span><span><b>x402 network listing</b> for Kadena, and a version for Chainweb EVM alongside the community developers' EVM work.</span></li>
       </ul>
       <p>The code is private while it is in development and will be published at launch, like the other <a href="https://github.com/KadenaNexus">Kadena Nexus</a> projects.</p>
 
       <h2 id="faq">Questions</h2>
-      <details><summary>Can I use it today?</summary><p>You can try it with test KDA in the <a href="/agentpay/app/">devnet demo</a>, which runs on our private test network. It is not on mainnet yet. This page will be updated at mainnet launch.</p></details>
+      <details><summary>Can I use it today?</summary><p>Yes, as a pilot on Kadena mainnet. An owner can set up an allowance on the <a href="/agentpay/owner/">owner page</a>, and an agent can buy the <a href="/agents/">Kadena Nexus tools</a> with it. The contract has not had an independent review yet, so keep the amounts small. To practice with test KDA, use the <a href="/agentpay/app/">devnet demo</a>.</p></details>
       <details><summary>What is x402?</summary><p>An open standard that lets software pay for a web request. A server answers "402 Payment Required" with a price, and the client pays and asks again. It was created by Coinbase and is now governed by the x402 Foundation at the Linux Foundation. Read more at <a href="https://x402.org/">x402.org</a>.</p></details>
       <details><summary>What happens if the agent is tricked into paying?</summary><p>The damage is capped by the owner's limits. With the approved-sellers list on, a tricked agent still cannot pay an account the owner did not approve. The owner can pause the allowance at any time.</p></details>
       <details><summary>Is this a trading bot?</summary><p>No. It does not trade or hold funds for anyone. It is a way for an agent to pay for services, with the owner's KDA staying in a vault the owner controls.</p></details>
 
       <h2 id="contact">Sell to agents, or follow the build</h2>
-      <p>If you run a data or compute service and would like agents to pay you in KDA, or you are building agents and want to try it when the public demo opens, write to <a href="mailto:Saudi.KDA@kadena.ws?subject=Kadena%20AgentPay%20AI">Saudi.KDA@kadena.ws</a> or join the <a href="https://t.me/KadenaNexus">Kadena Nexus Telegram group</a>. Updates are posted on <a href="https://x.com/KadenaNexus">@KadenaNexus</a>.</p>
-      <p class="updated">Kadena AgentPay AI is built by Kadena Nexus, a community team working alongside the Kadena Community Edition developers. Last updated November 17, 2026.</p>
+      <p>If you run a data or compute service and would like agents to pay you in KDA, or you are building agents and want help connecting one, write to <a href="mailto:Saudi.KDA@kadena.ws?subject=Kadena%20AgentPay%20AI">Saudi.KDA@kadena.ws</a> or join the <a href="https://t.me/KadenaNexus">Kadena Nexus Telegram group</a>. Updates are posted on <a href="https://x.com/KadenaNexus">@KadenaNexus</a>.</p>
+      <p class="updated">Kadena AgentPay AI is built by Kadena Nexus, a community team working alongside the Kadena Community Edition developers. Last updated November 22, 2026.</p>
     </div>
   </article>
 </main>
