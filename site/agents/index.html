@@ -225,13 +225,12 @@ pre .o{color:#F4A95E}
 .lanes{display:grid;grid-template-columns:8.5rem minmax(0,1fr);gap:.7rem 1rem;align-items:center}
 .lanes .name{font-weight:600;color:var(--sand);font-size:.95rem}
 .lane{position:relative;height:2.6rem;border-radius:999px;background:var(--panel);overflow:hidden}
-.lane .dot{position:absolute;top:50%;width:1rem;height:1rem;margin:-.5rem 0 0 -.5rem;border-radius:50%;left:104%;transition:left 1.2s cubic-bezier(.2,.7,.2,1)}
-.lane.kda .dot{background:var(--pink)}
+.lane .dot{position:absolute;top:50%;width:1rem;height:1rem;margin:-.5rem 0 0 -.5rem;border-radius:50%;left:-4%;animation:travel 12s linear infinite}
+@keyframes travel{0%{left:-4%;opacity:0}6%{opacity:1}90%{opacity:1}100%{left:104%;opacity:0}}
+.lane.kda .dot{background:var(--pink);box-shadow:0 0 0 0 rgba(226,113,10,.5);animation:travel 12s linear infinite,ping 1.6s ease-out infinite}
 .lane.base .dot{background:var(--teal)}
 .lane.polygon .dot{background:var(--deep)}
-.lane .dot.new{animation:ping 1.6s ease-out infinite}
 @keyframes ping{0%{box-shadow:0 0 0 0 rgba(226,113,10,.55)}100%{box-shadow:0 0 0 .8rem rgba(226,113,10,0)}}
-.axis{display:flex;justify-content:space-between;font-size:.8rem;color:var(--mist);grid-column:2}
 .livenums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}
 .livenums div{background:var(--panel);border-radius:12px;padding:.8rem .9rem}
 .livenums small{display:block;font-size:.8rem}
@@ -241,9 +240,9 @@ pre .o{color:#F4A95E}
 .recent li span:first-child{color:var(--sand);font-weight:600}
 .listed{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;width:100%;padding-top:1rem;border-top:1px solid var(--line)}
 .listed span{color:var(--sand);font-weight:600}
-@media (prefers-reduced-motion:reduce){.lane .dot{transition:none}.lane .dot.new{animation:none}.rp-card,.rp-chip,.rp-blk,.rp-bar i,.rp-badge,.rp-conf{transition:none}}
+@media (prefers-reduced-motion:reduce){.lane .dot{animation:none!important}.rp-card,.rp-chip,.rp-blk,.rp-bar i,.rp-badge,.rp-conf{transition:none}}
 @media (max-width:980px){.rp-flow,.rp-conf,.live .grid2{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:640px){.lanes{grid-template-columns:minmax(0,1fr)}.axis{grid-column:1}.rp-stage{padding-inline:1.1rem}}
+@media (max-width:640px){.lanes{grid-template-columns:minmax(0,1fr)}.rp-stage{padding-inline:1.1rem}}
 
 </style>
 <script type="application/ld+json">
@@ -420,12 +419,38 @@ pre .o{color:#F4A95E}
 
 <div class="wrap">
   <div class="nums">
-    <div><b>7</b><span>tools live today</span></div>
+    <div><b>8</b><span>tools live today</span></div>
     <div><b>13</b><span>blockchains with live fees</span></div>
     <div><b>10</b><span>networks in the address check</span></div>
     <div><b id="total">&ndash;</b><span>paid requests served so far</span></div>
   </div>
 </div>
+
+<section class="live" id="live">
+  <div class="wrap">
+    <span class="eyebrow">Live activity</span>
+    <h2>Paid calls from outside buyers, as they happen</h2>
+    <p class="sub">Each dot is one real call an agent paid for in the last 7 days, replayed on a loop. Orange ones were paid in KDA and settled on Kadena. Our own test purchases are left out. Read live from the service.</p>
+    <div class="grid2">
+      <div>
+        <div class="lanes" aria-hidden="true">
+          <span class="name">Kadena · KDA</span><div class="lane kda" data-lane="kda"></div>
+          <span class="name">Base · USDC</span><div class="lane base" data-lane="base"></div>
+          <span class="name">Polygon · USDC</span><div class="lane polygon" data-lane="polygon"></div>
+                  </div>
+        <p class="sub" id="live-note" style="font-size:.92rem">Loading the latest calls.</p>
+      </div>
+      <div>
+        <div class="livenums">
+          <div><small>Paid calls</small><b id="live-total">&ndash;</b></div>
+          <div><small>In KDA</small><b id="live-kda">&ndash;</b></div>
+          <div><small>In USDC</small><b id="live-usdc">&ndash;</b></div>
+        </div>
+        <ul class="recent" id="live-recent" aria-label="Latest paid calls"></ul>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="who">
   <div class="wrap">
@@ -577,33 +602,6 @@ pre .o{color:#F4A95E}
     <h3 style="margin-top:2.6rem;font-size:1.25rem">Planned next</h3>
     <div class="planned" style="grid-template-columns:minmax(0,1fr)">
       <article><h3>Follow the money <span class="tag plan">Planned</span></h3><p>Give an address or a transaction and get the path the funds took across chains, with every hop as data.</p></article>
-    </div>
-  </div>
-</section>
-
-<section class="live" id="live">
-  <div class="wrap">
-    <span class="eyebrow">Live activity</span>
-    <h2>Paid calls from outside buyers, as they happen</h2>
-    <p class="sub">Each dot is one call an agent paid for in the last 7 days, placed at its time. Orange ones were paid in KDA and settled on Kadena. Our own test purchases are left out. Read live from the service.</p>
-    <div class="grid2">
-      <div>
-        <div class="lanes" aria-hidden="true">
-          <span class="name">Kadena · KDA</span><div class="lane kda" data-lane="kda"></div>
-          <span class="name">Base · USDC</span><div class="lane base" data-lane="base"></div>
-          <span class="name">Polygon · USDC</span><div class="lane polygon" data-lane="polygon"></div>
-          <div class="axis"><span>7 days ago</span><span>now</span></div>
-        </div>
-        <p class="sub" id="live-note" style="font-size:.92rem">Loading the latest calls.</p>
-      </div>
-      <div>
-        <div class="livenums">
-          <div><small>Paid calls</small><b id="live-total">&ndash;</b></div>
-          <div><small>In KDA</small><b id="live-kda">&ndash;</b></div>
-          <div><small>In USDC</small><b id="live-usdc">&ndash;</b></div>
-        </div>
-        <ul class="recent" id="live-recent" aria-label="Latest paid calls"></ul>
-      </div>
     </div>
   </div>
 </section>
@@ -799,12 +797,13 @@ PAYMENT-SIGNATURE: ...
     const calls = o.recent.map(c => ({at: Date.parse(String(c.at || '').replace(/Z$/, ':00Z')), tool: String(c.tool || ''), lane: laneOf(String(c.network || ''))}))
                           .filter(c => c.lane && !isNaN(c.at));
     const week = calls.filter(c => now - c.at <= span);
+    // Each real call travels across its lane in turn, spaced over one 12-second loop, in the order they happened.
     week.slice().reverse().forEach((c, i) => {
       const dot = document.createElement('span');
-      dot.className = 'dot' + (c === week[0] ? ' new' : '');
+      dot.className = 'dot';
+      if (still) dot.style.left = Math.max(2, Math.min(98, 100 - (now - c.at) / span * 100)) + '%';
+      else dot.style.animationDelay = (-12 + i * 12 / week.length).toFixed(2) + 's' + (c.lane === 'kda' ? ', 0s' : '');
       document.querySelector('[data-lane="' + c.lane + '"]').appendChild(dot);
-      const x = Math.max(2, Math.min(98, 100 - (now - c.at) / span * 100)) + '%';
-      if (still) dot.style.left = x; else setTimeout(() => { dot.style.left = x; }, 200 + i * 180);
     });
     note.textContent = week.length ? week.length + ' paid ' + (week.length === 1 ? 'call' : 'calls') + ' from outside buyers in the last 7 days.'
                                    : 'No paid calls from outside buyers in the last 7 days.';
