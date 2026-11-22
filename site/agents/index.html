@@ -5,10 +5,10 @@
 <script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kadena Nexus: tools for AI agents</title>
-<meta name="description" content="Kadena Nexus tools for AI agents, paid per call over x402: Preflight before paying an address, wallet risk check, USDT and USDC freeze check, hack alerts, early warnings and live gas fees on 13 blockchains. USDC on Base or KDA. No account, no API key.">
+<meta name="description" content="Kadena Nexus tools for AI agents, paid per call over x402: Preflight before paying an address, wallet risk checks, freeze checks, hack alerts, gas fees on 13 blockchains, and Receipt Proof for files recorded on Kadena. USDC on Base or Polygon, or KDA. No account, no API key.">
 <link rel="canonical" href="https://kadena.ws/agents/">
 <meta property="og:title" content="Kadena Nexus: tools for AI agents">
-<meta property="og:description" content="Kadena Nexus tools for AI agents, paid per call over x402: Preflight before paying an address, wallet risk check, USDT and USDC freeze check, hack alerts, early warnings and live gas fees on 13 blockchains. USDC on Base or KDA. No account, no API key.">
+<meta property="og:description" content="Kadena Nexus tools for AI agents, paid per call over x402: Preflight before paying an address, wallet risk checks, freeze checks, hack alerts, gas fees on 13 blockchains, and Receipt Proof for files recorded on Kadena. USDC on Base or Polygon, or KDA. No account, no API key.">
 <meta property="og:url" content="https://kadena.ws/agents/">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://kadena.ws/og/og-home.jpg">
@@ -229,6 +229,12 @@ pre .o{color:#F4A95E}
 .field canvas{position:absolute;inset:0;width:100%;height:100%}
 .band-name{position:absolute;left:1rem;transform:translateY(-50%);font:600 .78rem/1 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--sand);background:rgba(255,255,255,.78);border:1px solid var(--line);border-radius:999px;padding:.35rem .6rem;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 @media (max-width:640px){.field{aspect-ratio:1/1}.band-name{font-size:.7rem}}
+.rp-foot .btn{min-height:44px}
+.rp-try{font-size:.9rem;margin-top:.6rem;max-width:46rem}
+.prompt summary{cursor:pointer;color:var(--teal);font-weight:600}
+.prompt-text{font-size:.9rem;background:var(--panel);border-radius:10px;padding:.7rem .9rem;margin:.5rem 0}
+.copy{font:600 .9rem var(--body);min-height:44px;padding:.45rem 1rem;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--sand);cursor:pointer;margin-top:.4rem}
+.copy:hover{border-color:var(--teal)}
 .livenums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}
 .livenums div{background:var(--panel);border-radius:12px;padding:.8rem .9rem}
 .livenums small{display:block;font-size:.8rem}
@@ -399,13 +405,13 @@ pre .o{color:#F4A95E}
   <div class="wrap">
     <div>
       <span class="eyebrow">Kadena Nexus Agents</span>
-      <h1>Know within a minute, not from the news.</h1>
-      <p class="lede">Paid tools that an AI agent can call by itself. It gets early warnings when funds start leaving an exchange or bridge, checks an address before paying it, and compares transfer fees across chains. No account, no subscription, no API key: it pays a few cents per call.</p>
+      <h1>Screen wallets, compare fees, and verify files on Kadena.</h1>
+      <p class="lede">Paid tools that an AI agent can call by itself. It checks an address before paying it, compares transfer fees across chains, gets early warnings when funds start leaving an exchange or bridge, and records a fingerprint of a delivered file on Kadena. No account, no subscription, no API key: it pays a few cents per call.</p>
       <div class="actions">
-        <a class="btn primary" href="#tools">See the tools</a>
-        <a class="btn" href="#use">Use it from your agent</a>
+        <a class="btn primary" href="https://agentpay.kadena.ws/v1/sample/preflight">Try a free Preflight sample</a>
+        <a class="btn" href="/proof/#1.1.gL5VA4Vj-Fu7eDWf9NFQJY-cMQxFlToA-1ZP1B6P6Co.YiZW4QroBVLxSbGhOGOwmdXBIXFgd8gnqtP5R4m7xHg.OUsrrvZzaX0N_aecWqj0-fye7_MhCoPQKNt2b7d4BBs">Verify a sample receipt</a>
       </div>
-      <p class="beta">Beta. Pay per call in USDC on Base or in KDA on Kadena, over the open x402 standard. Paying in KDA costs less.</p>
+      <p class="beta">Beta. Pay per call in USDC on Base or Polygon, or in KDA on Kadena, over the open x402 standard. Paying in KDA costs less. <a href="#tools">See all tools</a> · <a href="#use">Use it from your agent</a></p>
     </div>
     <aside class="case" aria-label="A case on record">
       <span class="eyebrow">A case on record</span>
@@ -428,7 +434,7 @@ pre .o{color:#F4A95E}
   <div class="wrap">
     <span class="eyebrow">Live activity</span>
     <h2>Paid calls, as they happen</h2>
-    <p class="sub">Each dot is one real call paid for in the last 7 days, replayed on a loop. Orange ones were paid in KDA and settled on Kadena. Most so far are our own test purchases; <span id="live-outside">a few</span> came from outside buyers. Read live from the service.</p>
+    <p class="sub">Each dot is one real call paid for in the last 7 days, replayed on a loop. Orange ones were paid in KDA and settled on Kadena. Read live from the service.</p>
     <div class="grid2">
       <div>
         <div class="field" id="live-field">
@@ -478,7 +484,8 @@ pre .o{color:#F4A95E}
         <dt>Input</dt><dd><code>address</code>, required. <code>network</code>, optional: name it to get the transfer fee as well.</dd>
         <dt>Returns</dt><dd>The verdict and a one-sentence summary, then the findings behind it: the risk level with a link to each case, whether USDT or USDC is frozen at the address, and the cost of a transfer. The verdict rests on the risk check and the freeze check: if either cannot be read, it is caution. The fee is cost information and never changes the verdict. Nothing found is not proof that an address is safe, and every answer says so.</dd>
         <dt>Covers</dt><dd>The ten networks of the address check. The freeze check applies to 0x and Tron addresses.</dd>
-        <dt>Price per call</dt><dd class="pay"><span><b data-usd="preflight">$0.025</b> in USDC on Base</span><span>or <b data-kda="preflight">0.025</b> KDA on Kadena <i class="less">costs less</i></span></dd>
+        <dt>For your agent</dt><dd><details class="prompt"><summary>Show the agent prompt</summary><p class="prompt-text">Before paying any address, call GET https://agentpay.kadena.ws/v1/preflight?address={address}&amp;network={network}. It is paid per call over x402: pay with USDC on Base (eip155:8453) or Polygon (eip155:137), or KDA on Kadena (kadena:mainnet01). Never pay more than 0.03 USDC or 0.03 KDA for one call. Act on the verdict: stop means do not pay; caution means ask me first; nothing found is not proof that the address is safe.</p></details><button type="button" class="copy" data-copy>Copy agent prompt</button></dd>
+        <dt>Price per call</dt><dd class="pay"><span><b data-usd="preflight">$0.025</b> in USDC on Base or Polygon</span><span>or <b data-kda="preflight">0.025</b> KDA on Kadena <i class="less">costs less</i></span></dd>
         <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/preflight">agentpay.kadena.ws/v1/sample/preflight</a></dd>
         <dt>Paid with</dt><dd class="split" data-split="preflight">&ndash;</dd>
       </dl>
@@ -501,13 +508,15 @@ pre .o{color:#F4A95E}
             <p style="font-size:.88rem;margin-top:.4rem">Block 7426716, recorded Nov 22, 2026, 10:48:22 UTC. The first real receipt.</p></div>
           <div class="rp-badge" data-rp-badge><b>Confirmed</b><span>This exact file now matches a record on Kadena.</span></div>
         </div>
-        <div class="rp-foot"><button type="button" class="rp-replay" data-rp-replay>Replay</button><span>Check this receipt yourself at <a href="/proof/">kadena.ws/proof</a>.</span></div>
+        <div class="rp-foot"><button type="button" class="rp-replay" data-rp-replay>Replay</button><a class="btn" href="/proof/#1.1.gL5VA4Vj-Fu7eDWf9NFQJY-cMQxFlToA-1ZP1B6P6Co.YiZW4QroBVLxSbGhOGOwmdXBIXFgd8gnqtP5R4m7xHg.OUsrrvZzaX0N_aecWqj0-fye7_MhCoPQKNt2b7d4BBs">Open sample receipt</a><a class="btn" href="/proof/sample/receipt-proof-sample-report.txt" download>Download sample file</a></div>
+        <p class="rp-try">Check it yourself, free: download the sample file, open the sample receipt, add the file and press Check. The verifier reads Kadena directly and should say the file matches. Change one letter in the file and it will not.</p>
       </div>
       <dl>
         <dt>Endpoint</dt><dd><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/proof/<em>{commitment}</em></code><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/proof/status/<em>{commitment}</em> (free)</code></dd>
         <dt>Input</dt><dd><code>commitment</code>: SHA-256 of 32 random salt bytes followed by the 32 bytes of the file's SHA-256, as 64 hex characters. Keep the salt: it is part of your receipt.</dd>
         <dt>Returns</dt><dd>At first "recording pending" with the Kadena transaction; the free status address shows the block and its time once 10 blocks deep, usually within minutes. A match shows that this exact file matches a commitment recorded in the block given. It does not show who wrote the file, when it was delivered, or that its content is correct.</dd>
         <dt>Verify</dt><dd><a href="/proof/">kadena.ws/proof</a>: runs in the browser, the file is not uploaded. Also as a script with no dependencies.</dd>
+        <dt>For your agent</dt><dd><details class="prompt"><summary>Show the agent prompt</summary><p class="prompt-text">To prove which file you delivered: 1) make 32 random bytes as a salt; 2) compute fileSha256 = SHA-256 of the file, and commitment = SHA-256 of the salt bytes followed by the 32 bytes of fileSha256, as 64 lowercase hex characters; 3) save the salt, fileSha256 and commitment before paying; 4) call GET https://agentpay.kadena.ws/v1/proof/{commitment}, paid over x402 in KDA on Kadena (kadena:mainnet01) only, never more than 0.01 KDA; 5) call GET https://agentpay.kadena.ws/v1/proof/status/{commitment} (free) until it says confirmed; 6) keep the receipt (salt, commitment, network, chain, module, request key) with the file. Anyone can check them at https://kadena.ws/proof/.</p></details><button type="button" class="copy" data-copy>Copy agent prompt</button></dd>
         <dt>Price per call</dt><dd class="pay"><span><b data-kda="proof">0.005</b> KDA on Kadena</span><span>USDC to follow</span></dd>
         <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/proof">agentpay.kadena.ws/v1/sample/proof</a></dd>
         <dt>Paid with</dt><dd class="split" data-split="proof">&ndash;</dd>
@@ -522,7 +531,7 @@ pre .o{color:#F4A95E}
         <dt>Input</dt><dd><code>network</code>, optional. One of <code>ethereum</code>, <code>bsc</code>, <code>arbitrum</code>, <code>base</code>. Leave it out for all four.</dd>
         <dt>Returns</dt><dd>Each warning with the wallets, the amount, when it moved and when it was seen, plus the on-chain evidence. Unconfirmed by design: a warning is not a confirmed theft.</dd>
         <dt>Covers</dt><dd><div class="chips" style="margin:0"><span class="chip">Ethereum</span><span class="chip">BNB Chain</span><span class="chip">Arbitrum</span><span class="chip">Base</span></div></dd>
-        <dt>Price per call</dt><dd class="pay"><span><b data-usd="early-warnings">$0.05</b> in USDC on Base</span><span>or <b data-kda="early-warnings">0.05</b> KDA on Kadena <i class="less">costs less</i></span></dd>
+        <dt>Price per call</dt><dd class="pay"><span><b data-usd="early-warnings">$0.05</b> in USDC on Base or Polygon</span><span>or <b data-kda="early-warnings">0.05</b> KDA on Kadena <i class="less">costs less</i></span></dd>
         <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/early-warnings">agentpay.kadena.ws/v1/sample/early-warnings</a></dd>
         <dt>Paid with</dt><dd class="split" data-split="early-warnings">&ndash;</dd>
       </dl>
@@ -536,7 +545,7 @@ pre .o{color:#F4A95E}
         <dt>Input</dt><dd><code>network</code>, optional. One of <code>ethereum</code>, <code>bsc</code>, <code>arbitrum</code>, <code>base</code>, <code>polygon</code>, <code>optimism</code>, <code>avalanche</code>, <code>tron</code>, <code>bitcoin</code>, <code>solana</code>.</dd>
         <dt>Returns</dt><dd>Up to 50 incidents: what happened, the kind, the networks, the reported amount, the addresses named in the reports, the sources, and a link to the case. A named address is not proof of who controls it, and every answer says so.</dd>
         <dt>Covers</dt><dd><div class="chips" style="margin:0"><span class="chip">Ethereum</span><span class="chip">Base</span><span class="chip">BNB Chain</span><span class="chip">Arbitrum</span><span class="chip">Polygon</span><span class="chip">Optimism</span><span class="chip">Avalanche</span><span class="chip">Tron</span><span class="chip">Bitcoin</span><span class="chip">Solana</span></div></dd>
-        <dt>Price per call</dt><dd class="pay"><span><b data-usd="incidents">$0.03</b> in USDC on Base</span><span>or <b data-kda="incidents">0.03</b> KDA on Kadena <i class="less">costs less</i></span></dd>
+        <dt>Price per call</dt><dd class="pay"><span><b data-usd="incidents">$0.03</b> in USDC on Base or Polygon</span><span>or <b data-kda="incidents">0.03</b> KDA on Kadena <i class="less">costs less</i></span></dd>
         <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/incidents">agentpay.kadena.ws/v1/sample/incidents</a></dd>
         <dt>Paid with</dt><dd class="split" data-split="incidents">&ndash;</dd>
       </dl>
@@ -550,7 +559,7 @@ pre .o{color:#F4A95E}
         <dt>Input</dt><dd><code>address</code>, required. <code>network</code>, optional: without it the network is read from the form of the address.</dd>
         <dt>Returns</dt><dd>A risk level, the reasons, and a link to each case. No record is not proof that an address is safe, and every answer says so.</dd>
         <dt>Covers</dt><dd><div class="chips" style="margin:0"><span class="chip">Ethereum</span><span class="chip">Base</span><span class="chip">BNB Chain</span><span class="chip">Arbitrum</span><span class="chip">Polygon</span><span class="chip">Optimism</span><span class="chip">Avalanche</span><span class="chip">Tron</span><span class="chip">Bitcoin</span><span class="chip">Solana</span></div></dd>
-        <dt>Price per call</dt><dd class="pay"><span><b data-usd="address-check">$0.02</b> in USDC on Base</span><span>or <b data-kda="address-check">0.02</b> KDA on Kadena <i class="less">costs less</i></span></dd>
+        <dt>Price per call</dt><dd class="pay"><span><b data-usd="address-check">$0.02</b> in USDC on Base or Polygon</span><span>or <b data-kda="address-check">0.02</b> KDA on Kadena <i class="less">costs less</i></span></dd>
         <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/address-check">agentpay.kadena.ws/v1/sample/address-check</a></dd>
         <dt>Paid with</dt><dd class="split" data-split="address-check">&ndash;</dd>
       </dl>
@@ -564,7 +573,7 @@ pre .o{color:#F4A95E}
         <dt>Input</dt><dd><code>address</code>, required. An <code>0x</code> address or a Tron address.</dd>
         <dt>Returns</dt><dd>Frozen or not, with each token contract that was read. A contract that cannot be read is marked, never guessed. Not frozen now does not mean an address cannot be frozen later.</dd>
         <dt>Covers</dt><dd><div class="chips" style="margin:0"><span class="chip">USDT on Ethereum</span><span class="chip">USDC on Ethereum</span><span class="chip">USDC on Base</span><span class="chip">USDT on Tron</span></div></dd>
-        <dt>Price per call</dt><dd class="pay"><span><b data-usd="freeze-check">$0.01</b> in USDC on Base</span><span>or <b data-kda="freeze-check">0.01</b> KDA on Kadena <i class="less">costs less</i></span></dd>
+        <dt>Price per call</dt><dd class="pay"><span><b data-usd="freeze-check">$0.01</b> in USDC on Base or Polygon</span><span>or <b data-kda="freeze-check">0.01</b> KDA on Kadena <i class="less">costs less</i></span></dd>
         <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/freeze-check">agentpay.kadena.ws/v1/sample/freeze-check</a></dd>
         <dt>Paid with</dt><dd class="split" data-split="freeze-check">&ndash;</dd>
       </dl>
@@ -578,7 +587,7 @@ pre .o{color:#F4A95E}
         <dt>Input</dt><dd>None.</dd>
         <dt>Returns</dt><dd>One figure per chain, when it was read, and how it was worked out. A chain that cannot be read is marked, never estimated.</dd>
         <dt>Covers</dt><dd><div class="chips" style="margin:0"><span class="chip">Ethereum</span><span class="chip">Base</span><span class="chip">Arbitrum</span><span class="chip">Optimism</span><span class="chip">BNB Chain</span><span class="chip">Polygon</span><span class="chip">Avalanche</span><span class="chip">Solana</span><span class="chip">Tron</span><span class="chip">Bitcoin</span><span class="chip">Stellar</span><span class="chip">XRP Ledger</span><span class="chip">Kadena</span></div></dd>
-        <dt>Price per call</dt><dd class="pay"><span><b data-usd="fees">$0.01</b> in USDC on Base</span><span>or <b data-kda="fees">0.01</b> KDA on Kadena <i class="less">costs less</i></span></dd>
+        <dt>Price per call</dt><dd class="pay"><span><b data-usd="fees">$0.01</b> in USDC on Base or Polygon</span><span>or <b data-kda="fees">0.01</b> KDA on Kadena <i class="less">costs less</i></span></dd>
         <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/fees">agentpay.kadena.ws/v1/sample/fees</a></dd>
         <dt>Paid with</dt><dd class="split" data-split="fees">&ndash;</dd>
       </dl>
@@ -592,7 +601,7 @@ pre .o{color:#F4A95E}
         <dt>Input</dt><dd><code>chain</code>, required. One of <code>ethereum</code>, <code>base</code>, <code>arbitrum</code>, <code>optimism</code>, <code>bnb</code>, <code>polygon</code>, <code>avalanche</code>, <code>solana</code>, <code>tron</code>, <code>bitcoin</code>, <code>stellar</code>, <code>xrpl</code>, <code>kadena</code>.</dd>
         <dt>Returns</dt><dd>The fee rate, the cost of a coin transfer and the cost of a stablecoin transfer, with the time it was read.</dd>
         <dt>Covers</dt><dd>Any of the 13 chains above.</dd>
-        <dt>Price per call</dt><dd class="pay"><span><b data-usd="fee">$0.002</b> in USDC on Base</span><span>or <b data-kda="fee">0.002</b> KDA on Kadena <i class="less">costs less</i></span></dd>
+        <dt>Price per call</dt><dd class="pay"><span><b data-usd="fee">$0.002</b> in USDC on Base or Polygon</span><span>or <b data-kda="fee">0.002</b> KDA on Kadena <i class="less">costs less</i></span></dd>
         <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/fee">agentpay.kadena.ws/v1/sample/fee</a></dd>
         <dt>Paid with</dt><dd class="split" data-split="fee">&ndash;</dd>
       </dl>
@@ -613,7 +622,7 @@ pre .o{color:#F4A95E}
       <div>
         <ol class="steps">
           <li><b>Read the catalog</b>One free address lists every tool, its price and how to call it. Any agent that speaks x402 can use it without setup.</li>
-          <li><b>Ask</b>The agent requests a tool and receives the price and where to pay: USDC on Base, or KDA on Kadena.</li>
+          <li><b>Ask</b>The agent requests a tool and receives the price and where to pay: USDC on Base or Polygon, or KDA on Kadena.</li>
           <li><b>Pay and receive</b>It repeats the request with the signed payment attached and gets the answer. With USDC the agent needs no ETH for fees. Nothing to renew.</li>
         </ol>
         <div class="links">
@@ -630,6 +639,7 @@ GET https://agentpay.kadena.ws/v1/early-warnings/base
 
 <span class="o">402 Payment Required</span>
   USDC on Base     0.05
+  USDC on Polygon  0.05
   KDA on Kadena    0.05   (costs less)
 
 <span class="c"># 2. ask again, with the signed payment</span>
@@ -726,9 +736,12 @@ PAYMENT-SIGNATURE: ...
   const read = url => fetch(url, {cache: 'no-store'}).then(r => r.ok ? r.json() : Promise.reject(r.status));
   const names = ['fees', 'fee', 'address-check', 'early-warnings', 'freeze-check', 'incidents', 'preflight', 'proof'];
   const price = v => /^\d+(\.\d+)?$/.test(String(v)) ? String(v) : null;
+  // The card a price belongs to comes from the tool's own address, never from its place in the list.
+  const nameOf = url => { const m = /\/v1\/([a-z-]+)(\/\{[a-z]+\})?$/.exec(String(url || '')); if (!m) return null;
+    const name = m[1] === 'fees' && m[2] ? 'fee' : m[1]; return names.includes(name) ? name : null; };
   read(at).then(cat => {
-    (cat.services || []).forEach((s, i) => {
-      const name = names[i];
+    (cat.services || []).forEach(s => {
+      const name = nameOf(s.url);
       if (!name) return;
       const usd = price(s.priceUsdc), kda = price(s.priceKda);
       if (usd) set('[data-usd="' + name + '"]', '$' + usd);
@@ -743,7 +756,7 @@ PAYMENT-SIGNATURE: ...
       if (!row || n(row.requests) === null) return;
       set('[data-count="' + name + '"]', row.requests.toLocaleString('en-US'));
       const usdc = n(row.paidInUsdc) || 0, kda = n(row.paidInKda) || 0;
-      set('[data-split="' + name + '"]', row.requests ? (name === 'proof' ? kda + ' in KDA on Kadena' : usdc + ' in USDC on Base, ' + kda + ' in KDA on Kadena') : 'No paid requests yet');
+      set('[data-split="' + name + '"]', row.requests ? (name === 'proof' ? kda + ' in KDA on Kadena' : usdc + ' in USDC, ' + kda + ' in KDA on Kadena') : 'No paid requests yet');
     });
   }).catch(() => {
     set('[data-split]', 'Counts are not available right now');
@@ -780,7 +793,7 @@ PAYMENT-SIGNATURE: ...
 </script>
 <script>
 (() => {
-  // Live activity: every paid call, our own test purchases included, from the service's free usage answer.
+  // Live activity: every paid call, from the service's free usage answer.
   const note = document.getElementById('live-note');
   const names = {fees: 'Gas fees, 13 chains', fee: 'Gas fee, one chain', 'address-check': 'Wallet risk check', 'early-warnings': 'Early warnings',
                  'freeze-check': 'Freeze check', incidents: 'Hack alerts', preflight: 'Preflight', proof: 'Receipt Proof'};
@@ -833,16 +846,15 @@ PAYMENT-SIGNATURE: ...
     requestAnimationFrame(frame);
   };
   fetch('https://agentpay.kadena.ws/v1/usage', {cache: 'no-store'}).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(u => {
-    const o = u && u.all, out = u && u.outside;
+    const o = u && u.all;
     if (!o || !Array.isArray(o.recent)) { note.textContent = 'Live activity is not available right now.'; return; }
     set('live-total', int(o.total)); set('live-kda', int(o.paidInKda)); set('live-usdc', int(o.paidInUsdc));
-    if (out && int(out.total) !== null) document.getElementById('live-outside').textContent = out.total + ' of all paid calls so far';
     const now = Date.now(), span = 7 * 864e5, still = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const calls = o.recent.map(c => ({at: Date.parse(String(c.at || '').replace(/Z$/, ':00Z')), tool: String(c.tool || ''), lane: laneOf(String(c.network || ''))}))
                           .filter(c => c.lane && !isNaN(c.at));
     const week = calls.filter(c => now - c.at <= span);
     drawField(week, still);
-    note.textContent = week.length ? week.length + ' paid ' + (week.length === 1 ? 'call' : 'calls') + ' in the last 7 days, our own test purchases included.'
+    note.textContent = week.length ? week.length + ' paid ' + (week.length === 1 ? 'call' : 'calls') + ' in the last 7 days.'
                                    : 'No paid calls in the last 7 days.';
     const list = document.getElementById('live-recent');
     calls.slice(0, 6).forEach(c => {
@@ -853,6 +865,13 @@ PAYMENT-SIGNATURE: ...
     });
   }).catch(() => { note.textContent = 'Live activity is not available right now.'; });
 })();
+</script>
+<script>
+document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => {
+  const text = b.parentNode.querySelector('.prompt-text').textContent;
+  const done = ok => { b.textContent = ok ? 'Copied' : 'Select the text above to copy'; setTimeout(() => { b.textContent = 'Copy agent prompt'; }, 2500); };
+  (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(() => done(true), () => { b.parentNode.querySelector('details').open = true; done(false); });
+}));
 </script>
 </body>
 </html>

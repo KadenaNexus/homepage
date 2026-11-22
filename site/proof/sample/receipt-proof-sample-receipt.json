@@ -1,0 +1,12 @@
+{
+ "type": "kadena-nexus-receipt-proof",
+ "version": 1,
+ "commitmentScheme": "sha256(salt32 || fileSha256_32), hex",
+ "salt": "622656e10ae80552f149b1a13863b099d5c121716077c827aad3f94789bbc478",
+ "commitment": "80be55038563f85bbb78359ff4d150258f9c310c45953a00fb564fd41e8fe82a",
+ "network": "mainnet01",
+ "chain": "1",
+ "module": "n_bae9408ba9655ac34901da87088e9b776941d0d3.receipt-proof-v1",
+ "requestKey": "OUsrrvZzaX0N_aecWqj0-fye7_MhCoPQKNt2b7d4BBs",
+ "fileSha256": "41e1ff2aac06201e878ba7533b99cef3bbcf40f1da2921316c700860290b11ce"
+}
