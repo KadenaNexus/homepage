@@ -195,6 +195,56 @@ pre .o{color:#F4A95E}
   .tool dt,.tool dd{padding-inline:1.1rem}
 }
 
+/* Receipt Proof in motion */
+.rp-stage{padding:1.2rem 1.4rem 0}
+.rp-flow{display:grid;grid-template-columns:minmax(0,13rem) minmax(0,15rem) minmax(0,1fr);gap:1rem;align-items:stretch}
+.rp-card{background:var(--panel);border-radius:14px;padding:.9rem 1rem;transition:opacity .5s ease}
+.rp-card small{display:block;font-size:.8rem;color:var(--mist)}
+.rp-card b{display:block;color:var(--sand);font-weight:600;margin-top:.15rem}
+.rp-hash{font:500 .85rem/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--sand);display:flex;align-items:center;gap:.5rem;margin-top:.25rem}
+.rp-chip{width:1rem;height:1rem;border-radius:4px;background:var(--pink);flex:none;transition:opacity .6s ease,transform .6s ease}
+.rp-blocks{display:flex;gap:.5rem;margin-top:.4rem;flex-wrap:wrap}
+.rp-blk{flex:1 1 4.6rem;min-width:4.6rem;height:3.6rem;border:2px solid var(--line);border-radius:10px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;font:500 .78rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--sand);transition:all .5s ease}
+.rp-blk .rp-chip{opacity:0;transform:scale(.4)}
+.rp-blk.hit{border-color:var(--pink);background:#FFF4EA}
+.rp-blk.hit .rp-chip{opacity:1;transform:none}
+.rp-conf{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,16rem);gap:1rem;align-items:center;margin-top:1rem;transition:opacity .5s ease}
+.rp-bar{height:.6rem;border-radius:999px;background:var(--panel);margin-top:.4rem;overflow:hidden}
+.rp-bar i{display:block;height:100%;width:0;background:var(--pink);transition:width .5s ease}
+.rp-badge{border-radius:14px;padding:.8rem 1rem;background:var(--panel);color:var(--sand);transition:background .5s ease,color .5s ease}
+.rp-badge b{font:700 1.1rem var(--display);display:block}
+.rp-badge.done{background:var(--deep);color:#fff}
+.rp-badge.done b{color:#fff}
+.rp-dim{opacity:.3}
+.rp-chip.away{opacity:0;transform:translateY(-1.2rem)}
+.rp-foot{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin-top:.9rem;font-size:.88rem;color:var(--mist)}
+.rp-replay{font:600 .9rem var(--body);min-height:44px;padding:.45rem 1rem;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--sand);cursor:pointer}
+.rp-replay:hover{border-color:var(--teal)}
+/* live activity */
+.live .grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,20rem);gap:2rem;margin-top:2rem;align-items:start}
+.lanes{display:grid;grid-template-columns:8.5rem minmax(0,1fr);gap:.7rem 1rem;align-items:center}
+.lanes .name{font-weight:600;color:var(--sand);font-size:.95rem}
+.lane{position:relative;height:2.6rem;border-radius:999px;background:var(--panel);overflow:hidden}
+.lane .dot{position:absolute;top:50%;width:1rem;height:1rem;margin:-.5rem 0 0 -.5rem;border-radius:50%;left:104%;transition:left 1.2s cubic-bezier(.2,.7,.2,1)}
+.lane.kda .dot{background:var(--pink)}
+.lane.base .dot{background:var(--teal)}
+.lane.polygon .dot{background:var(--deep)}
+.lane .dot.new{animation:ping 1.6s ease-out infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(226,113,10,.55)}100%{box-shadow:0 0 0 .8rem rgba(226,113,10,0)}}
+.axis{display:flex;justify-content:space-between;font-size:.8rem;color:var(--mist);grid-column:2}
+.livenums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}
+.livenums div{background:var(--panel);border-radius:12px;padding:.8rem .9rem}
+.livenums small{display:block;font-size:.8rem}
+.livenums b{font:700 1.6rem var(--display);color:var(--sand)}
+.recent{list-style:none;margin:1rem 0 0;padding:0;font-size:.92rem}
+.recent li{display:flex;justify-content:space-between;gap:1rem;padding:.45rem 0;border-bottom:1px solid var(--line)}
+.recent li span:first-child{color:var(--sand);font-weight:600}
+.listed{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;width:100%;padding-top:1rem;border-top:1px solid var(--line)}
+.listed span{color:var(--sand);font-weight:600}
+@media (prefers-reduced-motion:reduce){.lane .dot{transition:none}.lane .dot.new{animation:none}.rp-card,.rp-chip,.rp-blk,.rp-bar i,.rp-badge,.rp-conf{transition:none}}
+@media (max-width:980px){.rp-flow,.rp-conf,.live .grid2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.lanes{grid-template-columns:minmax(0,1fr)}.axis{grid-column:1}.rp-stage{padding-inline:1.1rem}}
+
 </style>
 <script type="application/ld+json">
 {
@@ -410,6 +460,36 @@ pre .o{color:#F4A95E}
       </dl>
     </article>
 
+    <article class="tool" id="receipt-proof">
+      <header><h3>Receipt Proof: a file's fingerprint, recorded on Kadena</h3><span class="count"><b data-count="proof">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
+      <p class="what">When an agent delivers a file, it records a salted fingerprint of that file on Kadena. Later, anyone holding the file and the receipt can check that it is the exact version that was recorded, and when, with a free verifier that reads a Kadena node directly. The file never leaves the agent.</p>
+      <div class="rp-stage" id="rp" aria-label="How Receipt Proof works, shown with the first real receipt">
+        <div class="rp-flow">
+          <div class="rp-card"><small>1 · The file</small><b>report.txt</b><small>Stays with you</small></div>
+          <div class="rp-card" data-rp="1"><small>2 · Its salted fingerprint</small><span class="rp-hash"><i class="rp-chip" data-rp-chip></i>80be5503…41e8fe82a</span><small>The only thing sent</small></div>
+          <div class="rp-card" data-rp="2"><small>3 · Recorded in a block on Kadena, chain 1</small>
+            <div class="rp-blocks" aria-hidden="true"><span class="rp-blk">7426714</span><span class="rp-blk">7426715</span><span class="rp-blk" data-rp-hit>7426716<i class="rp-chip"></i></span><span class="rp-blk">7426717</span><span class="rp-blk">7426718</span></div>
+          </div>
+        </div>
+        <div class="rp-conf" data-rp="3">
+          <div><div style="display:flex;justify-content:space-between;font-size:.92rem"><span style="color:var(--sand);font-weight:600">4 · Confirmations</span><span><span data-rp-n>0</span> of 10</span></div>
+            <div class="rp-bar"><i data-rp-bar></i></div>
+            <p style="font-size:.88rem;margin-top:.4rem">Block 7426716, recorded Nov 22, 2026, 10:48:22 UTC. The first real receipt.</p></div>
+          <div class="rp-badge" data-rp-badge><b>Confirmed</b><span>This exact file now matches a record on Kadena.</span></div>
+        </div>
+        <div class="rp-foot"><button type="button" class="rp-replay" data-rp-replay>Replay</button><span>Check this receipt yourself at <a href="/proof/">kadena.ws/proof</a>.</span></div>
+      </div>
+      <dl>
+        <dt>Endpoint</dt><dd><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/proof/<em>{commitment}</em></code><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/proof/status/<em>{commitment}</em> (free)</code></dd>
+        <dt>Input</dt><dd><code>commitment</code>: SHA-256 of 32 random salt bytes followed by the 32 bytes of the file's SHA-256, as 64 hex characters. Keep the salt: it is part of your receipt.</dd>
+        <dt>Returns</dt><dd>At first "recording pending" with the Kadena transaction; the free status address shows the block and its time once 10 blocks deep, usually within minutes. A match shows that this exact file matches a commitment recorded in the block given. It does not show who wrote the file, when it was delivered, or that its content is correct.</dd>
+        <dt>Verify</dt><dd><a href="/proof/">kadena.ws/proof</a>: runs in the browser, the file is not uploaded. Also as a script with no dependencies.</dd>
+        <dt>Price per call</dt><dd class="pay"><span><b data-kda="proof">0.005</b> KDA on Kadena</span><span>USDC to follow</span></dd>
+        <dt>Free sample</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/sample/proof">agentpay.kadena.ws/v1/sample/proof</a></dd>
+        <dt>Paid with</dt><dd class="split" data-split="proof">&ndash;</dd>
+      </dl>
+    </article>
+
     <article class="tool" id="early-warnings">
       <header><h3>Early Warnings</h3><span class="count"><b data-count="early-warnings">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
       <p class="what">Two signals from the last 48 hours, raised from the chains within about a minute: a large share of an exchange or bridge wallet leaving in minutes, and fresh wallets funded from a mixer that then deployed a contract.</p>
@@ -501,6 +581,33 @@ pre .o{color:#F4A95E}
   </div>
 </section>
 
+<section class="live" id="live">
+  <div class="wrap">
+    <span class="eyebrow">Live activity</span>
+    <h2>Paid calls from outside buyers, as they happen</h2>
+    <p class="sub">Each dot is one call an agent paid for in the last 7 days, placed at its time. Orange ones were paid in KDA and settled on Kadena. Our own test purchases are left out. Read live from the service.</p>
+    <div class="grid2">
+      <div>
+        <div class="lanes" aria-hidden="true">
+          <span class="name">Kadena · KDA</span><div class="lane kda" data-lane="kda"></div>
+          <span class="name">Base · USDC</span><div class="lane base" data-lane="base"></div>
+          <span class="name">Polygon · USDC</span><div class="lane polygon" data-lane="polygon"></div>
+          <div class="axis"><span>7 days ago</span><span>now</span></div>
+        </div>
+        <p class="sub" id="live-note" style="font-size:.92rem">Loading the latest calls.</p>
+      </div>
+      <div>
+        <div class="livenums">
+          <div><small>Paid calls</small><b id="live-total">&ndash;</b></div>
+          <div><small>In KDA</small><b id="live-kda">&ndash;</b></div>
+          <div><small>In USDC</small><b id="live-usdc">&ndash;</b></div>
+        </div>
+        <ul class="recent" id="live-recent" aria-label="Latest paid calls"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="use" id="use">
   <div class="wrap">
     <span class="eyebrow">Use it from your agent</span>
@@ -519,7 +626,7 @@ pre .o{color:#F4A95E}
           <a href="https://agentpay.kadena.ws/v1/usage">Usage counts</a>
           <a href="https://agentpay.kadena.ws/v1/sample/early-warnings">A free sample</a>
         </div>
-        <p class="sub" style="font-size:.95rem">Also listed where agents look for tools: the Coinbase x402 catalog and x402scan.</p>
+        <p class="sub" style="font-size:.95rem">Also listed where agents look for tools: Agentic Market, x402scan and PayAPI Market (links at the foot of this page).</p>
       </div>
       <pre aria-label="Example exchange"><span class="c"># 1. ask</span>
 GET https://agentpay.kadena.ws/v1/early-warnings/base
@@ -602,6 +709,7 @@ PAYMENT-SIGNATURE: ...
       <a href="/partnership/">Partnership</a>
       <a href="/privacy-policy">Privacy policy</a>
     </nav>
+    <p class="listed"><span>Our tools are also listed on</span><a href="https://agentic.market/">Agentic Market</a><a href="https://www.x402scan.com/">x402scan</a><a href="https://payapi.market/api/kadena-nexus">PayAPI Market</a></p>
   </div>
 </footer>
 <script>
@@ -619,7 +727,7 @@ PAYMENT-SIGNATURE: ...
   const at = 'https://agentpay.kadena.ws/v1';
   const set = (sel, text) => document.querySelectorAll(sel).forEach(el => { el.textContent = text; });
   const read = url => fetch(url, {cache: 'no-store'}).then(r => r.ok ? r.json() : Promise.reject(r.status));
-  const names = ['fees', 'fee', 'address-check', 'early-warnings', 'freeze-check', 'incidents', 'preflight'];
+  const names = ['fees', 'fee', 'address-check', 'early-warnings', 'freeze-check', 'incidents', 'preflight', 'proof'];
   const price = v => /^\d+(\.\d+)?$/.test(String(v)) ? String(v) : null;
   read(at).then(cat => {
     (cat.services || []).forEach((s, i) => {
@@ -638,13 +746,77 @@ PAYMENT-SIGNATURE: ...
       if (!row || n(row.requests) === null) return;
       set('[data-count="' + name + '"]', row.requests.toLocaleString('en-US'));
       const usdc = n(row.paidInUsdc) || 0, kda = n(row.paidInKda) || 0;
-      set('[data-split="' + name + '"]', row.requests ? usdc + ' in USDC on Base, ' + kda + ' in KDA on Kadena' : 'No paid requests yet');
+      set('[data-split="' + name + '"]', row.requests ? (name === 'proof' ? kda + ' in KDA on Kadena' : usdc + ' in USDC on Base, ' + kda + ' in KDA on Kadena') : 'No paid requests yet');
     });
   }).catch(() => {
     set('[data-split]', 'Counts are not available right now');
   });
 })();
 
+</script>
+<script>
+(() => {
+  // Receipt Proof in motion: the first real receipt, step by step.
+  const root = document.getElementById('rp');
+  if (!root) return;
+  const q = sel => root.querySelector(sel), qa = sel => root.querySelectorAll(sel);
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let t = 0, timer = null;
+  const show = step => {
+    qa('[data-rp]').forEach(el => el.classList.toggle('rp-dim', step < Number(el.dataset.rp) + (el.dataset.rp === '3' ? 2 : 0)));
+    q('[data-rp-chip]').classList.toggle('away', step >= 4);
+    q('[data-rp-hit]').classList.toggle('hit', step >= 4);
+    const n = Math.max(0, Math.min(10, step - 5));
+    q('[data-rp-n]').textContent = n;
+    q('[data-rp-bar]').style.width = n * 10 + '%';
+    const badge = q('[data-rp-badge]'), done = n >= 10;
+    badge.classList.toggle('done', done);
+    badge.querySelector('b').textContent = done ? 'Confirmed' : step >= 4 ? 'Recorded, confirming' : 'Waiting';
+    badge.querySelector('span').textContent = done ? 'This exact file now matches a record on Kadena.' : 'Counted once 10 blocks deep.';
+  };
+  const run = () => { clearInterval(timer); t = 0; show(0); timer = setInterval(() => { t += 1; show(t); if (t >= 15) clearInterval(timer); }, 600); };
+  q('[data-rp-replay]').addEventListener('click', () => still ? show(15) : run());
+  if (still) { show(15); return; }
+  show(0);
+  new IntersectionObserver((seen, obs) => { if (seen.some(e => e.isIntersecting)) { obs.disconnect(); run(); } }, {threshold: .4}).observe(root);
+})();
+</script>
+<script>
+(() => {
+  // Live activity: paid calls from outside buyers, from the service's free usage answer.
+  const note = document.getElementById('live-note');
+  const names = {fees: 'Gas fees, 13 chains', fee: 'Gas fee, one chain', 'address-check': 'Wallet risk check', 'early-warnings': 'Early warnings',
+                 'freeze-check': 'Freeze check', incidents: 'Hack alerts', preflight: 'Preflight', proof: 'Receipt Proof'};
+  const laneOf = n => n === 'eip155:8453' ? 'base' : n === 'eip155:137' ? 'polygon' : /^kadena:/.test(n) ? 'kda' : null;
+  const wayName = {kda: 'Kadena', base: 'Base', polygon: 'Polygon'};
+  const int = v => Number.isInteger(v) && v >= 0 ? v : null;
+  const set = (id, v) => { const el = document.getElementById(id); if (el && v !== null) el.textContent = v.toLocaleString('en-US'); };
+  fetch('https://agentpay.kadena.ws/v1/usage', {cache: 'no-store'}).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(u => {
+    const o = u && u.outside;
+    if (!o || !Array.isArray(o.recent)) { note.textContent = 'Live activity is not available right now.'; return; }
+    set('live-total', int(o.total)); set('live-kda', int(o.paidInKda)); set('live-usdc', int(o.paidInUsdc));
+    const now = Date.now(), span = 7 * 864e5, still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const calls = o.recent.map(c => ({at: Date.parse(String(c.at || '').replace(/Z$/, ':00Z')), tool: String(c.tool || ''), lane: laneOf(String(c.network || ''))}))
+                          .filter(c => c.lane && !isNaN(c.at));
+    const week = calls.filter(c => now - c.at <= span);
+    week.slice().reverse().forEach((c, i) => {
+      const dot = document.createElement('span');
+      dot.className = 'dot' + (c === week[0] ? ' new' : '');
+      document.querySelector('[data-lane="' + c.lane + '"]').appendChild(dot);
+      const x = Math.max(2, Math.min(98, 100 - (now - c.at) / span * 100)) + '%';
+      if (still) dot.style.left = x; else setTimeout(() => { dot.style.left = x; }, 200 + i * 180);
+    });
+    note.textContent = week.length ? week.length + ' paid ' + (week.length === 1 ? 'call' : 'calls') + ' from outside buyers in the last 7 days.'
+                                   : 'No paid calls from outside buyers in the last 7 days.';
+    const list = document.getElementById('live-recent');
+    calls.slice(0, 6).forEach(c => {
+      const li = document.createElement('li'), a = document.createElement('span'), b = document.createElement('span');
+      a.textContent = names[c.tool] || c.tool;
+      b.textContent = new Date(c.at).toLocaleString('en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC', hour12: false}) + ' UTC · ' + wayName[c.lane];
+      li.append(a, b); list.appendChild(li);
+    });
+  }).catch(() => { note.textContent = 'Live activity is not available right now.'; });
+})();
 </script>
 </body>
 </html>
