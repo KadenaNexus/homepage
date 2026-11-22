@@ -222,15 +222,13 @@ pre .o{color:#F4A95E}
 .rp-replay:hover{border-color:var(--teal)}
 /* live activity */
 .live .grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,20rem);gap:2rem;margin-top:2rem;align-items:start}
-.lanes{display:grid;grid-template-columns:8.5rem minmax(0,1fr);gap:.7rem 1rem;align-items:center}
-.lanes .name{font-weight:600;color:var(--sand);font-size:.95rem}
-.lane{position:relative;height:2.6rem;border-radius:999px;background:var(--panel);overflow:hidden}
-.lane .dot{position:absolute;top:50%;width:1rem;height:1rem;margin:-.5rem 0 0 -.5rem;border-radius:50%;left:-4%;animation:travel 12s linear infinite}
-@keyframes travel{0%{left:-4%;opacity:0}6%{opacity:1}90%{opacity:1}100%{left:104%;opacity:0}}
-.lane.kda .dot{background:var(--pink);box-shadow:0 0 0 0 rgba(226,113,10,.5);animation:travel 12s linear infinite,ping 1.6s ease-out infinite}
-.lane.base .dot{background:var(--teal)}
-.lane.polygon .dot{background:var(--deep)}
 @keyframes ping{0%{box-shadow:0 0 0 0 rgba(226,113,10,.55)}100%{box-shadow:0 0 0 .8rem rgba(226,113,10,0)}}
+.field{position:relative;width:100%;aspect-ratio:16/7;min-height:15rem;border-radius:20px;overflow:hidden;
+  background:radial-gradient(120% 90% at 80% 10%,#FFF6EE 0%,rgba(255,246,238,0) 55%),linear-gradient(180deg,#F7FAFB 0%,#EEF4F6 100%);
+  border:1px solid var(--line);box-shadow:inset 0 1px 0 #fff,0 18px 40px -28px rgba(18,58,72,.45)}
+.field canvas{position:absolute;inset:0;width:100%;height:100%}
+.band-name{position:absolute;left:1rem;transform:translateY(-50%);font:600 .78rem/1 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--sand);background:rgba(255,255,255,.78);border:1px solid var(--line);border-radius:999px;padding:.35rem .6rem;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+@media (max-width:640px){.field{aspect-ratio:1/1}.band-name{font-size:.7rem}}
 .livenums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}
 .livenums div{background:var(--panel);border-radius:12px;padding:.8rem .9rem}
 .livenums small{display:block;font-size:.8rem}
@@ -240,9 +238,9 @@ pre .o{color:#F4A95E}
 .recent li span:first-child{color:var(--sand);font-weight:600}
 .listed{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;width:100%;padding-top:1rem;border-top:1px solid var(--line)}
 .listed span{color:var(--sand);font-weight:600}
-@media (prefers-reduced-motion:reduce){.lane .dot{animation:none!important}.rp-card,.rp-chip,.rp-blk,.rp-bar i,.rp-badge,.rp-conf{transition:none}}
+@media (prefers-reduced-motion:reduce){.rp-card,.rp-chip,.rp-blk,.rp-bar i,.rp-badge,.rp-conf{transition:none}}
 @media (max-width:980px){.rp-flow,.rp-conf,.live .grid2{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:640px){.lanes{grid-template-columns:minmax(0,1fr)}.rp-stage{padding-inline:1.1rem}}
+@media (max-width:640px){.rp-stage{padding-inline:1.1rem}}
 
 </style>
 <script type="application/ld+json">
@@ -433,11 +431,12 @@ pre .o{color:#F4A95E}
     <p class="sub">Each dot is one real call paid for in the last 7 days, replayed on a loop. Orange ones were paid in KDA and settled on Kadena. Most so far are our own test purchases; <span id="live-outside">a few</span> came from outside buyers. Read live from the service.</p>
     <div class="grid2">
       <div>
-        <div class="lanes" aria-hidden="true">
-          <span class="name">Kadena · KDA</span><div class="lane kda" data-lane="kda"></div>
-          <span class="name">Base · USDC</span><div class="lane base" data-lane="base"></div>
-          <span class="name">Polygon · USDC</span><div class="lane polygon" data-lane="polygon"></div>
-                  </div>
+        <div class="field" id="live-field">
+          <canvas id="live-canvas" aria-hidden="true"></canvas>
+          <span class="band-name" style="top:16.6%">Kadena · KDA</span>
+          <span class="band-name" style="top:50%">Base · USDC</span>
+          <span class="band-name" style="top:83.3%">Polygon · USDC</span>
+        </div>
         <p class="sub" id="live-note" style="font-size:.92rem">Loading the latest calls.</p>
       </div>
       <div>
@@ -789,6 +788,50 @@ PAYMENT-SIGNATURE: ...
   const wayName = {kda: 'Kadena', base: 'Base', polygon: 'Polygon'};
   const int = v => Number.isInteger(v) && v >= 0 ? v : null;
   const set = (id, v) => { const el = document.getElementById(id); if (el && v !== null) el.textContent = v.toLocaleString('en-US'); };
+  // One glowing sphere per real call, drifting across its band at its own depth and pace.
+  const drawField = (week, still) => {
+    const box = document.getElementById('live-field'), cv = document.getElementById('live-canvas'), cx = cv.getContext('2d');
+    const bands = {kda: 1 / 6, base: 3 / 6, polygon: 5 / 6};
+    const tint = {kda: [226, 113, 10], base: [28, 99, 123], polygon: [18, 58, 72]};
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const orbs = week.map((c, i) => {
+      const z = .35 + rnd() * .65;                       // depth: 1 is near, smaller is far
+      return {lane: c.lane, z, x: (i + rnd() * .6) / Math.max(1, week.length), dy: (rnd() - .5) * .22, bob: rnd() * 6.28,
+              speed: .018 + z * .03, newest: i === 0};
+    }).sort((a, b) => a.z - b.z);
+    let w = 0, h = 0, run = !still, seen = true, last = performance.now();
+    const fit = () => { const r = box.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1);
+      w = r.width; h = r.height; cv.width = Math.round(w * d); cv.height = Math.round(h * d); cx.setTransform(d, 0, 0, d, 0, 0); };
+    const sphere = (x, y, r, [R, G, B], glow) => {
+      if (glow) { const g = cx.createRadialGradient(x, y, r * .6, x, y, r * 3.2);
+        g.addColorStop(0, `rgba(${R},${G},${B},.32)`); g.addColorStop(1, `rgba(${R},${G},${B},0)`);
+        cx.fillStyle = g; cx.beginPath(); cx.arc(x, y, r * 3.2, 0, 6.29); cx.fill(); }
+      const s = cx.createRadialGradient(x - r * .35, y - r * .4, r * .1, x, y, r);
+      s.addColorStop(0, `rgba(${Math.min(255, R + 120)},${Math.min(255, G + 120)},${Math.min(255, B + 120)},1)`);
+      s.addColorStop(.45, `rgb(${R},${G},${B})`); s.addColorStop(1, `rgb(${R * .55 | 0},${G * .55 | 0},${B * .55 | 0})`);
+      cx.fillStyle = s; cx.beginPath(); cx.arc(x, y, r, 0, 6.29); cx.fill();
+    };
+    const frame = t => {
+      const dt = Math.min(.05, (t - last) / 1000); last = t;
+      cx.clearRect(0, 0, w, h);
+      for (const y of [1 / 3, 2 / 3]) { cx.strokeStyle = 'rgba(18,58,72,.08)'; cx.setLineDash([2, 6]); cx.beginPath(); cx.moveTo(0, y * h); cx.lineTo(w, y * h); cx.stroke(); }
+      cx.setLineDash([]);
+      const unit = Math.max(5, Math.min(w, h * 2.2) / 70);
+      for (const o of orbs) {
+        if (run) o.x += o.speed * dt;
+        if (o.x > 1.08) o.x -= 1.16;
+        const r = unit * (.55 + o.z * .75), y = (bands[o.lane] + o.dy + Math.sin(t / 1400 + o.bob) * .012) * h;
+        cx.globalAlpha = .45 + o.z * .55;
+        sphere(o.x * w, y, r, tint[o.lane], o.lane === 'kda' || o.newest);
+      }
+      cx.globalAlpha = 1;
+      if (run && seen) requestAnimationFrame(frame);
+    };
+    fit(); new ResizeObserver(() => { fit(); if (!run || !seen) frame(performance.now()); }).observe(box);
+    if (!run) { frame(performance.now()); return; }
+    new IntersectionObserver(e => { const was = seen; seen = e.some(x => x.isIntersecting); if (seen && !was) { last = performance.now(); requestAnimationFrame(frame); } }).observe(box);
+    requestAnimationFrame(frame);
+  };
   fetch('https://agentpay.kadena.ws/v1/usage', {cache: 'no-store'}).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(u => {
     const o = u && u.all, out = u && u.outside;
     if (!o || !Array.isArray(o.recent)) { note.textContent = 'Live activity is not available right now.'; return; }
@@ -798,14 +841,7 @@ PAYMENT-SIGNATURE: ...
     const calls = o.recent.map(c => ({at: Date.parse(String(c.at || '').replace(/Z$/, ':00Z')), tool: String(c.tool || ''), lane: laneOf(String(c.network || ''))}))
                           .filter(c => c.lane && !isNaN(c.at));
     const week = calls.filter(c => now - c.at <= span);
-    // Each real call travels across its lane in turn, spaced over one 12-second loop, in the order they happened.
-    week.slice().reverse().forEach((c, i) => {
-      const dot = document.createElement('span');
-      dot.className = 'dot';
-      if (still) dot.style.left = Math.max(2, Math.min(98, 100 - (now - c.at) / span * 100)) + '%';
-      else dot.style.animationDelay = (-12 + i * 12 / week.length).toFixed(2) + 's' + (c.lane === 'kda' ? ', 0s' : '');
-      document.querySelector('[data-lane="' + c.lane + '"]').appendChild(dot);
-    });
+    drawField(week, still);
     note.textContent = week.length ? week.length + ' paid ' + (week.length === 1 ? 'call' : 'calls') + ' in the last 7 days, our own test purchases included.'
                                    : 'No paid calls in the last 7 days.';
     const list = document.getElementById('live-recent');
