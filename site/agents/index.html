@@ -429,8 +429,8 @@ pre .o{color:#F4A95E}
 <section class="live" id="live">
   <div class="wrap">
     <span class="eyebrow">Live activity</span>
-    <h2>Paid calls from outside buyers, as they happen</h2>
-    <p class="sub">Each dot is one real call an agent paid for in the last 7 days, replayed on a loop. Orange ones were paid in KDA and settled on Kadena. Our own test purchases are left out. Read live from the service.</p>
+    <h2>Paid calls, as they happen</h2>
+    <p class="sub">Each dot is one real call paid for in the last 7 days, replayed on a loop. Orange ones were paid in KDA and settled on Kadena. Most so far are our own test purchases; <span id="live-outside">a few</span> came from outside buyers. Read live from the service.</p>
     <div class="grid2">
       <div>
         <div class="lanes" aria-hidden="true">
@@ -781,7 +781,7 @@ PAYMENT-SIGNATURE: ...
 </script>
 <script>
 (() => {
-  // Live activity: paid calls from outside buyers, from the service's free usage answer.
+  // Live activity: every paid call, our own test purchases included, from the service's free usage answer.
   const note = document.getElementById('live-note');
   const names = {fees: 'Gas fees, 13 chains', fee: 'Gas fee, one chain', 'address-check': 'Wallet risk check', 'early-warnings': 'Early warnings',
                  'freeze-check': 'Freeze check', incidents: 'Hack alerts', preflight: 'Preflight', proof: 'Receipt Proof'};
@@ -790,9 +790,10 @@ PAYMENT-SIGNATURE: ...
   const int = v => Number.isInteger(v) && v >= 0 ? v : null;
   const set = (id, v) => { const el = document.getElementById(id); if (el && v !== null) el.textContent = v.toLocaleString('en-US'); };
   fetch('https://agentpay.kadena.ws/v1/usage', {cache: 'no-store'}).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(u => {
-    const o = u && u.outside;
+    const o = u && u.all, out = u && u.outside;
     if (!o || !Array.isArray(o.recent)) { note.textContent = 'Live activity is not available right now.'; return; }
     set('live-total', int(o.total)); set('live-kda', int(o.paidInKda)); set('live-usdc', int(o.paidInUsdc));
+    if (out && int(out.total) !== null) document.getElementById('live-outside').textContent = out.total + ' of all paid calls so far';
     const now = Date.now(), span = 7 * 864e5, still = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const calls = o.recent.map(c => ({at: Date.parse(String(c.at || '').replace(/Z$/, ':00Z')), tool: String(c.tool || ''), lane: laneOf(String(c.network || ''))}))
                           .filter(c => c.lane && !isNaN(c.at));
@@ -805,8 +806,8 @@ PAYMENT-SIGNATURE: ...
       else dot.style.animationDelay = (-12 + i * 12 / week.length).toFixed(2) + 's' + (c.lane === 'kda' ? ', 0s' : '');
       document.querySelector('[data-lane="' + c.lane + '"]').appendChild(dot);
     });
-    note.textContent = week.length ? week.length + ' paid ' + (week.length === 1 ? 'call' : 'calls') + ' from outside buyers in the last 7 days.'
-                                   : 'No paid calls from outside buyers in the last 7 days.';
+    note.textContent = week.length ? week.length + ' paid ' + (week.length === 1 ? 'call' : 'calls') + ' in the last 7 days, our own test purchases included.'
+                                   : 'No paid calls in the last 7 days.';
     const list = document.getElementById('live-recent');
     calls.slice(0, 6).forEach(c => {
       const li = document.createElement('li'), a = document.createElement('span'), b = document.createElement('span');
