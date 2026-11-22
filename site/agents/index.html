@@ -235,6 +235,21 @@ pre .o{color:#F4A95E}
 .prompt-text{font-size:.9rem;background:var(--panel);border-radius:10px;padding:.7rem .9rem;margin:.5rem 0}
 .copy{font:600 .9rem var(--body);min-height:44px;padding:.45rem 1rem;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--sand);cursor:pointer;margin-top:.4rem}
 .copy:hover{border-color:var(--teal)}
+.toolnav{position:sticky;top:calc(env(safe-area-inset-top,0px) + 4.25rem);z-index:4;display:flex;gap:.4rem;overflow-x:auto;padding:.6rem 0;margin:1rem 0 1.2rem;background:linear-gradient(180deg,var(--panel) 75%,rgba(242,246,247,0));scrollbar-width:none}
+.toolnav::-webkit-scrollbar{display:none}
+.toolnav a{flex:none;font:600 .88rem var(--body);color:var(--sand);text-decoration:none;background:#fff;border:1px solid var(--line);border-radius:999px;padding:.55rem .9rem;min-height:44px;display:inline-flex;align-items:center}
+.toolnav a:hover{border-color:var(--teal)}
+.tool{scroll-margin-top:8rem}
+.sample-out{font:500 .8rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#123A48;color:#E8F1F3;border-radius:12px;padding:.9rem 1rem;max-height:22rem;overflow:auto;margin:.6rem 0 0;white-space:pre}
+.code{margin-top:2.4rem;scroll-margin-top:8rem}
+.code h3{font:700 1.3rem var(--display);color:var(--sand);margin:0 0 .4rem}
+.tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0 .6rem;align-items:center}
+.tabs [role=tab]{font:600 .92rem var(--body);min-height:44px;padding:.45rem 1rem;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--sand);cursor:pointer}
+.tabs [role=tab][aria-selected=true]{background:var(--deep);border-color:var(--deep);color:#fff}
+.tabs .copy{margin:0 0 0 auto}
+.code pre{white-space:pre;overflow-x:auto}
+.field-tip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:.5rem .7rem;font-size:.82rem;color:var(--sand);box-shadow:0 10px 24px -14px rgba(18,58,72,.5);white-space:nowrap;transform:translate(-50%,calc(-100% - 14px));z-index:2}
+.field-tip b{display:block;font-size:.88rem}
 .livenums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}
 .livenums div{background:var(--panel);border-radius:12px;padding:.8rem .9rem}
 .livenums small{display:block;font-size:.8rem}
@@ -476,6 +491,9 @@ pre .o{color:#F4A95E}
     <h2>What each tool takes, returns and costs</h2>
     <p class="sub">Every tool is one web address that answers JSON. Each has a free sample that shows the shape of the answer. A call costs less when paid in KDA than in USDC. Prices and request counts on this page are read live from the service.</p>
 
+    <nav class="toolnav" aria-label="Tools on this page">
+      <a href="#preflight">Preflight</a><a href="#receipt-proof">Receipt Proof</a><a href="#early-warnings">Early warnings</a><a href="#incidents">Hack alerts</a><a href="#address-check">Wallet risk check</a><a href="#freeze-check">Freeze check</a><a href="#fees">Gas fees, 13 chains</a><a href="#fee">Gas fee, one chain</a><a href="#code">Code</a>
+    </nav>
     <article class="tool" id="preflight">
       <header><h3>Preflight: one check before you pay</h3><span class="count"><b data-count="preflight">&ndash;</b> paid requests</span><span class="tag live">Live</span></header>
       <p class="what">The one call to make before an agent sends money to an address it has not paid before. It runs the address check, the stablecoin freeze check and the fee lookup together and gives one word to act on: <strong>stop</strong>, <strong>caution</strong> or <strong>nothing found</strong>.</p>
@@ -651,6 +669,43 @@ PAYMENT-SIGNATURE: ...
   preparingWallets   address, mixer funding, contracts
   note               unconfirmed warnings, not confirmed thefts</pre>
     </div>
+    <div class="code" id="code">
+      <h3>Call it from code</h3>
+      <p class="sub" style="font-size:.95rem">With Coinbase's open x402 libraries the payment happens inside the request: the library reads the price, signs a USDC transfer for exactly that amount and asks again. For Polygon use <code>eip155:137</code>. Paying in KDA needs a Kadena x402 client; ask us for it.</p>
+      <div class="tabs" role="tablist" aria-label="Language">
+        <button type="button" role="tab" aria-selected="true" aria-controls="code-py" id="tab-py">Python</button>
+        <button type="button" role="tab" aria-selected="false" aria-controls="code-js" id="tab-js">Node.js</button>
+        <button type="button" class="copy" data-copy-code>Copy code</button>
+      </div>
+      <pre role="tabpanel" id="code-py" aria-labelledby="tab-py"># pip install &quot;x402[evm]&quot; requests
+from eth_account import Account
+import requests
+from x402 import x402ClientSync
+from x402.http.clients import wrapRequestsWithPayment
+from x402.mechanisms.evm.exact import ExactEvmClientScheme
+from x402.mechanisms.evm.signers import EthAccountSigner
+
+account = Account.from_key(AGENT_KEY)   # a wallet holding a little USDC on Base
+client = x402ClientSync()
+client.register(&quot;eip155:8453&quot;, ExactEvmClientScheme(signer=EthAccountSigner(account)))
+session = wrapRequestsWithPayment(requests.Session(), client)
+
+r = session.get(&quot;https://agentpay.kadena.ws/v1/preflight?address=0x...&amp;network=base&quot;)
+print(r.status_code, r.json())</pre>
+      <pre role="tabpanel" id="code-js" aria-labelledby="tab-js" hidden>// npm install @x402/fetch @x402/evm viem
+import { wrapFetchWithPaymentFromConfig } from &quot;@x402/fetch&quot;;
+import { ExactEvmScheme } from &quot;@x402/evm/exact/client&quot;;
+import { privateKeyToAccount } from &quot;viem/accounts&quot;;
+
+const account = privateKeyToAccount(AGENT_KEY); // a wallet holding a little USDC on Base
+const fetchWithPay = wrapFetchWithPaymentFromConfig(fetch, {
+  schemes: [{ network: &quot;eip155:8453&quot;, client: new ExactEvmScheme(account) }],
+});
+
+const res = await fetchWithPay(&quot;https://agentpay.kadena.ws/v1/preflight?address=0x...&amp;network=base&quot;);
+console.log(res.status, await res.json());</pre>
+      <p class="sub" style="font-size:.88rem">Both were run against this service with an empty wallet: each signed a payment and was refused with "insufficient funds", and nothing was charged.</p>
+    </div>
   </div>
 </section>
 
@@ -801,6 +856,13 @@ PAYMENT-SIGNATURE: ...
   const wayName = {kda: 'Kadena', base: 'Base', polygon: 'Polygon'};
   const int = v => Number.isInteger(v) && v >= 0 ? v : null;
   const set = (id, v) => { const el = document.getElementById(id); if (el && v !== null) el.textContent = v.toLocaleString('en-US'); };
+  // Live prices by tool, for the labels on the spheres.
+  const prices = {};
+  fetch('https://agentpay.kadena.ws/v1', {cache: 'no-store'}).then(r => r.ok ? r.json() : Promise.reject()).then(cat => (cat.services || []).forEach(s => {
+    const m = /\/v1\/([a-z-]+)(\/\{[a-z]+\})?$/.exec(String(s.url || '')); if (!m) return;
+    const ok = v => /^\d+(\.\d+)?$/.test(String(v)) ? String(v) : null;
+    prices[m[1] === 'fees' && m[2] ? 'fee' : m[1]] = {usdc: ok(s.priceUsdc), kda: ok(s.priceKda)};
+  })).catch(() => {});
   // One glowing sphere per real call, drifting across its band at its own depth and pace.
   const drawField = (week, still) => {
     const box = document.getElementById('live-field'), cv = document.getElementById('live-canvas'), cx = cv.getContext('2d');
@@ -810,9 +872,27 @@ PAYMENT-SIGNATURE: ...
     const orbs = week.map((c, i) => {
       const z = .35 + rnd() * .65;                       // depth: 1 is near, smaller is far
       return {lane: c.lane, z, x: (i + rnd() * .6) / Math.max(1, week.length), dy: (rnd() - .5) * .22, bob: rnd() * 6.28,
-              speed: .018 + z * .03, newest: i === 0};
+              speed: .018 + z * .03, newest: i === 0, call: c};
     }).sort((a, b) => a.z - b.z);
-    let w = 0, h = 0, run = !still, seen = true, last = performance.now();
+    let w = 0, h = 0, run = !still, seen = true, last = performance.now(), hover = null, slow = 1;
+    // Pointing at a sphere (or tapping it) shows what that call was; motion slows while you look.
+    const tip = document.createElement('div'); tip.className = 'field-tip'; tip.hidden = true; box.appendChild(tip);
+    const point = e => {
+      const r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      hover = null;
+      for (const o of orbs) if (o.px !== undefined && Math.hypot(o.px - x, o.py - y) <= Math.max(o.pr, 12)) hover = o;
+      slow = hover ? .15 : 1; tip.hidden = !hover;
+      if (!hover) return;
+      const c = hover.call, p = c.lane === 'kda' ? (prices[c.tool] || {}).kda : (prices[c.tool] || {}).usdc;
+      tip.innerHTML = '';
+      const b = document.createElement('b'); b.textContent = names[c.tool] || c.tool; tip.appendChild(b);
+      tip.appendChild(document.createTextNode(new Date(c.at).toLocaleString('en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC', hour12: false})
+        + ' UTC · ' + (c.lane === 'kda' ? 'KDA on Kadena' : 'USDC on ' + wayName[c.lane]) + (p ? ' · ' + (c.lane === 'kda' ? p + ' KDA' : '$' + p) : '')));
+      tip.style.left = Math.min(Math.max(hover.px, 90), w - 90) + 'px'; tip.style.top = hover.py - hover.pr + 'px';
+      if (!run || !seen) frame(performance.now());
+    };
+    cv.addEventListener('pointermove', point); cv.addEventListener('pointerdown', point);
+    cv.addEventListener('pointerleave', () => { hover = null; slow = 1; tip.hidden = true; });
     const fit = () => { const r = box.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1);
       w = r.width; h = r.height; cv.width = Math.round(w * d); cv.height = Math.round(h * d); cx.setTransform(d, 0, 0, d, 0, 0); };
     const sphere = (x, y, r, [R, G, B], glow) => {
@@ -831,13 +911,15 @@ PAYMENT-SIGNATURE: ...
       cx.setLineDash([]);
       const unit = Math.max(5, Math.min(w, h * 2.2) / 70);
       for (const o of orbs) {
-        if (run) o.x += o.speed * dt;
+        if (run) o.x += o.speed * dt * slow;
         if (o.x > 1.08) o.x -= 1.16;
         const r = unit * (.55 + o.z * .75), y = (bands[o.lane] + o.dy + Math.sin(t / 1400 + o.bob) * .012) * h;
         cx.globalAlpha = .45 + o.z * .55;
-        sphere(o.x * w, y, r, tint[o.lane], o.lane === 'kda' || o.newest);
+        o.px = o.x * w; o.py = y; o.pr = r;
+        sphere(o.x * w, y, r, tint[o.lane], o.lane === 'kda' || o.newest || o === hover);
       }
       cx.globalAlpha = 1;
+      if (hover) tip.style.left = Math.min(Math.max(hover.px, 90), w - 90) + 'px', tip.style.top = hover.py - hover.pr + 'px';
       if (run && seen) requestAnimationFrame(frame);
     };
     fit(); new ResizeObserver(() => { fit(); if (!run || !seen) frame(performance.now()); }).observe(box);
@@ -872,6 +954,35 @@ document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click'
   const done = ok => { b.textContent = ok ? 'Copied' : 'Select the text above to copy'; setTimeout(() => { b.textContent = 'Copy agent prompt'; }, 2500); };
   (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(() => done(true), () => { b.parentNode.querySelector('details').open = true; done(false); });
 }));
+</script>
+<script>
+(() => {
+  // A "Show sample answer" button beside each free sample: the free JSON opens in place.
+  document.querySelectorAll('.tool a[href*="agentpay.kadena.ws/v1/sample/"]').forEach(a => {
+    const b = document.createElement('button'), out = document.createElement('pre');
+    b.type = 'button'; b.className = 'copy'; b.textContent = 'Show sample answer'; b.style.marginLeft = '.8rem';
+    out.className = 'sample-out'; out.hidden = true; out.tabIndex = 0; out.setAttribute('aria-label', 'Sample answer');
+    b.addEventListener('click', () => {
+      if (!out.hidden) { out.hidden = true; b.textContent = 'Show sample answer'; return; }
+      b.textContent = 'Loading'; out.hidden = false;
+      fetch(a.href, {cache: 'no-store'}).then(r => r.ok ? r.json() : Promise.reject(r.status))
+        .then(j => { out.textContent = JSON.stringify(j, null, 2).slice(0, 20000); b.textContent = 'Hide sample answer'; })
+        .catch(() => { out.textContent = 'The sample could not be loaded right now. Open the link instead.'; b.textContent = 'Hide sample answer'; });
+    });
+    a.after(b); a.parentNode.appendChild(out);
+  });
+  // Code tabs.
+  const tabs = document.querySelectorAll('.tabs [role=tab]');
+  tabs.forEach(t => t.addEventListener('click', () => tabs.forEach(x => {
+    const on = x === t; x.setAttribute('aria-selected', on); document.getElementById(x.getAttribute('aria-controls')).hidden = !on; })));
+  const cb = document.querySelector('[data-copy-code]');
+  if (cb) cb.addEventListener('click', () => {
+    const open = [...document.querySelectorAll('.code pre[role=tabpanel]')].find(p => !p.hidden);
+    (navigator.clipboard ? navigator.clipboard.writeText(open.textContent) : Promise.reject())
+      .then(() => { cb.textContent = 'Copied'; }, () => { cb.textContent = 'Select the code to copy'; })
+      .finally(() => setTimeout(() => { cb.textContent = 'Copy code'; }, 2500));
+  });
+})();
 </script>
 </body>
 </html>
