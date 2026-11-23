@@ -131,6 +131,13 @@
   </div>
 
   <details>
+    <summary>Where a receipt helps</summary>
+    <p>A receipt shows that a file existed in this exact form at or before a block time on Kadena.</p>
+    <ul><li><b>Contracts and agreements:</b> show that a signed version existed in this exact form by a given time, for example before a dispute.</li><li><b>Designs, code and creative work:</b> timestamp a version before you publish or share it.</li><li><b>Reports and records:</b> show that a compliance report or financial record has not changed since it was recorded.</li><li><b>Software releases:</b> show which build or source snapshot existed at release time.</li><li><b>Offers and term sheets:</b> timestamp the version you sent while a deal is still being negotiated.</li></ul>
+    <p>No office and no appointment, $0.005 per file. Only the salted fingerprint is sent, never the file, when the fingerprint is made on your side. Anyone can check a receipt against a Kadena node, with no account and without asking us. It is not a notarization: it does not identify who signed or wrote the file, and a receipt whose salt is lost cannot be checked.</p>
+  </details>
+
+  <details>
     <summary>Use this verifier without Kadena Nexus</summary>
     <p>Save this page (it is one file with nothing loaded from elsewhere) and open the saved copy. It needs only the file, the receipt and a Kadena node. The same check as a script, with no dependencies: <code>python3 receipt_proof.py verify &lt;file&gt; &lt;receipt.json&gt;</code>.</p>
   </details>
