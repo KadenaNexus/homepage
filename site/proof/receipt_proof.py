@@ -265,7 +265,12 @@ def from_fragment(fragment: str, deployments=None) -> dict:
     found = next((d for d in (DEPLOYMENTS if deployments is None else deployments) if str(d["id"]) == parts[1]), None)
     if found is None:
         raise ValueError("the link names a contract that is not on the list")
-    commitment, salt = _hex(parts[2]), _hex(parts[3])
+    # Each value is base64url (as to_fragment writes it) or, for links an agent builds by hand, 64 hex characters.
+    value = lambda part: part.lower() if HEX64.fullmatch(part.lower()) else _hex(part)       # noqa: E731
+    try:
+        commitment, salt = value(parts[2]), value(parts[3])
+    except ValueError:
+        raise ValueError("not a Receipt Proof link")
     if not HEX64.fullmatch(commitment) or not HEX64.fullmatch(salt) or (parts[4] and not REQUEST_KEY.fullmatch(parts[4])):
         raise ValueError("not a Receipt Proof link")
     return {"type": TYPE, "version": VERSION, "commitmentScheme": SCHEME, "salt": salt, "commitment": commitment,
