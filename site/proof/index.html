@@ -2700,9 +2700,7 @@ function fromFragment(fragment, deployments) {
   const found = deployments.find(d => String(d.id) === parts[1]);
   if (!found) throw new Error("the link names a contract that is not on the list");
   let commitment, salt;
-  // Each value is base64url (as toFragment writes it) or, for links an agent builds by hand, 64 hex characters.
-  const value = part => HEX64.test(part.toLowerCase()) ? part.toLowerCase() : toHex(unb64url(part));
-  try { commitment = value(parts[2]); salt = value(parts[3]); } catch { throw new Error("not a Receipt Proof link"); }
+  try { commitment = toHex(unb64url(parts[2])); salt = toHex(unb64url(parts[3])); } catch { throw new Error("not a Receipt Proof link"); }
   if (!HEX64.test(commitment) || !HEX64.test(salt) || (parts[4] && !REQUEST_KEY.test(parts[4]))) throw new Error("not a Receipt Proof link");
   return { type: TYPE, version: VERSION, commitmentScheme: SCHEME, salt, commitment, network: found.network, chain: found.chain,
     module: found.module, requestKey: parts[4] || null };
