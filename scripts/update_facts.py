@@ -231,18 +231,19 @@ def mining():
             rows.append((f"Not identified ({a[:6]}…{a[-4:]})", sh))
         else:
             other += sh
-    if garden:
-        rows.append(("Kadena Garden (solo miners)", garden))
-    named = sum(sh for _, sh in rows)
+    named = sum(sh for _, sh in rows) + garden
     rest = max(0.0, 1 - named)
     if rest >= 0.0005:
         rows.append(("Other miners", rest))
-    if not rows or rows[0][1] <= 0:
+    if not (rows or garden) or (rows and rows[0][1] <= 0):
         raise ValueError("no pool shares")
-    body = "".join(f"\n          <tr><td>{esc(n)}</td><td>{sh * 100:.1f}%</td></tr>" for n, sh in rows) + "\n        "
+    # Kadena Garden (run by Kadena Nexus, the publisher) is listed first and marked; the rest stay largest first.
+    ours = (f'\n          <tr class="ours"><td>Kadena Garden (solo miners)<span class="ours-tag">Our pool</span></td>'
+            f'<td>{garden * 100:.1f}%</td></tr>') if garden else ""
+    body = ours + "".join(f"\n          <tr><td>{esc(n)}</td><td>{sh * 100:.1f}%</td></tr>" for n, sh in rows) + "\n        "
     at = dt.datetime.fromisoformat(str(s.get("at") or s.get("day")).replace("Z", "+00:00"))
     blocks = int(s.get("sampled_blocks") or 0)
-    top = sorted(rows, key=lambda r: -r[1])[:2]
+    top = sorted(rows + ([("Kadena Garden", garden)] if garden else []), key=lambda r: -r[1])[:2]
     out = {"mining-hashrate": f"{net / 1e15:.1f} PH/s", "mining-pools": body,
            "mining-top": esc(join([f"{n} ({sh * 100:.0f}%)" for n, sh in top], "and")),
            "mining-sample": esc(f"{blocks:,} blocks" + (f" up to {at:%H:%M} UTC on {long_date(at.date())}" if at.tzinfo else ""))}

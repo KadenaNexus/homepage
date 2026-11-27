@@ -312,6 +312,8 @@ footer a:hover{color:var(--sand)}
 .ptable th{color:var(--sand);font-weight:600;background:var(--panel)}
 .ptable td:last-child,.ptable th:last-child{text-align:right;white-space:nowrap}
 .ptable.wide td:last-child,.ptable.wide th:last-child{text-align:left;white-space:normal}
+.ptable tr.ours td{background:#FDF1E6;color:var(--sand);font-weight:600}.ptable tr.ours td:first-child{box-shadow:inset 3px 0 0 var(--pink)}
+.ours-tag{display:inline-block;margin-left:.45rem;padding:.08rem .5rem;border-radius:999px;background:var(--pink);color:#fff;font:600 .72rem/1.5 var(--body);vertical-align:middle;white-space:nowrap}
 .tscroll{overflow-x:auto;margin:0 0 1rem}
 pre{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1rem;overflow-x:auto;font:500 .88rem/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--sand);margin:0 0 1rem}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;overflow-wrap:anywhere}
@@ -373,21 +375,21 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;ove
       <div class="tscroll"><table class="ptable">
         <thead><tr><th>Who found the blocks</th><th>Share of blocks</th></tr></thead>
         <tbody data-auto="mining-pools">
+          <tr class="ours"><td>Kadena Garden (solo miners)<span class="ours-tag">Our pool</span></td><td>1.8%</td></tr>
           <tr><td>AntPool</td><td>39.5%</td></tr>
           <tr><td>OberPool</td><td>39.5%</td></tr>
           <tr><td>Poolflare</td><td>15.1%</td></tr>
           <tr><td>Not identified (k:a331…de88)</td><td>4.1%</td></tr>
-          <tr><td>Kadena Garden (solo miners)</td><td>1.8%</td></tr>
         </tbody>
       </table></div>
       <p>Fees and payout methods, as each pool lists them on <a href="https://miningpoolstats.stream/kadena">MiningPoolStats</a> (checked November 3, 2026):</p>
       <div class="tscroll"><table class="ptable wide">
         <thead><tr><th>Pool</th><th>Payout and fee</th></tr></thead>
         <tbody>
+          <tr class="ours"><td><a href="https://mine.kadena.ws/">Kadena Garden</a><span class="ours-tag">Our pool</span></td><td>Solo, 0% fee on Direct and Sweep (0.5% on Convert), no minimum: every block pays your own wallet directly</td></tr>
           <tr><td><a href="https://www.antpool.com/">AntPool</a></td><td>PPS, 3% fee, minimum payout 2 KDA</td></tr>
           <tr><td><a href="https://oberpool.dnns.es/">OberPool</a></td><td>PPLNS, 0% fee, minimum payout 50 KDA</td></tr>
           <tr><td><a href="https://poolflare.net/coin/kda">Poolflare</a></td><td>PPS, PPLNS or solo, 2% fee</td></tr>
-          <tr><td><a href="https://mine.kadena.ws/">Kadena Garden</a></td><td>Solo, 0% fee on Direct and Sweep (0.5% on Convert), no minimum: every block pays your own wallet directly</td></tr>
         </tbody>
       </table></div>
       <p>PPS pays a fixed amount for each share of work, so income is steady and the pool takes the luck risk. PPLNS pays out of the blocks the pool actually finds. Solo means each block you find is yours alone: income comes in whole blocks, so it is lumpier for a single machine but has no pool payout to wait for.</p>
