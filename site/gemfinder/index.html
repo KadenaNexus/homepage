@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>if(location.hostname==="www.kadena.ws")location.replace("https://kadena.ws"+location.pathname+location.search+location.hash)</script>
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GemFinder: potential gems with a public track record | Kadena Nexus</title>
+<meta name="description" content="GemFinder by Kadena Nexus: a daily research report on young Ethereum and Solana tokens that passed an automated screen, with a public track record of every pick, winners and losers. Paid per report over x402.">
+<link rel="canonical" href="https://kadena.ws/gemfinder/">
+<meta property="og:title" content="GemFinder: potential gems with a public track record">
+<meta property="og:description" content="GemFinder by Kadena Nexus: a daily research report on young Ethereum and Solana tokens that passed an automated screen, with a public track record of every pick, winners and losers. Paid per report over x402.">
+<meta property="og:url" content="https://kadena.ws/gemfinder/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://kadena.ws/og/og-home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kadena.ws/og/og-home.jpg">
+<meta name="twitter:site" content="@KadenaNexus">
+<meta name="theme-color" content="#1C637B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap"></noscript>
+<style>
+:root{
+  --ink:#FFFFFF;        /* page */
+  --panel:#F2F6F7;      /* raised surfaces */
+  --line:#D6E0E4;       /* rules and outlines */
+  --sand:#123A48;       /* headline text, from the wordmark */
+  --mist:#4F6B76;       /* body text */
+  --teal:#1C637B;       /* brand teal, from the logo */
+  --pink:#E2710A;       /* brand orange, from the logo, used sparingly */
+  --live:#1C637B;       /* live status */
+  --deep:#123A48;       /* dark band */
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body:"Instrument Sans", "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+  --wrap:min(1180px, 100% - 2.5rem);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(4.5rem + env(safe-area-inset-top,0px))}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media (min-width:1500px){:root{--wrap:min(1400px, 100% - 5rem)}}
+body{margin:0;background:var(--ink);color:var(--mist);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img,svg,canvas{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--pink);outline-offset:3px;border-radius:4px}
+.wrap{width:var(--wrap);margin-inline:auto}
+h1,h2,h3{font-family:var(--display);color:var(--sand);font-weight:600;margin:0;letter-spacing:-.015em}
+p{margin:0}
+.skip{position:absolute;left:-999px;top:0}
+.skip:focus{left:1rem;top:1rem;background:var(--teal);color:#fff;padding:.5rem .8rem;z-index:10}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .2s}
+.top.scrolled{border-bottom-color:var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:4.25rem;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;font:700 1.15rem/1 var(--display);color:var(--sand)}
+.brand img{width:34px;height:auto}
+.nav{display:flex;gap:1.6rem;align-items:center}
+.nav a{text-decoration:none;font-size:.95rem;color:var(--mist)}
+.nav a:hover{color:var(--sand)}
+.nav .contact{color:var(--sand);border:1px solid var(--line);padding:.45rem .9rem;border-radius:999px}
+.nav .contact:hover{border-color:var(--pink)}
+.nav .buy{color:#fff;background:#B35405;padding:.45rem 1rem;border-radius:999px;font-weight:600}
+.nav .buy:hover{color:#fff;background:#8F4304}
+.buy-m{display:none}
+.menu{display:none;background:none;border:1px solid var(--line);color:var(--sand);border-radius:8px;padding:.45rem .7rem;font:500 .9rem var(--body)}
+@media (max-width:760px){
+  .menu{display:block}
+  .nav{display:none;position:absolute;top:4.25rem;left:0;right:0;flex-direction:column;align-items:flex-start;gap:0;background:var(--ink);border-bottom:1px solid var(--line);padding:.5rem 1.25rem 1rem}
+  .nav.open{display:flex}
+  .nav a{padding:.7rem 0;width:100%}
+  .nav .contact{border:0;padding:.7rem 0}
+  .nav .buy{display:none}
+  .buy-m{display:inline-flex;align-items:center;margin-left:auto;text-decoration:none;color:#fff;background:#B35405;padding:.45rem .85rem;border-radius:999px;font:600 .9rem var(--body);white-space:nowrap}
+  .brand{white-space:nowrap}
+  .top .wrap{gap:.6rem}
+}
+@media (max-width:400px){
+  .brand{font-size:1rem;gap:.45rem}
+  .brand img{width:28px}
+  .buy-m{padding:.4rem .7rem;font-size:.85rem}
+  .menu{padding:.4rem .6rem}
+}
+@media (max-width:345px){
+  .brand{font-size:.88rem}
+  .brand img{width:24px}
+  .top .wrap{gap:.4rem}
+}
+footer{border-top:1px solid var(--line);padding-block:2rem 2.5rem;font-size:.9rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:1rem 2rem;justify-content:space-between}
+footer nav{display:flex;flex-wrap:wrap;gap:1.4rem}
+footer a{text-decoration:none}
+footer a:hover{color:var(--sand)}
+/* page */
+section{padding-block:clamp(3rem,7vw,5.5rem)}
+.eyebrow{font:600 .8rem/1 var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--teal)}
+h2{font-size:clamp(1.7rem,3.2vw,2.5rem);line-height:1.1}
+.sub{margin-top:.8rem;max-width:62ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:2.9rem;padding:0 1.3rem;border-radius:999px;font:600 1rem var(--body);text-decoration:none;border:1px solid var(--line);color:var(--sand);transition:border-color .15s,background .15s}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.primary:hover{background:#154f63;border-color:#154f63}
+.btn:not(.primary):hover{border-color:var(--teal)}
+.hero{border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff 0%,var(--panel) 100%)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:3rem;align-items:center;padding-block:clamp(3rem,7vw,5.5rem)}
+.hero h1{font-size:clamp(2.3rem,5vw,4.3rem);line-height:1.03;font-weight:700;margin-top:1rem;max-width:14ch}
+.hero .lede{margin-top:1.3rem;font-size:1.15rem;max-width:54ch}
+.actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.8rem}
+.beta{margin-top:1.4rem;font-size:.9rem;max-width:56ch}
+.case{background:var(--deep);color:#C9DAE0;border-radius:18px;padding:1.6rem 1.6rem 1.7rem}
+.case .eyebrow{color:#F4A95E}
+.case strong{display:block;margin-top:.8rem;font:600 1.3rem/1.25 var(--display);color:#fff}
+.case p{margin-top:.9rem;font-size:.95rem}
+.nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:16px;background:#fff;margin-top:-2rem;position:relative;overflow:hidden}
+.nums div{padding:1.2rem 1.3rem;border-left:1px solid var(--line)}
+.nums div:first-child{border-left:0}
+.nums b{display:block;font:700 1.8rem/1.1 var(--display);color:var(--sand)}
+.nums span{font-size:.9rem}
+.chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1.1rem}
+.chip{font-size:.85rem;border:1px solid var(--line);border-radius:999px;padding:.22rem .7rem;background:#fff;color:var(--sand)}
+.who{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin-top:2rem}
+.who article{border:1px solid var(--line);border-radius:14px;padding:1.2rem 1.2rem 1.3rem;background:#fff}
+.who h3{font-size:1.1rem}
+.who .uses{margin-top:.35rem;font-size:.82rem;color:var(--teal);font-weight:600}
+.who p{margin-top:.7rem;font-size:.95rem}
+.tools{background:var(--panel);border-block:1px solid var(--line)}
+.tool{background:#fff;border:1px solid var(--line);border-radius:16px;margin-top:1.4rem;overflow:hidden}
+.tool header{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;padding:1.2rem 1.4rem;border-bottom:1px solid var(--line)}
+.tool h3{font-size:1.3rem;margin-right:auto}
+.tag{font:600 .75rem/1 var(--body);letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:.35rem .65rem}
+.tag.live{background:#E3F1EC;color:#17624A}
+.tag.plan{background:var(--panel);color:var(--mist);border:1px solid var(--line)}
+.count{font-size:.9rem;color:var(--sand)}
+.count b{font:700 1.05rem var(--display)}
+.tool .what{padding:1.1rem 1.4rem 0;max-width:80ch}
+.tool dl{display:grid;grid-template-columns:9.5rem minmax(0,1fr);margin:1rem 0 0;border-top:1px solid var(--line)}
+.tool dt,.tool dd{padding:.7rem 1.4rem;border-bottom:1px solid var(--line);margin:0}
+.tool dt{font:600 .8rem/1.5 var(--body);letter-spacing:.05em;text-transform:uppercase;color:var(--mist);background:#FAFCFC}
+.tool dd{font-size:.97rem;color:var(--sand);min-width:0}
+.tool dl > :nth-last-child(-n+2){border-bottom:0}
+code,.mono{font:500 .88rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.ep{display:block;overflow-wrap:anywhere}
+.ep + .ep{margin-top:.3rem}
+.ep em{font-style:normal;color:#B35405}
+.verb{display:inline-block;font-weight:700;color:var(--teal);margin-right:.4rem}
+.pay{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}
+.pay span b{font-weight:600}
+.split{color:var(--mist);font-size:.88rem}
+.less{font-style:normal;font:600 .72rem/1 var(--body);letter-spacing:.05em;text-transform:uppercase;background:#FCEBD9;color:#8F4304;border-radius:999px;padding:.25rem .55rem;margin-left:.35rem;white-space:nowrap}
+.tool dd a{color:var(--teal)}
+.planned{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.4rem}
+.planned article{border:1px dashed #B9C9CF;border-radius:14px;padding:1.1rem 1.2rem;background:#fff}
+.planned h3{font-size:1.05rem;display:flex;align-items:center;gap:.6rem;justify-content:space-between}
+.planned p{margin-top:.5rem;font-size:.93rem}
+.use .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2.5rem;margin-top:2rem;align-items:start}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:0 0 1.3rem 3rem}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:2rem;height:2rem;border-radius:50%;background:var(--teal);color:#fff;font:700 .95rem/2rem var(--display);text-align:center}
+.steps b{display:block;color:var(--sand);font-family:var(--display);font-size:1.08rem}
+pre{margin:0;background:var(--deep);color:#DCE8EC;border-radius:14px;padding:1.2rem 1.3rem;overflow-x:auto;font:500 .85rem/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre .c{color:#8FB0BC}
+pre .o{color:#F4A95E}
+.links{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.2rem}
+.links a{font-size:.92rem;border:1px solid var(--line);border-radius:999px;padding:.4rem .9rem;text-decoration:none;color:var(--sand);background:#fff}
+.links a:hover{border-color:var(--teal)}
+.trust{background:var(--panel);border-block:1px solid var(--line)}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:2rem}
+.three article{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1.2rem 1.3rem}
+.three h3{font-size:1.1rem}
+.three p{margin-top:.6rem;font-size:.95rem}
+.own .box{border:1px solid var(--line);border-radius:18px;padding:clamp(1.4rem,3vw,2.2rem);display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:2rem;align-items:center}
+.own p{margin-top:.8rem;max-width:60ch}
+.own ul{margin:0;padding-left:1.1rem;font-size:.95rem}
+.own li{margin:.35rem 0}
+@media (max-width:980px){
+  .hero .wrap,.use .grid,.own .box{grid-template-columns:minmax(0,1fr)}
+  .who{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .planned,.three{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  .nums{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:-1.2rem}
+  .nums div:nth-child(3){border-left:0}
+  .nums div:nth-child(n+3){border-top:1px solid var(--line)}
+  .who{grid-template-columns:minmax(0,1fr)}
+  .tool dl{grid-template-columns:minmax(0,1fr)}
+  .tool dt{border-bottom:0;padding-bottom:.1rem;background:#fff}
+  .tool dd{padding-top:.2rem}
+  .tool dl > :nth-last-child(2){border-bottom:0}
+  .tool header,.tool .what{padding-inline:1.1rem}
+  .tool dt,.tool dd{padding-inline:1.1rem}
+}
+
+/* Receipt Proof in motion */
+.rp-stage{padding:1.2rem 1.4rem 0}
+.rp-flow{display:grid;grid-template-columns:minmax(0,13rem) minmax(0,15rem) minmax(0,1fr);gap:1rem;align-items:stretch}
+.rp-card{background:var(--panel);border-radius:14px;padding:.9rem 1rem;transition:opacity .5s ease}
+.rp-card small{display:block;font-size:.8rem;color:var(--mist)}
+.rp-card b{display:block;color:var(--sand);font-weight:600;margin-top:.15rem}
+.rp-hash{font:500 .85rem/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--sand);display:flex;align-items:center;gap:.5rem;margin-top:.25rem}
+.rp-chip{width:1rem;height:1rem;border-radius:4px;background:var(--pink);flex:none;transition:opacity .6s ease,transform .6s ease}
+.rp-blocks{display:flex;gap:.5rem;margin-top:.4rem;flex-wrap:wrap}
+.rp-blk{flex:1 1 4.6rem;min-width:4.6rem;height:3.6rem;border:2px solid var(--line);border-radius:10px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;font:500 .78rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--sand);transition:all .5s ease}
+.rp-blk .rp-chip{opacity:0;transform:scale(.4)}
+.rp-blk.hit{border-color:var(--pink);background:#FFF4EA}
+.rp-blk.hit .rp-chip{opacity:1;transform:none}
+.rp-conf{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,16rem);gap:1rem;align-items:center;margin-top:1rem;transition:opacity .5s ease}
+.rp-bar{height:.6rem;border-radius:999px;background:var(--panel);margin-top:.4rem;overflow:hidden}
+.rp-bar i{display:block;height:100%;width:0;background:var(--pink);transition:width .5s ease}
+.rp-badge{border-radius:14px;padding:.8rem 1rem;background:var(--panel);color:var(--sand);transition:background .5s ease,color .5s ease}
+.rp-badge b{font:700 1.1rem var(--display);display:block}
+.rp-badge.done{background:var(--deep);color:#fff}
+.rp-badge.done b{color:#fff}
+.rp-dim{opacity:.3}
+.rp-chip.away{opacity:0;transform:translateY(-1.2rem)}
+.rp-foot{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin-top:.9rem;font-size:.88rem;color:var(--mist)}
+.rp-replay{font:600 .9rem var(--body);min-height:44px;padding:.45rem 1rem;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--sand);cursor:pointer}
+.rp-replay:hover{border-color:var(--teal)}
+/* live activity */
+.live .grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,20rem);gap:2rem;margin-top:2rem;align-items:start}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(226,113,10,.55)}100%{box-shadow:0 0 0 .8rem rgba(226,113,10,0)}}
+.field{position:relative;width:100%;aspect-ratio:16/7;min-height:15rem;border-radius:20px;overflow:hidden;
+  background:radial-gradient(120% 90% at 80% 10%,#FFF6EE 0%,rgba(255,246,238,0) 55%),linear-gradient(180deg,#F7FAFB 0%,#EEF4F6 100%);
+  border:1px solid var(--line);box-shadow:inset 0 1px 0 #fff,0 18px 40px -28px rgba(18,58,72,.45)}
+.field canvas{position:absolute;inset:0;width:100%;height:100%}
+.band-name{position:absolute;left:1rem;transform:translateY(-50%);font:600 .78rem/1 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--sand);background:rgba(255,255,255,.78);border:1px solid var(--line);border-radius:999px;padding:.35rem .6rem;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+@media (max-width:640px){.field{aspect-ratio:1/1}.band-name{font-size:.7rem}}
+.rp-foot .btn{min-height:44px}
+.rp-try{font-size:.9rem;margin-top:.6rem;max-width:46rem}
+.prompt summary{cursor:pointer;color:var(--teal);font-weight:600}
+.prompt-text{font-size:.9rem;background:var(--panel);border-radius:10px;padding:.7rem .9rem;margin:.5rem 0}
+.copy{font:600 .9rem var(--body);min-height:44px;padding:.45rem 1rem;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--sand);cursor:pointer;margin-top:.4rem}
+.copy:hover{border-color:var(--teal)}
+.toolnav{position:sticky;top:calc(env(safe-area-inset-top,0px) + 4.25rem);z-index:4;display:flex;gap:.4rem;overflow-x:auto;padding:.6rem 0;margin:1rem 0 1.2rem;background:linear-gradient(180deg,var(--panel) 75%,rgba(242,246,247,0));scrollbar-width:none}
+.toolnav::-webkit-scrollbar{display:none}
+.toolnav a{flex:none;font:600 .88rem var(--body);color:var(--sand);text-decoration:none;background:#fff;border:1px solid var(--line);border-radius:999px;padding:.55rem .9rem;min-height:44px;display:inline-flex;align-items:center}
+.toolnav a:hover{border-color:var(--teal)}
+.tool{scroll-margin-top:8rem}
+.sample-out{font:500 .8rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#123A48;color:#E8F1F3;border-radius:12px;padding:.9rem 1rem;max-height:22rem;overflow:auto;margin:.6rem 0 0;white-space:pre}
+.code{margin-top:2.4rem;scroll-margin-top:8rem}
+.code h3{font:700 1.3rem var(--display);color:var(--sand);margin:0 0 .4rem}
+.tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0 .6rem;align-items:center}
+.tabs [role=tab]{font:600 .92rem var(--body);min-height:44px;padding:.45rem 1rem;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--sand);cursor:pointer}
+.tabs [role=tab][aria-selected=true]{background:var(--deep);border-color:var(--deep);color:#fff}
+.tabs .copy{margin:0 0 0 auto}
+.code pre{white-space:pre;overflow-x:auto}
+.field-tip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:.5rem .7rem;font-size:.82rem;color:var(--sand);box-shadow:0 10px 24px -14px rgba(18,58,72,.5);white-space:nowrap;transform:translate(-50%,calc(-100% - 14px));z-index:2}
+.field-tip b{display:block;font-size:.88rem}
+.livenums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}
+.livenums div{background:var(--panel);border-radius:12px;padding:.8rem .9rem}
+.livenums small{display:block;font-size:.8rem}
+.livenums b{font:700 1.6rem var(--display);color:var(--sand)}
+.recent{list-style:none;margin:1rem 0 0;padding:0;font-size:.92rem}
+.recent li{display:flex;justify-content:space-between;gap:1rem;padding:.45rem 0;border-bottom:1px solid var(--line)}
+.recent li span:first-child{color:var(--sand);font-weight:600}
+.listed{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;width:100%;padding-top:1rem;border-top:1px solid var(--line)}
+.listed span{color:var(--sand);font-weight:600}
+@media (prefers-reduced-motion:reduce){.rp-card,.rp-chip,.rp-blk,.rp-bar i,.rp-badge,.rp-conf{transition:none}}
+@media (max-width:980px){.rp-flow,.rp-conf,.live .grid2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.rp-stage{padding-inline:1.1rem}}
+
+
+/* GemFinder */
+.gf{background:var(--panel);border-block:1px solid var(--line)}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.6rem}
+.steps article{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.2rem 1.2rem}
+.steps h3{font-size:1.05rem}
+.steps p{margin-top:.5rem;font-size:.95rem}
+.tr{background:#fff;border:1px solid var(--line);border-radius:16px;padding:1.2rem 1.4rem 1.3rem;margin-top:1.4rem}
+.tr-tabs{display:flex;gap:.4rem;margin:.2rem 0 1rem}
+.tr-tabs button{font:600 .9rem/1 var(--body);border:1px solid var(--line);background:#fff;border-radius:999px;padding:.55rem 1rem;min-height:44px;cursor:pointer;color:var(--sand)}
+.tr-tabs button[aria-selected="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+.tr-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:.6rem;margin:0 0 1rem}
+.tr-sum div{border:1px solid var(--line);border-radius:12px;padding:.65rem .8rem;background:#FAFCFC}
+.tr-sum small{display:block;font:600 .72rem/1.3 var(--body);letter-spacing:.05em;text-transform:uppercase;color:var(--mist)}
+.tr-sum b{font:700 1.25rem/1.3 var(--display);color:var(--sand)}
+.tr-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.tr table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:46rem}
+.tr th,.tr td{padding:.55rem .7rem;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.tr th{font:600 .74rem/1.3 var(--body);letter-spacing:.04em;text-transform:uppercase;color:var(--mist);background:#FAFCFC}
+.tr tbody tr:last-child td{border-bottom:0}
+.tr td{color:var(--sand)}
+.tr td.up{color:#17624A}.tr td.down{color:#A23B2A}
+.tr td.why{white-space:normal;min-width:15rem;color:var(--mist)}
+.tr a{color:var(--teal)}
+.note{font-size:.9rem;margin-top:.9rem;max-width:84ch}
+@media (max-width:760px){.steps{grid-template-columns:minmax(0,1fr)}.tr{padding-inline:1.1rem}.tr-sum{grid-template-columns:repeat(2,minmax(0,1fr))}.tr-sum b{font-size:1.05rem}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Kadena Nexus home">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAAA7CAYAAADCZyymAAABSWlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGB8kJOcW8yiwMCQm1dSFOTupBARGaXA/oiBmUGEgZOBj0E2Mbm4wDfYLYQBCIoTy4uTS4pyGFDAt2sMjCD6sm5GYl5K5cv9YVF2jNualVtD3b77r2LAD7hSUouTgfQfIFZJLigqYWBgBLqGQam8pADEdgGyRZIzElOA7AggW6cI6EAguwUkng5hzwCxkyDsNSB2UUiQM5B9AMhWSEdiJyGxc3NKk6FuALmeJzUvNBhIcwCxDEMxQxCDO4MTDjVsYDXOQGjAwAAKL/RwKE4zNoLo4rFnYGC9+///ZzUGBvYJDAx/J/3//3vh//9/FzEwMN9hYDhQiNCfv4CBweITULwfIZY0jYFheycDg8QthJgKUB1/KwPDtiMFiUWJYCFmIGZKy2Rg+LScgYE3koFB+AIwaKMB4+JfsfmfKnMAABckSURBVHja1Xt7tF11de4352+tvffZ5xGSQAgPgQAGTRQuwnXoRZsw1IG9Xntvud0Hq60Kt6Ko+MIIFWRnD6UqiBahRVKt1V7H1bO97VWrVakNB/BBhVZRwkMQhQYIIclJzmPvvdZvzu/+8Vv7EB9DqSRR1xgZ2Tk5Z521vjXnN+f85rcEex+tVkC3awHAGe++6r88EvWFMWTPyIMuIXxX5tgyUdPp699x7o0iQrSmArqTht+Qg4CgDZEOHFBsu+yY07LYO00Qj2dAUyBb89rId1Fb+bXxt9yyDQDYQpAuFu9BFs/Wbis6HX/B2zvPfaw+3t7D8AJvjGVRFYBANSCII4uFjwX5+sFaXPZPF73+KwClOg1/3WBIhcnD71r1kprMvh2Mz2/ULagQogIoQAaI6r9T6596cLDiytUXf2f73qBICoxW6Ha79pzzLz1/W9788/5IU91AhMyhAgkBIgKIQEQ0q9Vk1EqslOLy6Xe+7kK/tK3YuJEQ+bWAQkIgAEh5+JLDPjSu/TeJGuYjCaWLCEQUooQopJGLNps5ikJ/OM/Rs5dt+NGNnEKQSVhAqxW2dLt22vmXnPNwPvqRBQISo0GDUiCiIhQRiGo6pwBWujm4MDL2/Kf9zukjD1x64fUAFNPTvw5AZCMgMi08e/df/s3B9flzdw2iDUqpggYCuIpAASigcBf2yxhruR1c13jWW1506G3N18z8YKqFIADkzPMuWvVdZt+Zr42OCpwMmTILYJZDNANVIRoAFREBVRQQoTptSYb8yHz+v31lw5u+iKmpgMkDyylTLYTJLuzHb175tqW13VfuLFCKSiYKBIVABRoSNKJCVRERoQYKVWKzLhkk3zGQpc9e8tYf3K8C8Meub+/nzXHEgcGpoANmYHRxj4CbwEzoTifgIBxUh2sPGR6el/bmzZsztFp+IMFot6GTXdj9F550DMv5jTML0RkRYJB0C6S50wygASRAB5wONxLOsNBH2aj78uBzbRGhnvWy/3Xorn5xphWRMASSAneQFGWEOGXxTHQB0/+JkyB0EAc+HxqnvP+WO0+FCFutqXCgANm4JXGgzz1yzlhWjpemTqGSBJyJYl1EnHASNAodpDPxDiEAs9nZkrTiD7Z+YO3T9NGJ8WcXGg6lRQgoQgKkqJPiTnhJeCRpYAIFIOGguAhA8Zjn+vDAngMA3daB4w7twtimeq84oxedjiB0DK9SCMAddKYLdgeNDi4+Y1JIlCRHMjZHfeYFunuhOB4agPTogQQf4QllNYeYAe4Uc4ob6A44IayQR0AR5fgDmi7VDT80e+oyIB5TRBd3F3dJt+CgMxVkJ+BVASSq1El3CTeBmBIAYeVJKiorEhmTIFMzQYMkOIWeUgjuIm4CJ8ScSBEjlIRlEYsRHGBEAGDX3K6msxz1CMAh6S7TZzgFFAEFoMABSYgAYPW9JOiEWZRYGztSVfPUkNBTX5NYM50BKTLghLixyk0RWhWLBpojIkIVNQBA9wDxR/X3aBgZ9Yi6EYvX7ukpkRQ6QQz5ggRcgMQhCQ+kIBAAKPqzKhYfEosgCbqLkCIEyJQSQgwjBGqGKmVE3CFOCFPUqISVCgDdyQPTi2yBEJCimFlVD8iM4gSFBNwhdJcq6BMDOJggojBlxGKHSyZIgse7deUovhfKgYOmoA25oyJUh3hVXdwAN9CMMCMrjhFz8dIRoave1b6uCSCx1oFgVYBW9tbXg4EOdyc9EUjCwysmcElh4AIDOLy1qj7QSV0oQMsnbtS3HLr826MetwhyAHCy5F5Fm2SkmlOMgDnETdQNYpFwA2iCou8OrNpcL04CKJjs6n4f4rrg9g2/N25SnDUfARJqVTTAq6xI0TJ8xnvVjJTxcIE7fCwH3LLv7qwfd5Oe3un0lwa7tqYmNLhYSh06BUYRJ0gD3QAzig2rTKxAAcTdiqymOxbsfIFw3Zo79muE3HYuMgF8245b3zYhg6P60Q2EChMVWspwmA0B8ES4lioQnBAk7hWh10MQZGPvX/3mLw8UaOs7T80+Nh7738yyPCdYVoSSKMkpYkxR4TFVGDNI+q0CixCzzHt9X0A467T2VS+e7nTiKdddl++PLLn1XOSnbkJ5x3lPf2HD9/zpfDQjoVVwJOoDF//hRFWKU0MmlkCjg6CVB49Ivqtofmb5JQ98mm2ottvAf33z1YPnLGu88iDv3y9ZXiPdxM0fByVVGroT5pQYK0CMQgORHkck5bHSPvbi9mUn3vba15ZotzO02/skfaZaCARw6iaUd71u9e/Weg90zXv1yCCQ4SwOIUl6Sv7qMxNxgJ4Yxgma0HFwM9T29Ee+1Bt7/tl0CjYikV+73dZOp+Mvf8tFx27ZHT86o/nppeYgCRNPeggUDIRIAEVdRF1EwCAKVUFQUaiFvBbqKB95ivg5//xnG/4RAFpTUwFdoNttDRvIJzirtHXtli3S6nZdqjp67xufcgHnd79XbZD16C6AEkJJxdUhRJrNGTQDggqgihAUqo56TTFSI/pWs6wxfvXX5LQLJzvdgoRUHctPCkSZCp579lvP2uVyTgE9sXAsp3gQ0dKohajnmtcbXh+Bq8LdQYiJiqgGEVVHXgt1OJcHXnNMvXbFZ971hgd/4vdsWStYcweThlJVwMlJbbVaQBforrmD6HQeHxRFcPvrT3hR3t926ZguPG+ucEYHJXVbpNBDQDYaFCoCc0XfEZGHBaFQ1YMGERH2NcPW+sjI5kIP+tuj33ffbUM9RVLLBvmpR6LDC1EAb223V/zr/dsPcUFO52DBMMj7C7Xa+NjKuXrjxL7kpw+0dnrRGF1iAAQeVTVAM1cRGW/UNLdyx3jmnw4qn3nJ2JG3XnDBZO+nSid+ntwWBPjIZa8/vty9e/2qubtfvtIeOn2k3INYDKJISh+lWz1INhIC9pQyC63dGKDfcNa/G1n7kS5dNl/PljEUj2aF9aVeH+s95YPfeVhEHADYhqKT+tiflRD3usZWq6Xd7tQvDW8F8LILLj76PtM/3BXz8waN5lHuJSBiNVEdF9p45lmjkaNJQPP83p3Ibtk2v7BT8pEjhTamDHk91/6Y+raJwdyMqdSWenHY0nLn0WMYrD5E+qPLi0dw2Pz9vqTYyVGbUU0ahUzURfpl7QHK6F95dsj/Wb3pzvtS7fglZbuFgDVg0l5/prf5hdqcYOPGn/me1pYt0kUL2Cu0f/+CC1bc3x+9YA/yt8VaLcvpcVnwbGXW53it1n+IDd1aot6vNSCqMMkgmrTaXBVNJcZoqNEwYgVG4wIaNodDyj0xKLC2d48e37tHlhcPez1YENZoOvYBNI6/YvXVN2+vxhvd2IJ0AbTWgBt/qs3fCGDjT0XEfwyQJ8Z8ihugmO5EAHjeGy964WNsfjzWm0cuQa+/pIbywQWOPBYZspAzhOCSB0JVLQjyLEPQnDUhMsmZwXCQL0jNTQIpy3xBlvocjrGtOL5/n51U3JWJY0cRlr9qzbU//CIAbF6H7Ib18E4Hvg+6332m9ArWbwyY7sQzL3rvsffMll+A4vDdZQwD6ngIIDVAQgZmClEFNAPyDEEVdc1QE0cg0RSDkFAKlrKHZTaLgznrq3y7nFDctevw3swZJ157321chww3wIaEuC+OfddiixDTnXjKuefmf/e+P/3hUxvZq+fn55cUZRwPFlm1/YBb0lcs9c1S6RglDZGAiWCADAVyKTRgj9awLUxgl4xhR5jQr40877wTr73vtlvPPSWXacR9Cca+BWTYVu/a5QDk7u3bXlhohuCMaYLyqoW2St5zkhFkBMxhRkQHjEBJYCCgkSiYYZc2bdCcCFsx9rkrLruq226vy07ddFu5P8aCfQ2IoNu1j7fb9b75q90hpAk9AnQMZ3O6p0HRDBrT9AyLoBvcDQYHCBRQ9CWQoPZj5nm27MMEZMvaN+w3iWHfAtJqKQB87IGZkwrJjvdiQHdTZ5qUPTqqYTDJk45qCovUGAlzmjvMASNhFAwcUFKlnN3+1CNr3xGA3f2o7u+XMX2uP3ima6ag2VABpzu0EjqF1V7AnDAaAHUVdUaNRvNoMHfkXqLBkqMscajt2Tl28rrZYee6v45sf5zUoh3JQJBCRhcEBZSkq4hUAEGMeRbyTFV7Cz0VPAqEQ7FkouFOU7hmGhFEkt7kMTzl0a/vV51lv0VIP4SjHEiS9qJOJ9WAbqDTQqiFem/h0Ym5nRcfNf/Ys95Rcs1hM4+eMjG3/VMTAUHdHE6qiyw4sDuMrrz99ocOrYY++e2IkG7XAwAzP5bZTwQ305KVABHzkGfN3q7Pn1TzN37m2g8+CADTlVKqwB89+y3vWphojr1mrOjHfshCXzLz2ujEvXNzzyHw4OTatb8VgCgAnnn2+Yfc0rM1JKHDJarI0KtgWZ5nYwszn75j1Z+/Qjrwdeva2fR6ODodtlot7a5Zw/Lhw99wrN79zENyPmd576FYZA3koYnRwc5XCTDV6nZ/C1Km1RIAvK/Ul8T66CEQRmgQEYUkAcc0r2XNhd2bN/a++irpgGi3dXq6E6t5iN1u19oAbtv02vJpTTvn2N79O59V3q2nz90sL9r5ZX9p/6YzfvDa49Z3u13bvG7/8N8+AaSNtmLNGn5j6sqRPeBFJgGiKlCFBBVRGmq1bLzs33laZmdNdrcUaLflJzSP6uh0Oj7VaoVL33PVnYf7ztccajv0iHIrlw4e8THbEeq68y9uvbC15PRpRLYQfvMAIeUfzn04oNPxN1y/vbMwsuQEuJtCVVQFAmNWC6Mstj9rLD/z4x+/enur1Qo/D4zhMdntWnvduqx1zY1/55HvHQkhA8k9Ja2eza9ZsfDPn/3W+a+YkC6M7X0bKU+GnGRdux2mOx0DwFP+ZMPrtkv92r57FLMgBCBkroomfbAiH7z4pk1X3Th0Kz2RVUO3BW2tIf/thyv+/uD63O8tWIwhCJaOataz5jd350e/8hkf+rd7AcjmNsL6jU9+0JNf9ORbk13trrlDsGUtsfdqYctaDs123Lw5O+Xvpy/eUWLjwM0QXZnUfXfAJ2BhdW4v+9J1V049UTAev4RklfreeS85KJv7xg2j+Z4T+wimAZwYYTZAY7uEiYuPfO6//7VMig1VsBsAXb/2Z4HpdoHWFPwXgSY/d4yfnFT8kgu/rn1d81Pl3BnbBuWGBepzi37fYVEWPQjQWM+QH4He27/5kSuuXLeunU1Xmsmv4hD611f/p6eO2v035vn8ykLVQlDUsxhGGzWUkt/i+dg1I6tP/YelZ39+5pf5/564YraXptpuX7lsc2nrdlk4ufRiBULWZ5bvDkGDLwxWeZafOhBdPXAC/b7RTdO+xgB6zEOeHxT3fPj7m654Myu7569MU5VL8Ptnn/i8mt37ZeT9JiVn5Qfk+ChUswwDy7ZCeKtk9e+r+1YJMtBGzQGDuPUgtQey/Ih7lrzz2zt+qaY6XEW8//0fHf/Mww9eOKfZq4ta84iY1WEhQDVANFT+CsKjgWXp8JKwqNX0Km4x5iFky/oz3e9vumKyAsPxJG2bQ1Du+JNj/nvdHv2/LgNQVfNMBCGYKNHIGZo1gWbJNSmSrJiV+xB9E0B0q0h+fSkTf3HIJT+89adVd90bjNYF7TWf+PGDN23PRy+eRe2IfsFY9ovo/UGM/UEsB/1og0H0sojw0qAUhhAQApAJRNVCYyQb8/Jbr3zqirNJCtasIfaBh1W6sM3rkK396I8+17elb6hJFkCaOehOhUMHpfrunsSZeYu7ehZnehb39Bh39xD39BiLSAfsiNG8eHWdO781955DP/Cl819cF0kbPwCQIRh/dMEFq26by6dn6mNPEbNCQhYsCwrNgJALgxIqgFZOR0LgleHCDYjuoMu49R45udk4rXvZhvv3TsF9dWxeh+z0aYnf/+OV7z6otuOSOXHLVEMIgASBqECUQFAOXYgiClWCIszTrOiaUZeNBp0d1P/pkWLV/3zqxn+ZTSnTbut1hx8errrlnut315esc48lVDPJMjDPhJolHVSVUAUVgCgEELiTQNoqm7MO6lHotW6+/OLP/qok+oQ2/y2ofDbYllcs2Tw2Mre+R1oWNEggdbEhJEUhqlpZMkHVIWAOiEADyuVjoTYzX//CQfG8/9Hd0hFFp+Of/Jc7Xz6fNddZ0Y9wZotmEsfQjVXZPpJJJn3JWSmpEFHTekObZf8r37j84s+i1Qr7A4yhJ6QLADREPfjNgyL0hK7mkvw+nnaecElbPXemxXfl//Hk4oCL0CXfMWvlQc3ipTO1TWdPdmHKqamwq5RzS1arweFuikhRMPSJeNqqP+5aQ2VFIghoxhIrR/RqB6SF/WtFnEwdqp74yR/c3vf6lxui4m7DTTYw9FKlJbf4okgFJt9ZWorDAVC1PzCSxTu2XdMa0zO/fPPT+y7PcisBUAEZ/oAs2vWGLjZPnqxFUIY2rZBpHstHTs7zbwJgd2r/G3hvuAGJFXTkH8GQzE9OuKUISG6ihA1cKl07mZuSgOdDu4TOF0BNfXW+59b1+pjFUy0LDXFSIJXEhyGkQ5OWiCfXq1RepCr+ktUvAAG494Mb37YLgByIlwDWr4cLwHpz4o75EnByqFDSnPTq8t246A90Au4+jIxkgHKHk56rw+PsaTpbxMOpWjXbgGLoSUp/xJm0z+RwTlB7FQBUIQFxoBFkPktAHBB/2XA9uaeIjxYRBSASHWBcvHTY0IBnniykVfq4P26oEUcyETjhyE5QK11RvV2xKG+xWnMvWvoqTnHn0KkmRogn06MC0FiUQzHggB7MFkSkpy6pAyDBoVfQCGcyDsEV8EXTrrBqFRM2DncHKEHHRho7WeUThqa19JQfN7aycjLT0+dEtDJMSBFBJB41AJhae2AipJNK4VHLT5gVhJnk6k+e1OoypfJ4D8GhG6sXGshkSE73SE/vFgXaA7q8IXdoHDiG2cKqtR+aPvE4X+w9hqbDK/QMI7neCQAHyuouVSAffPnn5kxGHsg0+VDNCXcfzpigpRt+PLirArNYkZJxO5oK0LhdXyqDbzfo90Cl2iABwxcAkonXAR9qxNXX4QCMqNxLeb8fD3N8dXHGPlBHK8m2RPhqgEp0VgVQMKwiFZMOyRPukEoAoLvDIpEJZaHAzCCMflVfu2nTwsGZfCIXlUTVwwjwijcSn0hMblf1CqAEVNS8puPiX/vi+y68He22dp/EVPsfTptuSpssO/ITs0VtT00oMHgCQvbeni5ecjLkpcBPKyLakoaKavNvD3/XnT9WgPKHxyy9ZnQwe5fktYxkWcUTh+/GDDscOGUIMxwOgTb6s8XR6pc4CWzZIgeSTzuAT7UQnvk3tz6Y1SYuHc0zdUSjC+mLjvQqZWQxYlLAEGaMo5lnu3q1By0efRkJCWhDv9TpDJ77n3/nptlY/kGR18bhHkU01SOpMlZY7VWUFBhEslGFHMLeG792+cWfx5PUPH7lVdCWpGus+PDCt165ZvlxS+uDk/tmydQtKqktgqTUSjO+qDgENpYzd23M9morfv/Iy26/cyOgik7H2+22fuFjH7h97ThftNT6t9fzWi4qASRgRnV3OJzpvSzNQpaNWrFwuA1ec8uV7Y+0fk1gLM57HZBw2b360+fsHhz04ZGQh/GMIcCFTprTo1vq1gDUwLCkrnlE887dftgZx7z7nq9PtRCkA/8ZgWjDhg3j04/G1+1R/nHf9RmojQg1gKpQGgJ9WzPXLx3X5BX/7/L33Lk/RvxfdQoevrf7vVcefnqN82+KKNaH4AdlgVBNDXThgY0s3OXZyP+eWf70vzy5Mz0zlCl/oYS4+ePtRufmHafskWztQs+XNfIsLhlp3nt0w7/9yQ/92dbE8r95b3Z3W+nFREBxz/lPP65mMycP3I4eDLzZqPOxTOt3jKx6+m2Hbbh+figj7q2t/n/yZ8rve0hJSAAAAABJRU5ErkJggg==" alt="" width="34" height="30">
+      Kadena Nexus
+    </a>
+    <a class="buy-m" href="https://buy.kadena.ws/">Buy KDA</a>
+    <button class="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="/#projects">Projects</a>
+      <a href="/#security">Security</a>
+      <a href="/#about">About</a>
+      <a href="https://kadenadevs.kadena.ws/">Build</a>
+      <a href="/partnership/">Partners</a>
+      <a class="buy" href="https://buy.kadena.ws/">Buy KDA</a>
+      <a class="contact" href="mailto:Saudi.KDA@kadena.ws">Contact us</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero" style="padding:0">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Kadena Nexus GemFinder</span>
+      <h1>Potential gems, with every pick on record.</h1>
+      <p class="lede">A daily research report on young Ethereum and Solana tokens that passed our automated screen for sellability, taxes, owner controls, liquidity and trading activity. Every token that ever joined the list is tracked in public, the ones that went down included.</p>
+      <div class="actions">
+        <a class="btn primary" href="#record">See the track record</a>
+        <a class="btn" href="#buy">Get the report</a>
+      </div>
+      <p class="beta">Research, not a recommendation or a prediction. Automated checks can miss risks, and prices and liquidity can change quickly. Not financial advice.</p>
+    </div>
+    <aside class="case" aria-label="How the list works">
+      <span class="eyebrow">How the list works</span>
+      <strong>A token stays on the list for up to 90 days while it keeps passing daily re-checks, and is removed when it stops.</strong>
+      <p>A failed contract check or mostly wash trading removes it at once, with the reason shown. Liquidity falling below half of its level when listed removes it too.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="gf" id="record">
+  <div class="wrap">
+    <span class="eyebrow">Track record</span>
+    <h2>Every pick, winners and losers</h2>
+    <p class="sub">Names are hidden while a token is on the live list, which is what the paid report is for, and shown once it leaves. Read live from the service.</p>
+    <div class="tr" id="gem-record" aria-live="polite">
+      <div class="tr-tabs" role="tablist" aria-label="Chain">
+        <button type="button" role="tab" aria-selected="true" data-chain="ethereum">Ethereum</button>
+        <button type="button" role="tab" aria-selected="false" data-chain="solana">Solana</button>
+      </div>
+      <div class="tr-sum" id="gem-sum"></div>
+      <div class="tr-scroll"><table>
+        <thead><tr><th scope="col">Pick</th><th scope="col">Listed</th><th scope="col">Days</th><th scope="col">Since listed</th><th scope="col">Best</th><th scope="col">Day 7</th><th scope="col">Day 30</th><th scope="col">Day 90</th><th scope="col">Status</th></tr></thead>
+        <tbody id="gem-rows"><tr><td colspan="9">Loading the track record.</td></tr></tbody>
+      </table></div>
+      <p class="note">Prices are recorded once a day from public market data, for 90 days after listing, also after a token is removed. Results compare the price on day 7, 30 and 90 with the price when listed; a token with no market left counts as &minus;100%. "Best" is the highest daily record, not the intraday high. Past results do not predict future results.</p>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <span class="eyebrow">The screen</span>
+    <h2>What a token has to pass</h2>
+    <div class="steps">
+      <article><h3>Can it be sold?</h3><p>A test sale is quoted, buy and sell taxes and the cost of selling must stay under 10%, and an ordinary transfer must work.</p></article>
+      <article><h3>Who controls it?</h3><p>No owner power to mint, pause or block transfers, no upgradeable contract, and top holders under 50% where that can be measured.</p></article>
+      <article><h3>Is the market real?</h3><p>Enough liquidity and real sellers, not mostly wash trading, within an age and size range where research is useful.</p></article>
+    </div>
+    <p class="note">"Watching" means a token passed with some checks not completed; the report names those checks. Today every pick on Ethereum and Solana is "watching". The screen does not check the team, the project or its future, and nothing it finds is proof that a token is free of risk.</p>
+  </div>
+</section>
+
+<section class="tools" id="buy">
+  <div class="wrap">
+    <span class="eyebrow">For AI agents</span>
+    <h2>Get today's report</h2>
+    <p class="sub">The report is one web address that answers JSON, paid per call over the open x402 standard. No sign-up.</p>
+    <article class="tool" id="gemfinder">
+      <header><h3>GemFinder daily report</h3><span class="tag live">Live</span></header>
+      <p class="what">Today's list for one chain: each token's address and ticker, when it joined, its price and liquidity then and now, the checks it passed and the ones not completed, and the tokens removed in the last few days with the reason.</p>
+      <dl>
+        <dt>Endpoint</dt><dd><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/gem-finder/<em>{chain}</em></code><code class="ep"><span class="verb">GET</span>agentpay.kadena.ws/v1/gem-finder/<em>{chain}</em>/reports/<em>{sha256}</em></code></dd>
+        <dt>Input</dt><dd><code>chain</code>: <code>ethereum</code> or <code>solana</code>. The first address is free and gives today's <code>reportPath</code>; that path is the paid report.</dd>
+        <dt>Returns</dt><dd>A fixed snapshot of today's report: its content matches the SHA-256 in its address. Paying again with the same payment returns the same report without a second charge.</dd>
+        <dt>For your agent</dt><dd><details class="prompt"><summary>Show the agent prompt</summary><p class="prompt-text">Once a day, call GET https://agentpay.kadena.ws/v1/gem-finder/{chain} with chain ethereum or solana. It is free and returns reportPath. Then GET https://agentpay.kadena.ws{reportPath}, paid per call over x402: pay with USDC on Base (eip155:8453), Polygon (eip155:137) or Arc (eip155:5042), or KDA on Kadena (kadena:mainnet01). Never pay more than 0.05 USDC or 0.05 KDA for one report. Treat it as research, not advice: show me the tokens, their checks and what was not checked, and never buy a token on its basis without asking me.</p></details><button type="button" class="copy" data-copy>Copy agent prompt</button></dd>
+        <dt>Price</dt><dd class="pay"><span><b>$0.05</b> per report in USDC on Base, Polygon or Arc</span><span>or <b>0.05</b> KDA on Kadena</span></dd>
+        <dt>Track record</dt><dd><a class="mono" href="https://agentpay.kadena.ws/v1/gem-finder/ethereum/track-record">agentpay.kadena.ws/v1/gem-finder/<em>{chain}</em>/track-record</a>, free</dd>
+      </dl>
+    </article>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; <span id="yr">2026</span> Kadena Nexus. Community-run, not financial advice.</span>
+    <nav aria-label="Footer">
+      <a href="https://nodes.kadena.ws/">Monitor</a>
+      <a href="https://adoption.kadena.ws/">Adoption Index</a>
+      <a href="https://marketplace.kadena.ws/">Marketplace</a>
+      <a href="https://buy.kadena.ws/">Kadeway</a>
+      <a href="https://trace.kadena.ws/">KadenaTrace</a>
+      <a href="https://trace.kadena.ws/guides">Crypto theft guides</a>
+      <a href="https://kadenadevs.kadena.ws/">Devs</a>
+      <a href="https://earn.kadena.ws/">Earn</a>
+      <a href="https://quantum.kadena.ws/">Quantum</a>
+      <a href="/whales/">Whale Watch</a>
+      <a href="https://github.com/KadenaNexus">GitHub</a>
+      <a href="/community-edition/">Kadena Community Edition</a>
+      <a href="/buy-kda/">How to buy KDA</a>
+      <a href="/faq/">Kadena FAQ</a>
+      <a href="/news/">Kadena news</a>
+      <a href="/reports/">Kadena network reports</a>
+      <a href="/tokenomics/">KDA tokenomics</a>
+      <a href="/mining/">How to mine Kadena</a>
+      <a href="/wallets/">Kadena wallets</a>
+      <a href="/games/">Kadena games and NFTs</a>
+      <a href="/rpc/">Kadena RPC endpoints</a>
+      <a href="/agentpay/">Kadena AgentPay AI</a>
+      <a href="/agents/">Kadena Nexus Agents</a>
+      <a href="/partnership/">Partnership</a>
+      <a href="/privacy-policy">Privacy policy</a>
+    </nav>
+    <p class="listed"><span>Our tools are also listed on</span><a href="https://agentic.market/">Agentic Market</a><a href="https://www.x402scan.com/">x402scan</a><a href="https://payapi.market/api/kadena-nexus">PayAPI Market</a></p>
+  </div>
+</footer>
+<script>
+(() => {
+  const top = document.getElementById('top');
+  const onScroll = () => top.classList.toggle('scrolled', scrollY > 8);
+  addEventListener('scroll', onScroll, {passive:true}); onScroll();
+  const btn = document.querySelector('.menu'), nav = document.getElementById('nav');
+  btn.addEventListener('click', () => { const open = nav.classList.toggle('open'); btn.setAttribute('aria-expanded', open); btn.textContent = open ? 'Close' : 'Menu'; });
+  document.getElementById('yr').textContent = new Date().getFullYear();
+})();
+</script>
+<script>
+document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => {
+  const text = b.parentNode.querySelector('.prompt-text').textContent;
+  const done = ok => { b.textContent = ok ? 'Copied' : 'Select the text above to copy'; setTimeout(() => { b.textContent = 'Copy agent prompt'; }, 2500); };
+  (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(() => done(true), () => { b.parentNode.querySelector('details').open = true; done(false); });
+}));
+</script>
+<script>
+(() => {
+  const box = document.getElementById('gem-record');
+  const rows = document.getElementById('gem-rows'), sum = document.getElementById('gem-sum');
+  const tabs = box.querySelectorAll('[data-chain]');
+  const scan = {ethereum: 'https://etherscan.io/token/', solana: 'https://solscan.io/token/'};
+  const cache = {};
+  const dash = '\u2013';
+  const pct = v => v === null || v === undefined ? dash : (v > 0 ? '+' : v < 0 ? '\u2212' : '') + Math.abs(v).toFixed(1) + '%';
+  const cls = v => v === null || v === undefined || v === 0 ? '' : v > 0 ? 'up' : 'down';
+  const el = (tag, text, className) => { const e = document.createElement(tag); if (text !== undefined) e.textContent = text; if (className) e.className = className; return e; };
+  const result = r => r.status === 'pending' ? {t: 'pending', v: null} : r.status === 'no_data' ? {t: 'no data', v: null} : {t: pct(r.changePct), v: r.changePct};
+  const tile = (label, value) => { const d = el('div'); d.append(el('small', label), el('b', value)); return d; };
+  const line = text => { const tr = el('tr'); const td = el('td', text); td.colSpan = 9; tr.append(td); rows.append(tr); };
+  function show(chain, data) {
+    rows.textContent = ''; sum.textContent = '';
+    if (!data) return line('The track record could not be read just now. Try again later.');
+    const s = data.summary || {};
+    sum.append(tile('Picks', String(s.picks ?? dash)), tile('On the list', String(s.live ?? dash)), tile('Ended', String(s.ended ?? dash)),
+               tile('Removed for risk', typeof s.removedForRiskPct === 'number' ? s.removedForRiskPct.toFixed(1) + '%' : dash));
+    for (const h of ['7d', '30d', '90d']) {
+      const r = s[h] || {};
+      sum.append(tile('Up after ' + h.replace('d', ' days'), r.picksMeasured ? r.upPct.toFixed(0) + '% of ' + r.picksMeasured + ', median ' + pct(r.medianChangePct) : 'not yet'));
+    }
+    const picks = data.picks || [];
+    if (!picks.length) return line('No picks yet.');
+    for (const p of picks) {
+      const tr = el('tr'), name = el('td');
+      if (p.listStatus === 'ended' && p.address) {
+        name.append(el('span', (p.symbol || p.pick) + ' '));
+        const a = el('a', p.address.slice(0, 6) + '\u2026' + p.address.slice(-4));
+        a.href = scan[chain] + encodeURIComponent(p.address); a.rel = 'noopener'; a.target = '_blank';
+        name.append(a);
+      } else name.textContent = p.pick;
+      tr.append(name, el('td', p.listed || dash), el('td', String(p.daysListed ?? dash)),
+                el('td', pct(p.changeSinceListedPct), cls(p.changeSinceListedPct)), el('td', pct(p.bestChangePct), cls(p.bestChangePct)));
+      for (const h of ['7d', '30d', '90d']) { const r = result((p.results || {})[h] || {}); tr.append(el('td', r.t, cls(r.v))); }
+      tr.append(p.listStatus === 'ended' ? el('td', 'Ended ' + (p.ended || '') + ': ' + (p.endReason || ''), 'why')
+                                         : el('td', (p.tier === 'watching' ? 'On the list (watching)' : 'On the list') + ', name hidden', 'why'));
+      rows.append(tr);
+    }
+  }
+  function load(chain) {
+    tabs.forEach(b => b.setAttribute('aria-selected', String(b.dataset.chain === chain)));
+    if (chain in cache) return show(chain, cache[chain]);
+    fetch('https://agentpay.kadena.ws/v1/gem-finder/' + chain + '/track-record', {cache: 'no-store'})
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(d => { cache[chain] = d; show(chain, d); }, () => show(chain, null));
+  }
+  tabs.forEach(b => b.addEventListener('click', () => load(b.dataset.chain)));
+  load('ethereum');
+})();
+</script>
+</body>
+</html>
